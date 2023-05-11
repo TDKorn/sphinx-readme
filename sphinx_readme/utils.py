@@ -1,3 +1,4 @@
+import re
 from sphinx.application import Sphinx
 from typing import Dict, List, Optional, Any
 
@@ -19,3 +20,20 @@ def set_conf_val(app: Sphinx, attr: str, value: Any) -> None:
     """
     app.config._raw_config[attr] = value
     setattr(app.config, attr, value)
+
+
+def read_rst(rst_file: str, parse_include: bool = False):
+    with open(rst_file, 'r', encoding='utf-8') as f:
+        rst = f.read()
+    if parse_include:
+        rst = re.sub(
+            pattern=r".. include:: ([/\w]+.rst)",
+            repl=include_rst,
+            string=rst
+        )
+    return rst
+
+
+def include_rst(match):
+    rst_file = match.group(1)
+    return read_rst(rst_file)

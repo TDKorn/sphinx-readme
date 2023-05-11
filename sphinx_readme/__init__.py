@@ -8,7 +8,7 @@ from docutils.nodes import Node
 from collections import defaultdict
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
-from .utils import get_conf_val, set_conf_val
+from .utils import get_conf_val, set_conf_val, read_rst
 from typing import Dict, Any, Optional, Callable, List
 
 __version__ = "v0.0.1"
@@ -16,6 +16,7 @@ __version__ = "v0.0.1"
 
 def setup(app: Sphinx) -> Dict[str, Any]:
     app.connect('doctree-resolved', parse_linkcode_nodes)
+    app.connect('build-finished', resolve_readme)
 
     app.add_config_value("readme_inline_markup", True, True)
     app.add_config_value("readme_raw_directive", True, True)
@@ -83,6 +84,39 @@ def parse_linkcode_nodes(app: Sphinx, doctree: Node, docname: str) -> Dict:
     # if get_conf_val(app, "readme_add_linkcode_class") is True:
     #     node['classes'] = ['linkcode-link']
     #     node.children = [Text(_(f'{get_conf_val(app, "linkcode_link_text", "[source]")}'))]
+
+
+def resolve_readme(app: Sphinx, exception):
+    rst_files = get_conf_val(app, "readme_src", [])
+    out_dir = get_conf_val(app, "readme_out_dir")
+    parse_include_directive = get_conf_val(app, "readme_include_directive")
+    use_raw_directive = get_conf_val(app, "readme_raw_directive")
+    docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "linkcode_url"))
+
+    if isinstance(rst_files, str):
+        rst_files = [rst_files]
+
+    rst_files = list(map(os.path.abspath, rst_files))
+    # Create dict of {file: text} - all parsing is done on this text
+    rst_sources = {rst_file: read_rst(rst_file, parse_include_directive) for rst_file in rst_files}
+
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
+
+    for rst_src in rst_sources:
+        rst = resolve_autodoc_refs(
+            rst=rst_sources[rst_src],
+            ref_map=get_conf_val(app, "readme_refs"),
+            inline_markup=get_conf_val(app, "readme_inline_markup")
+        )
+
+        rst_out = os.path.join(
+            out_dir, os.path.basename(rst_src)
+        )
+        with open(rst_out, 'w', encoding='utf-8') as f:
+            f.write(rst)
+        print(
+            f'``sphinx_readme``: saved generated .rst file to {rst_out}')
 
 
 def get_internal_ref(node: Node, qualified_name: str) -> str:
@@ -190,14 +224,12 @@ def get_header_vals(autodoc_refs, ref_map, inline_markup, link_type) -> List[str
 
     return header
 
-            # if inline_markup:
-            #     header.append(f".. |.`{ref}`| replace:: ``{info['replace']}``")
-            # else:
-            #     header.append(f".. |.{ref}| replace:: {info['replace']}")
-            #
-            # if link_type == "code":
-            #     header.append(".. _." + ref + ": " + info['external'])
-            # else:
-            #     header.append(".. _." + ref + ": " + info['external'])
-
-
+    # if inline_markup:
+    #     header.append(f".. |.`{ref}`| replace:: ``{info['replace']}``")
+    # else:
+    #     header.append(f".. |.{ref}| replace:: {info['replace']}")
+    #
+    # if link_type == "code":
+    #     header.append(".. _." + ref + ": " + info['external'])
+    # else:
+    #     header.append(".. _." + ref + ": " + info['external'])
