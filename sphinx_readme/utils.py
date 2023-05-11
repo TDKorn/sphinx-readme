@@ -22,7 +22,6 @@ def set_conf_val(app: Sphinx, attr: str, value: Any) -> None:
 
 
 
-
 def get_header_vals(refs: Dict[str, Dict[str, str]], inline_markup: bool = True) -> List[str]:
     header = []
     for ref in refs:

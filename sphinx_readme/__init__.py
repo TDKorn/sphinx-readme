@@ -1,5 +1,6 @@
 import os
 import copy
+import re
 import sphinx
 from pathlib import Path
 from docutils import nodes
@@ -53,7 +54,7 @@ def parse_linkcode_nodes(app: Sphinx, doctree: Node, docname: str) -> Dict:
                 short_ref = qualified_name.split(".")[-1]
 
                 info = {
-                    "external": node.parent.get("refuri"),
+                    "external": node.parent.get("refuri"),  # Should check if readme url is same as linkcode somewhere
                     "internal": internal_ref,
                     "module": grandparent.get("module"),
                     "fullname": grandparent.get("fullname"),
@@ -135,3 +136,68 @@ def get_all_variants(fully_qualified_name: str) -> List[str]:
         variants.extend(get_variants(ref))
 
     return variants
+
+
+def resolve_autodoc_refs(rst, ref_map, inline_markup):
+    # The rst could have :directive:`{~.}{module|class}{.}target` where {} is optional
+    # Directives to link to source code -> class, meth, func
+    # Should have ``readme_replace_attrs`` config value -> :attr:`{}` becomes ``{}``
+    pattern = rf":(?:class|meth|func):`([~\.\w]+)`"
+
+    # Sphinx substitutions are used for cross-refs instead
+    # Syntax is |.{target}|_ or |.`{target}`|_
+    if inline_markup:
+        repl = r"|.`\1`|_"
+    else:
+        repl = r"|.\1|_"
+
+    # Get a list of all autodoc cross-refs
+    autodoc_refs = set(re.findall(pattern, rst))
+
+    # Replace cross-refs with Sphinx substitutions
+    rst = re.sub(pattern, repl, rst)
+
+    # Use ref map to generate header for cross-refs in the file
+    # Should probably have whatever function call this func, then call header func, then combine results... but for now
+    header = get_header_vals(autodoc_refs, ref_map, inline_markup, link_type="code")
+
+    rst = "\n".join(header) + "\n\n" + rst
+    return rst
+
+
+def get_header_vals(autodoc_refs, ref_map, inline_markup, link_type) -> List[str]:
+    header = []
+
+    for ref in autodoc_refs:
+        info = ref_map[ref]
+
+        # Check for empty REFERENCE_MAPPING
+        if not any(info.values()):
+            continue
+
+        if link_type == "code":     #TODO: figure out how u gonna do this part -> check a list of code hosting websites?
+            link = info['external']
+        else:
+            link = info['internal']     #TODO: Must have readme_docs_url + info['internal'] as full link but not sure where to do it
+
+        if inline_markup:
+            ref = f"`{ref}`"
+
+        header.extend([
+            f".. |.{ref}| replace:: {info['replace']}",
+            f".. _.{ref}: {link}"
+        ])
+
+    return header
+
+            # if inline_markup:
+            #     header.append(f".. |.`{ref}`| replace:: ``{info['replace']}``")
+            # else:
+            #     header.append(f".. |.{ref}| replace:: {info['replace']}")
+            #
+            # if link_type == "code":
+            #     header.append(".. _." + ref + ": " + info['external'])
+            # else:
+            #     header.append(".. _." + ref + ": " + info['external'])
+
+
