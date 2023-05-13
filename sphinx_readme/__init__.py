@@ -20,6 +20,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     app.add_config_value("readme_inline_markup", True, True)
     app.add_config_value("readme_raw_directive", True, True)
+    app.add_config_value("readme_replace_attrs", True, True)
     app.add_config_value("readme_out_dir", Path(app.srcdir).parent.parent, True)
 
     app.setup_extension('sphinx.ext.linkcode')
@@ -109,6 +110,8 @@ def resolve_readme(app: Sphinx, exception):
             ref_map=get_conf_val(app, "readme_refs"),
             inline_markup=get_conf_val(app, "readme_inline_markup")
         )
+        if get_conf_val(app, "readme_replace_attrs"):
+            rst = replace_autodoc_attrs(rst)
 
         rst_out = os.path.join(
             out_dir, os.path.basename(rst_src)
@@ -233,3 +236,15 @@ def get_header_vals(autodoc_refs, ref_map, inline_markup, link_type) -> List[str
     #     header.append(".. _." + ref + ": " + info['external'])
     # else:
     #     header.append(".. _." + ref + ": " + info['external'])
+
+
+def replace_autodoc_attrs(rst) -> str:
+    # Ex. ~.Class.meth => ``meth``
+    short_ref = r" :attr:`~\.?(\w+)`"
+    # Ex. .Class.meth => ``Class.meth``
+    long_ref = r" :attr:`\.?([\.\w]+)`"
+    repl = r" ``\1``"
+
+    rst = re.sub(short_ref, repl, rst)
+    rst = re.sub(long_ref, repl, rst)
+    return rst
