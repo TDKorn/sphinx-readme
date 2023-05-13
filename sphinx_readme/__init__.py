@@ -301,3 +301,35 @@ def replace_rst_images(src_dir: str, out_dir: str, rst_src: str, rst: str) -> st
         repl = fr".. image:: {relpath_to_src}\1",
         string=rst
     )
+
+
+def replace_admonitions(rst: str, raw_directive: bool = True) -> str:
+    pattern = r".. admonition:: \w?\n\W*\w*\n+W+"
+    if raw_directive:
+        admonition = '''
+.. raw:: html
+
+   <table>
+      <tr align="left">
+         <th>{icon} {title}</th>
+      </tr>
+      <tr>
+         <td>
+
+{text}
+
+.. raw:: html
+
+   </td></tr>
+   </div>
+
+'''
+    else:
+        admonition = '''
+.. csv-table::
+    :header: {icon} {title}
+
+    "{text}"
+
+'''
+    return admonition   # obviously not
