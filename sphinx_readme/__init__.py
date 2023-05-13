@@ -110,8 +110,16 @@ def resolve_readme(app: Sphinx, exception):
             ref_map=get_conf_val(app, "readme_refs"),
             inline_markup=get_conf_val(app, "readme_inline_markup")
         )
+
         if get_conf_val(app, "readme_replace_attrs"):
             rst = replace_autodoc_attrs(rst)
+
+        rst = replace_rst_images(
+            src_dir=app.srcdir,
+            out_dir=out_dir,
+            rst_src=rst_src,
+            rst=rst
+        )
 
         rst_out = os.path.join(
             out_dir, os.path.basename(rst_src)
@@ -248,3 +256,48 @@ def replace_autodoc_attrs(rst) -> str:
     rst = re.sub(short_ref, repl, rst)
     rst = re.sub(long_ref, repl, rst)
     return rst
+
+
+def replace_rst_images(src_dir: str, out_dir: str, rst_src: str, rst: str) -> str:
+    """Resolves filepaths of ``image`` directives to be relative to the ``readme_out_dir`` instead of the ``source`` dir
+
+        ".. image:: /blah/blah.png"
+        ".. image:: /blah.png"
+        ".. image:: blah.png"
+        ".. image:: blah/blah.png"
+        ".. image:: ../blah/blah.png"
+
+    :param src_dir: the Sphinx docs source directory (``app.srcdir``)
+    :param out_dir: the output directory for the rst file
+    :param rst_src: filename of the rst file being parsed
+    :param rst: the content of the rst file being parsed
+    :return: the rst file content with correct image directives
+    """
+    out_dir_path = Path(out_dir)
+    rst_src_dir = Path(rst_src).parent
+
+    # These image paths are relative to the rst source file
+    # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
+    relative = r".. image:: ([\w\.]+[\w/]+\.\w{3,4})"
+    matches = re.findall(relative, rst)
+
+    for match in matches:
+        # Find absolute path of the image
+        rel_img_path = Path(match)
+        abs_img_path = (rst_src_dir / rel_img_path).resolve()
+        # Find path of image relative to the output directory
+        final_img_path = str(abs_img_path.relative_to(out_dir_path)).replace(os.path.sep, "/")
+        # Sub that hoe in!!!
+        rst = re.sub(
+            pattern=rf".. image:: {match}",
+            repl=fr".. image:: {final_img_path}",
+            string=rst
+        )
+    # These image paths are "absolute" (relative to src_dir)
+    # .. image:: /path/to/image.ext
+    relpath_to_src = os.path.relpath(src_dir, out_dir).replace(os.path.sep, "/")
+    return re.sub(
+        pattern=r".. image:: (/[\w/]+\.\w{3,4})",
+        repl = fr".. image:: {relpath_to_src}\1",
+        string=rst
+    )
