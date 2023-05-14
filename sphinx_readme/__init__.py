@@ -15,7 +15,7 @@ __version__ = "v0.0.1"
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
-    app.connect('doctree-resolved', parse_linkcode_nodes)
+    app.connect('doctree-resolved', parse_references)
     app.connect('build-finished', resolve_readme)
 
     app.add_config_value("readme_inline_markup", True, True)
@@ -25,44 +25,55 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     app.setup_extension('sphinx.ext.linkcode')
 
+    docs_url = get_conf_val(app, "readme_docs_url")
+    if docs_url == get_conf_val(app, "linkcode_url"):
+        link_type = "code"
+    else:
+        link_type = "html"
+
+    set_conf_val(app, "readme_link_type", link_type)
+
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
 
 
 REFERENCE_MAPPING = {
-    "internal": None,
-    "external": None,
     "module": None,
     "fullname": None,
     "replace": None,
+    "target": None
 }
 
 
-def parse_linkcode_nodes(app: Sphinx, doctree: Node, docname: str) -> Dict:
+def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
     """Creates a mapping of Python cross-references and their targets
     """
+    docs_url = get_conf_val(app, "readme_docs_url").rstrip("/")
+    link_type = get_conf_val(app, "readme_link_type")
+
     refs = defaultdict(lambda: copy.deepcopy(REFERENCE_MAPPING))
 
     for node in list(doctree.findall(nodes.inline)):
         if 'viewcode-link' in node['classes']:
             if node.parent.get('internal') is False:
                 grandparent = node.parent.parent
-
                 try:
                     qualified_name = grandparent.get("ids")[0]
                 except IndexError:
                     qualified_name = grandparent.get("module", "") + grandparent.get("fullname", "")
 
-                internal_ref = get_internal_ref(node, qualified_name)
                 short_ref = qualified_name.split(".")[-1]
+                is_method = grandparent.get("_toc_name", "").endswith("()")
+
+                if link_type == "code":
+                    target = node.parent.get("refuri")
+                else:
+                    target = get_internal_ref(node, docs_url, qualified_name)
 
                 info = {
-                    "external": node.parent.get("refuri"),  # Should check if readme url is same as linkcode somewhere
-                    "internal": internal_ref,
+                    "target": target,
                     "module": grandparent.get("module"),
                     "fullname": grandparent.get("fullname"),
                 }
-
-                is_method = grandparent.get("_toc_name", "").endswith("()")
                 variants = get_all_variants(qualified_name)
 
                 for variant in variants:
@@ -77,8 +88,8 @@ def parse_linkcode_nodes(app: Sphinx, doctree: Node, docname: str) -> Dict:
                     if get_conf_val(app, "readme_inline_markup"):
                         replace = f"``{replace}``"
 
+                    info["replace"] = replace
                     refs[variant].update(info)
-                    refs[variant]["replace"] = replace
 
     set_conf_val(app, "readme_refs", refs)
     return refs
@@ -97,9 +108,16 @@ def resolve_readme(app: Sphinx, exception):
     if isinstance(rst_files, str):
         rst_files = [rst_files]
 
-    rst_files = list(map(os.path.abspath, rst_files))
+    rst_files = [
+        # Absolute path of files; files should be relative to source directory
+        str((Path(app.srcdir) / Path(rst_file)).resolve())
+        for rst_file in rst_files
+    ]
     # Create dict of {file: text} - all parsing is done on this text
-    rst_sources = {rst_file: read_rst(rst_file, parse_include_directive) for rst_file in rst_files}
+    rst_sources = {
+        rst_file: read_rst(str(rst_file), parse_include_directive)
+        for rst_file in rst_files
+    }
 
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
@@ -130,7 +148,7 @@ def resolve_readme(app: Sphinx, exception):
             f'``sphinx_readme``: saved generated .rst file to {rst_out}')
 
 
-def get_internal_ref(node: Node, qualified_name: str) -> str:
+def get_internal_ref(node: Node, docs_url: str, qualified_name: str) -> str:
     """Generate internal reference URL that would be used in HTML build
 
     Can't just use internal reference node
@@ -145,7 +163,7 @@ def get_internal_ref(node: Node, qualified_name: str) -> str:
     """
     rst_source = os.path.basename(node.parent.document.get("source"))
     html_file = rst_source.split(".rst")[0] + ".html"
-    return html_file + f"#{qualified_name}"
+    return f"{docs_url}/{html_file}#{qualified_name}"
 
 
 def get_variants(obj: str):
@@ -186,11 +204,10 @@ def get_all_variants(fully_qualified_name: str) -> List[str]:
 def resolve_autodoc_refs(rst, ref_map, inline_markup):
     # The rst could have :directive:`{~.}{module|class}{.}target` where {} is optional
     # Directives to link to source code -> class, meth, func
-    # Should have ``readme_replace_attrs`` config value -> :attr:`{}` becomes ``{}``
     pattern = rf":(?:class|meth|func):`([~\.\w]+)`"
 
     # Sphinx substitutions are used for cross-refs instead
-    # Syntax is |.{target}|_ or |.`{target}`|_
+    # Syntax is |.{ref}|_ or |.`{ref}`|_
     if inline_markup:
         repl = r"|.`\1`|_"
     else:
@@ -199,11 +216,10 @@ def resolve_autodoc_refs(rst, ref_map, inline_markup):
     # Get a list of all autodoc cross-refs
     autodoc_refs = set(re.findall(pattern, rst))
 
-    # Replace cross-refs with Sphinx substitutions
+    # Replace cross-refs with substitutions
     rst = re.sub(pattern, repl, rst)
 
-    # Use ref map to generate header for cross-refs in the file
-    # Should probably have whatever function call this func, then call header func, then combine results... but for now
+    # Use ref_map to generate header for cross-refs in the file
     header = get_header_vals(autodoc_refs, ref_map, inline_markup, link_type="code")
 
     rst = "\n".join(header) + "\n\n" + rst
@@ -220,30 +236,15 @@ def get_header_vals(autodoc_refs, ref_map, inline_markup, link_type) -> List[str
         if not any(info.values()):
             continue
 
-        if link_type == "code":     #TODO: figure out how u gonna do this part -> check a list of code hosting websites?
-            link = info['external']
-        else:
-            link = info['internal']     #TODO: Must have readme_docs_url + info['internal'] as full link but not sure where to do it
-
         if inline_markup:
             ref = f"`{ref}`"
 
         header.extend([
             f".. |.{ref}| replace:: {info['replace']}",
-            f".. _.{ref}: {link}"
+            f".. _.{ref}: {info['target']}"
         ])
 
     return header
-
-    # if inline_markup:
-    #     header.append(f".. |.`{ref}`| replace:: ``{info['replace']}``")
-    # else:
-    #     header.append(f".. |.{ref}| replace:: {info['replace']}")
-    #
-    # if link_type == "code":
-    #     header.append(".. _." + ref + ": " + info['external'])
-    # else:
-    #     header.append(".. _." + ref + ": " + info['external'])
 
 
 def replace_autodoc_attrs(rst) -> str:
