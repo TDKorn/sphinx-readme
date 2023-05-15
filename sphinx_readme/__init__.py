@@ -47,13 +47,29 @@ REFERENCE_MAPPING = {
 def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
     """Creates a mapping of Python cross-references and their targets
     """
-    docs_url = get_conf_val(app, "readme_docs_url").rstrip("/")
+    docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "linkcode_url", "")).rstrip("/")
+    if not docs_url:
+        raise ExtensionError(
+            "sphinx_readme: ``readme_docs_url`` or ``linkcode_url`` must be set"
+        )
     link_type = get_conf_val(app, "readme_link_type")
+    refs = get_conf_val(app, "readme_refs")
 
-    refs = defaultdict(lambda: copy.deepcopy(REFERENCE_MAPPING))
+    if refs is None:
+        refs = defaultdict(lambda: copy.deepcopy(REFERENCE_MAPPING))
+        refs['std-ref'] = []
+
+
 
     for node in list(doctree.findall(nodes.inline)):
-        if 'viewcode-link' in node['classes']:
+        if 'std-ref' in node['classes']:
+            target = {
+                "text": str(node.children[0]),
+                "refuri": get_conf_val(app, "html_baseurl", "") + node.parent.get('refuri', '')
+            }
+            refs['std-ref'].append(target)
+
+        elif 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
             if node.parent.get('internal') is False:
                 grandparent = node.parent.parent
                 try:
@@ -122,10 +138,12 @@ def resolve_readme(app: Sphinx, exception):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
 
+    ref_map = get_conf_val(app, "readme_refs")
+
     for rst_src in rst_sources:
         rst = resolve_autodoc_refs(
             rst=rst_sources[rst_src],
-            ref_map=get_conf_val(app, "readme_refs"),
+            ref_map=ref_map,
             inline_markup=get_conf_val(app, "readme_inline_markup")
         )
 
@@ -138,6 +156,7 @@ def resolve_readme(app: Sphinx, exception):
             rst_src=rst_src,
             rst=rst
         )
+        rst = replace_std_refs(rst, ref_map)
 
         rst_out = os.path.join(
             out_dir, os.path.basename(rst_src)
@@ -164,6 +183,24 @@ def get_internal_ref(node: Node, docs_url: str, qualified_name: str) -> str:
     rst_source = os.path.basename(node.parent.document.get("source"))
     html_file = rst_source.split(".rst")[0] + ".html"
     return f"{docs_url}/{html_file}#{qualified_name}"
+
+def replace_std_refs(rst, ref_map):
+    # Find all :ref:`ref_id` cross-refs
+    std_cross_refs = re.findall(
+        pattern=r":ref:`(.+)`",
+        string=rst
+    )
+    # Match these ids up with target data in the ref_map
+    std_refs = dict(zip(std_cross_refs, ref_map['std-ref']))
+
+    # Replace cross-refs with `text <link>`_ format
+    for ref_id, info in std_refs.items():
+        rst = re.sub(
+            pattern=rf":ref:`{ref_id}`",
+            repl=rf"`{info['text']} <{info['refuri']}>`_",
+            string=rst
+        )
+    return rst
 
 
 def get_variants(obj: str):
