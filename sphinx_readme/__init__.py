@@ -25,13 +25,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     app.setup_extension('sphinx.ext.linkcode')
 
-    docs_url = get_conf_val(app, "readme_docs_url")
-    if docs_url == get_conf_val(app, "linkcode_url"):
-        link_type = "code"
-    else:
-        link_type = "html"
 
-    set_conf_val(app, "readme_link_type", link_type)
 
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
 
@@ -47,27 +41,32 @@ REFERENCE_MAPPING = {
 def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
     """Creates a mapping of Python cross-references and their targets
     """
-    docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "linkcode_url", "")).rstrip("/")
+    docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "html_baseurl", "")).rstrip("/")
+    refs = get_conf_val(app, "readme_refs")
     if not docs_url:
         raise ExtensionError(
-            "sphinx_readme: ``readme_docs_url`` or ``linkcode_url`` must be set"
+            "sphinx_readme: conf.py value must be set for ``readme_docs_url`` or ``html_baseurl``"
         )
-    link_type = get_conf_val(app, "readme_link_type")
-    refs = get_conf_val(app, "readme_refs")
+    link_type = 'code' if docs_url == get_conf_val(app, "linkcode_url") else 'html'
 
     if refs is None:
         refs = defaultdict(lambda: copy.deepcopy(REFERENCE_MAPPING))
-        refs['std-ref'] = []
+        refs['ref'] = []
+        refs['doc'] = []
 
-
+    def get_cross_ref_target(node: Node) -> Dict:
+        """Helper function to parse target info of a cross-reference"""
+        return {
+            'text': str(node.children[0]),
+            "refuri": docs_url + "/" + node.parent.get('refuri', '')
+        }
 
     for node in list(doctree.findall(nodes.inline)):
-        if 'std-ref' in node['classes']:
-            target = {
-                "text": str(node.children[0]),
-                "refuri": get_conf_val(app, "html_baseurl", "") + node.parent.get('refuri', '')
-            }
-            refs['std-ref'].append(target)
+        if 'doc' in node['classes']:
+            refs['doc'].append(get_cross_ref_target(node))
+
+        elif 'std-ref' in node['classes']:
+            refs['ref'].append(get_cross_ref_target(node))
 
         elif 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
             if node.parent.get('internal') is False:
@@ -161,7 +160,9 @@ def resolve_readme(app: Sphinx, exception):
             rst_src=rst_src,
             rst=rst
         )
-        rst = replace_std_refs(rst, ref_map)
+
+        for role in ('ref', 'doc'):
+            rst = replace_cross_refs(rst, ref_map, role)
 
         # Write the final output
         rst_out = os.path.join(
@@ -193,23 +194,24 @@ def get_internal_ref(node: Node, docs_url: str, qualified_name: str) -> str:
     return f"{docs_url}/{html_file}#{qualified_name}"
 
 
-def replace_std_refs(rst, ref_map):
-    # Find all :ref:`ref_id` cross-refs
-    std_cross_refs = re.findall(
-        pattern=r":ref:`(.+)`",
+def replace_cross_refs(rst, ref_map, ref_role: str):
+    # Find all :ref_role:`ref_id` cross-refs
+    cross_refs = re.findall(
+        pattern=fr":{ref_role}:`(.+)`",
         string=rst
     )
     # Match these ids up with target data in the ref_map
-    std_refs = dict(zip(std_cross_refs, ref_map['std-ref']))
+    cross_ref_map = dict(zip(cross_refs, ref_map[ref_role]))
 
     # Replace cross-refs with `text <link>`_ format
-    for ref_id, info in std_refs.items():
+    for ref_id, target in cross_ref_map.items():
         rst = re.sub(
-            pattern=rf":ref:`{ref_id}`",
-            repl=rf"`{info['text']} <{info['refuri']}>`_",
+            pattern=rf":{ref_role}:`{ref_id}`",
+            repl=rf"`{target['text']} <{target['refuri']}>`_",
             string=rst
         )
     return rst
+
 
 def get_variants(obj: str):
     """
