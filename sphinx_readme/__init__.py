@@ -48,6 +48,11 @@ def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
             "sphinx_readme: conf.py value must be set for ``readme_docs_url`` or ``html_baseurl``"
         )
     link_type = 'code' if docs_url == get_conf_val(app, "linkcode_url") else 'html'
+    set_conf_val(app, "readme_link_type", link_type)
+
+    replace_attrs = get_conf_val(app, "readme_replace_attrs")
+    inline_markup = get_conf_val(app, "inline_markup")
+    refs = get_conf_val(app, "readme_refs")
 
     if refs is None:
         refs = defaultdict(lambda: copy.deepcopy(REFERENCE_MAPPING))
@@ -100,11 +105,34 @@ def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
                     if is_method:
                         replace += "()"
 
-                    if get_conf_val(app, "readme_inline_markup"):
+                    if inline_markup:
                         replace = f"``{replace}``"
 
                     info["replace"] = replace
                     refs[variant].update(info)
+
+    if replace_attrs and link_type == "html":
+        for node in list(doctree.findall(nodes.reference)):
+            if "attr" in node.parent.rawsource:
+                target = docs_url + "/" + node.get("refuri")
+                qualified_name = node.get("reftitle")
+                short_ref = qualified_name.split('.')[-1]
+
+                variants = get_all_variants(qualified_name)
+
+                for variant in variants:
+                    if variant.startswith("~"):
+                        replace = short_ref
+                    else:
+                        replace = variant.lstrip('.')
+
+                    if inline_markup:
+                        replace = f"``{replace}``"
+
+                    refs[variant].update({
+                        'target': target,
+                        'replace': replace
+                    })
 
     set_conf_val(app, "readme_refs", refs)
     return refs
@@ -121,6 +149,7 @@ def resolve_readme(app: Sphinx, exception):
     docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "linkcode_url"))
     inline_markup = get_conf_val(app, "readme_inline_markup")
     link_type = get_conf_val(app, "readme_link_type")
+    replace_attrs = get_conf_val(app, "readme_replace_attrs")
 
     if isinstance(rst_files, str):
         rst_files = [rst_files]
@@ -144,15 +173,13 @@ def resolve_readme(app: Sphinx, exception):
     for rst_src in rst_sources:
         rst, autodoc_refs = resolve_autodoc_refs(
             rst=rst_sources[rst_src],
-            ref_map=ref_map,
-            inline_markup=inline_markup
+            inline_markup=inline_markup,
+            replace_attrs=replace_attrs,
+            link_type=link_type
         )
 
         # Use ref_map to generate header for cross-refs in the file
         header_vals = get_header_vals(autodoc_refs, ref_map, inline_markup, link_type)
-
-        if get_conf_val(app, "readme_replace_attrs"):
-            rst = replace_autodoc_attrs(rst)
 
         rst = replace_rst_images(
             src_dir=app.srcdir,
@@ -248,10 +275,27 @@ def get_all_variants(fully_qualified_name: str) -> List[str]:
     return variants
 
 
-def resolve_autodoc_refs(rst, ref_map, inline_markup):
-    # The rst could have :directive:`{~.}{module|class}{.}target` where {} is optional
-    # Directives to link to source code -> class, meth, func
-    pattern = rf":(?:class|meth|func):`([~\.\w]+)`"
+def resolve_autodoc_refs(rst: str, inline_markup: bool, replace_attrs: bool, link_type: str):
+    """
+    :param rst:
+    :param inline_markup:
+    :param replace_attrs:
+    :param link_type:
+    :return:
+    """
+    # The rst could have :role:`{~.}{module|class}{.}target` where {} is optional
+    # Roles to link to source code -> class, meth, func
+    pattern = r":(?:class|meth|func):`([~\.\w]+)`"
+
+    if replace_attrs:
+        if link_type == 'code':
+            # Links to source code aren't generated for properties/attributes
+            # Replace :attr:`~.attribute` with ``attribute``
+            rst = replace_autodoc_attrs(rst)
+
+        else:
+            # We can generate links to html documentation though!
+            pattern = r":(?:class|meth|func|attr):`([~\.\w]+)`"
 
     # Sphinx substitutions are used for cross-refs instead
     # Syntax is |.{ref}|_ or |.`{ref}`|_
