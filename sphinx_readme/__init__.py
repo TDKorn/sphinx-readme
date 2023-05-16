@@ -120,6 +120,8 @@ def resolve_readme(app: Sphinx, exception):
     parse_include_directive = get_conf_val(app, "readme_include_directive")
     use_raw_directive = get_conf_val(app, "readme_raw_directive")
     docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "linkcode_url"))
+    inline_markup = get_conf_val(app, "readme_inline_markup")
+    link_type = get_conf_val(app, "readme_link_type")
 
     if isinstance(rst_files, str):
         rst_files = [rst_files]
@@ -141,11 +143,14 @@ def resolve_readme(app: Sphinx, exception):
     ref_map = get_conf_val(app, "readme_refs")
 
     for rst_src in rst_sources:
-        rst = resolve_autodoc_refs(
+        rst, autodoc_refs = resolve_autodoc_refs(
             rst=rst_sources[rst_src],
             ref_map=ref_map,
-            inline_markup=get_conf_val(app, "readme_inline_markup")
+            inline_markup=inline_markup
         )
+
+        # Use ref_map to generate header for cross-refs in the file
+        header_vals = get_header_vals(autodoc_refs, ref_map, inline_markup, link_type)
 
         if get_conf_val(app, "readme_replace_attrs"):
             rst = replace_autodoc_attrs(rst)
@@ -158,11 +163,14 @@ def resolve_readme(app: Sphinx, exception):
         )
         rst = replace_std_refs(rst, ref_map)
 
+        # Write the final output
         rst_out = os.path.join(
             out_dir, os.path.basename(rst_src)
         )
         with open(rst_out, 'w', encoding='utf-8') as f:
-            f.write(rst)
+            f.write(
+                "\n".join(header_vals) + "\n\n" + rst
+            )
         print(
             f'``sphinx_readme``: saved generated .rst file to {rst_out}')
 
@@ -184,6 +192,7 @@ def get_internal_ref(node: Node, docs_url: str, qualified_name: str) -> str:
     html_file = rst_source.split(".rst")[0] + ".html"
     return f"{docs_url}/{html_file}#{qualified_name}"
 
+
 def replace_std_refs(rst, ref_map):
     # Find all :ref:`ref_id` cross-refs
     std_cross_refs = re.findall(
@@ -201,7 +210,6 @@ def replace_std_refs(rst, ref_map):
             string=rst
         )
     return rst
-
 
 def get_variants(obj: str):
     """
@@ -257,10 +265,7 @@ def resolve_autodoc_refs(rst, ref_map, inline_markup):
     rst = re.sub(pattern, repl, rst)
 
     # Use ref_map to generate header for cross-refs in the file
-    header = get_header_vals(autodoc_refs, ref_map, inline_markup, link_type="code")
-
-    rst = "\n".join(header) + "\n\n" + rst
-    return rst
+    return rst, autodoc_refs
 
 
 def get_header_vals(autodoc_refs, ref_map, inline_markup, link_type) -> List[str]:
