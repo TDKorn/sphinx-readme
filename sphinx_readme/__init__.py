@@ -3,14 +3,10 @@ import copy
 import re
 import sphinx
 from pathlib import Path
-from docutils import nodes
-from docutils.nodes import Node
-from collections import defaultdict
 from sphinx.application import Sphinx
-from sphinx.errors import ExtensionError
-from .parser import READMEParser, parse_references, resolve_readme
-from .utils import get_conf_val, set_conf_val, read_rst, logger
 from typing import Dict, Any, Optional, Callable, List, Union
+from .utils import get_conf_val, set_conf_val, read_rst, logger
+from .parser import READMEParser, parse_references, resolve_readme
 
 __version__ = "v0.0.1"
 
@@ -33,129 +29,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.setup_extension('sphinx.ext.linkcode')
 
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
-
-
-REFERENCE_MAPPING = {
-    "module": None,
-    "fullname": None,
-    "replace": None,
-    "target": None
-}
-
-
-def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
-    """Creates a mapping of Python cross-references and their targets
-    """
-    docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "html_baseurl", "")).rstrip("/")
-    if not docs_url:
-        raise ExtensionError(
-            "sphinx_readme: conf.py value must be set for ``readme_docs_url`` or ``html_baseurl``"
-        )
-    link_type = 'code' if docs_url == get_conf_val(app, "linkcode_url") else 'html'
-    set_conf_val(app, "readme_link_type", link_type)
-
-    replace_attrs = get_conf_val(app, "readme_replace_attrs")
-    inline_markup = get_conf_val(app, "readme_inline_markup")
-    refs = get_conf_val(app, "readme_refs")
-
-    if refs is None:
-        refs = defaultdict(lambda: copy.deepcopy(REFERENCE_MAPPING))
-        refs['ref'] = []
-        refs['doc'] = []
-
-    def get_cross_ref_target(node: Node) -> Dict:
-        """Helper function to parse target info of a cross-reference"""
-        return {
-            'text': str(node.children[0]),
-            "refuri": docs_url + "/" + node.parent.get('refuri', '')
-        }
-
-    for node in list(doctree.findall(nodes.inline)):
-        if 'doc' in node['classes']:
-            refs['doc'].append(get_cross_ref_target(node))
-
-        elif 'std-ref' in node['classes']:
-            refs['ref'].append(get_cross_ref_target(node))
-
-        elif 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
-            if node.parent.get('internal') is False:
-                grandparent = node.parent.parent
-                try:
-                    qualified_name = grandparent.get("ids")[0]
-                except IndexError:
-                    qualified_name = grandparent.get("module", "") + grandparent.get("fullname", "")
-
-                short_ref = qualified_name.split(".")[-1]
-                is_method = grandparent.get("_toc_name", "").endswith("()")
-
-                if link_type == "code":
-                    target = node.parent.get("refuri")
-                else:
-                    target = get_internal_ref(node, docs_url, qualified_name)
-
-                info = {
-                    "target": target,
-                    "module": grandparent.get("module"),
-                    "fullname": grandparent.get("fullname"),
-                }
-                variants = get_all_variants(qualified_name)
-
-                for variant in variants:
-                    if variant.startswith("~"):
-                        replace = short_ref
-                    else:
-                        replace = variant.lstrip(".")
-
-                    if is_method:
-                        replace += "()"
-
-                    if inline_markup:
-                        replace = f"``{replace}``"
-
-                    info["replace"] = replace
-                    refs[variant].update(info)
-
-    if replace_attrs and link_type == "html":
-        for node in list(doctree.findall(nodes.reference)):
-            if ":attr:" in node.parent.rawsource:
-                try:
-                    child = node.children[0]
-                except (AttributeError, IndexError) as e:
-                    continue
-
-                if isinstance(child, nodes.literal) and 'py-attr' in child.get('classes', []):
-                    refuri = node.get("refuri", '').lstrip('./')
-                    qualified_name = node.get("reftitle")
-
-                    if not all((refuri, qualified_name)):
-                        continue
-
-                    target = docs_url + "/" + refuri
-                    short_ref = qualified_name.split('.')[-1]
-                    variants = get_all_variants(qualified_name)
-
-                    for variant in variants:
-                        if variant in refs:
-                            continue
-
-                        if variant.startswith("~"):
-                            replace = short_ref
-                        else:
-                            replace = variant.lstrip('.')
-
-                        if inline_markup:
-                            replace = f"``{replace}``"
-
-                        refs[variant].update({
-                            'target': target,
-                            'replace': replace
-                        })
-
-    set_conf_val(app, "readme_refs", refs)
-    return refs
-    # if get_conf_val(app, "readme_add_linkcode_class") is True:
-    #     node['classes'] = ['linkcode-link']
-    #     node.children = [Text(_(f'{get_conf_val(app, "linkcode_link_text", "[source]")}'))]
 
 
 def resolve_readme(app: Sphinx, exception):
@@ -218,24 +91,6 @@ def resolve_readme(app: Sphinx, exception):
             )
         print(
             f'``sphinx_readme``: saved generated .rst file to {rst_out}')
-
-
-def get_internal_ref(node: Node, docs_url: str, qualified_name: str) -> str:
-    """Generate internal reference URL that would be used in HTML build
-
-    Can't just use internal reference node
-        - node.get("refuri") returns incorrect html file and incorrect anchor
-            Ex. when rst file name is different from python file name
-            html file uses python file name which is WRONG because the html file names
-            are based on the rst file names
-
-    document.get("source") returns absolute path to rst source file -> can convert to html file and use
-    fully qualified name for the anchor
-
-    """
-    rst_source = os.path.basename(node.parent.document.get("source"))
-    html_file = rst_source.split(".rst")[0] + ".html"
-    return f"{docs_url}/{html_file}#{qualified_name}"
 
 
 def replace_cross_refs(rst, ref_map, ref_role: str):
