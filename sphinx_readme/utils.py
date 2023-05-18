@@ -1,8 +1,12 @@
 import re
+import subprocess
 from pathlib import Path
 from sphinx.application import Sphinx
 from typing import Dict, List, Optional, Any, Union
+from sphinx.util import logging
 
+
+logger = logging.getLogger(__name__)
 
 def get_conf_val(app: Sphinx, attr: str, default: Optional[Any] = None) -> Any:
     """Retrieve the value of a ``conf.py`` config variable
@@ -23,23 +27,6 @@ def set_conf_val(app: Sphinx, attr: str, value: Any) -> None:
     setattr(app.config, attr, value)
 
 
-def read_source_files(rst_files: Union[str, List], srcdir: str, parse_include: bool):
-    if isinstance(rst_files, str):
-        rst_files = [rst_files]
-
-    rst_files = [
-        # Absolute path of files; files should be relative to source directory
-        str((Path(srcdir) / Path(rst_file)).resolve())
-        for rst_file in rst_files
-    ]
-    # Create dict of {file: text} - all parsing is done on this text
-    rst_sources = {
-        rst_file: read_rst(str(rst_file), parse_include)
-        for rst_file in rst_files
-    }
-    return rst_sources
-
-
 def read_rst(rst_file: str, parse_include: bool = False):
     with open(rst_file, 'r', encoding='utf-8') as f:
         rst = f.read()
@@ -55,3 +42,37 @@ def read_rst(rst_file: str, parse_include: bool = False):
 def include_rst(match):
     rst_file = match.group(1)
     return read_rst(rst_file)
+
+def get_variants(obj: str):
+    """
+
+    >>> get_variants('mod.Class.meth')
+    >>> ['mod.Class.meth', '.mod.Class.meth', '~mod.Class.meth', '~.mod.Class.meth']
+    """
+    return [prefix + obj for prefix in ('', '.', '~', '~.')]
+
+
+def get_all_variants(fully_qualified_name: str) -> List[str]:
+    """Generates a list of all possible ways to cross-reference a class/method/function
+
+    >>> get_all_variants("sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer")
+
+    ['get_pkg_lexer', '.get_pkg_lexer', '~get_pkg_lexer', '~.get_pkg_lexer', 'TDKMethLexer.get_pkg_lexer',
+    '.TDKMethLexer.get_pkg_lexer', '~TDKMethLexer.get_pkg_lexer', '~.TDKMethLexer.get_pkg_lexer',
+    'meth_lexer.TDKMethLexer.get_pkg_lexer', '.meth_lexer.TDKMethLexer.get_pkg_lexer',
+    '~meth_lexer.TDKMethLexer.get_pkg_lexer', '~.meth_lexer.TDKMethLexer.get_pkg_lexer',
+    'sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
+     '.sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
+     '~sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
+      '~.sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer']
+
+    :param fully_qualified_name: the fully qualified name (pkg.module.class.method)
+    """
+    parts = fully_qualified_name.split(".")[::-1]  # => ['meth', 'Class', 'mod', "pkg"]
+    variants = []
+
+    for i, part in enumerate(parts):
+        ref = '.'.join(parts[i::-1])  # 'meth', 'Class.meth', 'mod.class.meth', 'pkg.mod.class.meth'
+        variants.extend(get_variants(ref))
+
+    return variants

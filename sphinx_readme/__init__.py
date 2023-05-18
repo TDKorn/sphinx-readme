@@ -8,21 +8,27 @@ from docutils.nodes import Node
 from collections import defaultdict
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
-from .utils import get_conf_val, set_conf_val, read_rst
+from .parser import READMEParser, parse_references, resolve_readme
+from .utils import get_conf_val, set_conf_val, read_rst, logger
 from typing import Dict, Any, Optional, Callable, List, Union
 
 __version__ = "v0.0.1"
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
-    app.connect('doctree-resolved', parse_references)
-    app.connect('build-finished', resolve_readme)
+    set_conf_val(app, 'READMEParser', READMEParser(app))
+
+    app.connect('doctree-resolved', parser.parse_references)
+    app.connect('build-finished', parser.resolve_readme)
+    # app.connect('doctree-resolved', parse_references)
+    # app.connect('build-finished', resolve_readme)
 
     app.add_config_value("readme_inline_markup", True, True)
     app.add_config_value("readme_raw_directive", True, True)
     app.add_config_value("readme_include_directive", True, True)
     app.add_config_value("readme_replace_attrs", True, True)
     app.add_config_value("readme_out_dir", Path(app.srcdir).parent.parent, True)
+    app.add_config_value("linkcode_blob", 'head', True)
 
     app.setup_extension('sphinx.ext.linkcode')
 
@@ -251,39 +257,6 @@ def replace_cross_refs(rst, ref_map, ref_role: str):
     return rst
 
 
-def get_variants(obj: str):
-    """
-
-    >>> get_variants('mod.Class.meth')
-    >>> ['mod.Class.meth', '.mod.Class.meth', '~mod.Class.meth', '~.mod.Class.meth']
-    """
-    return [prefix + obj for prefix in ('', '.', '~', '~.')]
-
-
-def get_all_variants(fully_qualified_name: str) -> List[str]:
-    """Generates a list of all possible ways to cross-reference a class/method/function
-
-    >>> get_all_variants("sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer")
-
-    ['get_pkg_lexer', '.get_pkg_lexer', '~get_pkg_lexer', '~.get_pkg_lexer', 'TDKMethLexer.get_pkg_lexer',
-    '.TDKMethLexer.get_pkg_lexer', '~TDKMethLexer.get_pkg_lexer', '~.TDKMethLexer.get_pkg_lexer',
-    'meth_lexer.TDKMethLexer.get_pkg_lexer', '.meth_lexer.TDKMethLexer.get_pkg_lexer',
-    '~meth_lexer.TDKMethLexer.get_pkg_lexer', '~.meth_lexer.TDKMethLexer.get_pkg_lexer',
-    'sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
-     '.sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
-     '~sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
-      '~.sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer']
-
-    :param fully_qualified_name: the fully qualified name (pkg.module.class.method)
-    """
-    parts = fully_qualified_name.split(".")[::-1]  # => ['meth', 'Class', 'mod', "pkg"]
-    variants = []
-
-    for i, part in enumerate(parts):
-        ref = '.'.join(parts[i::-1])  # 'meth', 'Class.meth', 'mod.class.meth', 'pkg.mod.class.meth'
-        variants.extend(get_variants(ref))
-
-    return variants
 
 
 def resolve_autodoc_refs(rst: str, inline_markup: bool, replace_attrs: bool, link_type: str):
