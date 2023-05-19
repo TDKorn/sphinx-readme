@@ -113,20 +113,32 @@ class READMEParser:
         return f"{self.config.docs_url}/{html_file}#{qualified_name}"
 
     def parse_admonitions(self, doctree: Node):
+        admonitions = {'generic': [], 'specific': []}
         src = doctree.get('source')
-        admonitions = []
 
         for admonition in list(doctree.findall(nodes.Admonition)):
+            body = admonition.rawsource
             sep = admonition.child_text_separator
-            body = admonition.rawsource.split(sep)
+            lines = body.split(sep)
             info = dict(
-                cls=admonition.get('classes')[0],
-                title=admonition.children[0].rawsource,
                 body=body,
-                startswith=body[0],
-                endswith=body[-1]
+                startswith=lines[0],
+                endswith=lines[-1]
             )
-            admonitions.append(info)
+            if isinstance(admonition, nodes.admonition):
+                # Generic Admonition (using admonition directive)
+                info.update({
+                    'cls': admonition.get('classes')[0],
+                    'title': admonition.children[0].rawsource
+                })
+                admonitions['generic'].append(info)
+            else:
+                # Specific Admonition (for example, .. note::)
+                info.update({
+                    'cls': admonition.tagname,
+                    'title': admonition.tagname,
+                })
+                admonitions['specific'].append(info)
 
         self.admonitions[src] = admonitions
 
@@ -150,6 +162,7 @@ class READMEParser:
                     rst_txt += rf"   :class: {admonition['class']}" + r"\n"
 
                 rst_txt += r"\n" + rf"   {rst[start:end]}"
+
                 rst = re.sub(
                     pattern=rst_txt.replace("*", r"\*").replace("+", r"\+").replace(".", r"\."),
                     repl=self.config.admonition_template.format(
@@ -158,7 +171,6 @@ class READMEParser:
                     ),
                     string=rst
                 )
-
             self.config.readme_sources[src] = rst
 
     def resolve_readme(self, exception):
