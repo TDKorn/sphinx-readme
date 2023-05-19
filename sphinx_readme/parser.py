@@ -128,14 +128,14 @@ class READMEParser:
             if isinstance(admonition, nodes.admonition):
                 # Generic Admonition (using admonition directive)
                 info.update({
-                    'cls': admonition.get('classes')[0],
+                    'class': admonition.get('classes')[0],
                     'title': admonition.children[0].rawsource
                 })
                 admonitions['generic'].append(info)
             else:
                 # Specific Admonition (for example, .. note::)
                 info.update({
-                    'cls': admonition.tagname,
+                    'class': admonition.tagname,
                     'title': admonition.tagname,
                 })
                 admonitions['specific'].append(info)
@@ -146,32 +146,68 @@ class READMEParser:
         for src, admonitions in self.admonitions.items():
             rst = self.config.readme_sources[src]
 
-            for admonition in admonitions:
-                startswith = admonition['startswith']
-                endswith = admonition['endswith']
+            for _type in ('generic', 'specific'):
+                for admonition in admonitions[_type]:
+                    pattern = self.get_admonition_regex(admonition, _type, rst)
+                    icon = self.get_admonition_icon(admonition, _type)
+                    rst = re.sub(
+                        pattern=pattern,
+                        repl=self.config.admonition_template.format(
+                            title=admonition['title'],
+                            icon=admonition['class'],
+                            text=admonition['body']
+                        ),
+                        string=rst
+                    )
 
-                if not (startswith in rst and endswith in rst):
-                    continue
-
-                start = rst.find(startswith)
-                end = rst.find(endswith) + len(endswith)
-
-                rst_txt = rf".. admonition:: {admonition['title']}" + r"\n"
-
-                if admonition['class']:
-                    rst_txt += rf"   :class: {admonition['class']}" + r"\n"
-
-                rst_txt += r"\n" + rf"   {rst[start:end]}"
-
-                rst = re.sub(
-                    pattern=rst_txt.replace("*", r"\*").replace("+", r"\+").replace(".", r"\."),
-                    repl=self.config.admonition_template.format(
-                        title=admonition['title'],
-                        text=admonition['body']
-                    ),
-                    string=rst
-                )
             self.config.readme_sources[src] = rst
+
+    def get_admonition_regex(self, admonition, admonition_type, rst):
+        if not (rst_body := self.find_admonition_body(admonition, rst)):
+            return ''
+
+        if admonition_type == 'specific':
+            # For example, .. note:: This is a note
+            pattern = fr".. {admonition['title']}::\n?\n?\s+{rst_body}"
+
+        else:
+            # Any admonition that uses generic .. admonition:: directive
+            pattern = rf".. admonition:: {admonition['title']}" + r"\n"
+
+            if cls := admonition['class']:
+                if 'admonition-' not in cls:
+                    pattern += rf"\s+:class: {cls}" + r"\n"
+
+            pattern += r"\n" + rf"\s+{rst_body}"
+
+        return pattern
+
+    def find_admonition_body(self, admonition: Dict, rst: str) -> str:
+        """Return the exact ``rst`` corresponding to the body of the admonition"""
+        startswith = admonition['startswith']
+        endswith = admonition['endswith']
+
+        if not (startswith in rst and endswith in rst):
+            return ''
+
+        start = rst.find(startswith)
+        end = rst.find(endswith) + len(endswith)
+        body = rst[start:end]
+
+        return body.replace("*", r"\*").replace("+", r"\+").replace(".", r"\.").replace("?", r"\?")
+
+    def get_admonition_icon(self, admonition: dict, admonition_type: str):
+        types = ("attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning")
+        icons = ("⚠", "⚠", "☢", "❌", "🧠", "‼", "📝", "💡", "❗")
+        icon_map = dict(zip(types, icons))
+        icon = icon_map.get(admonition['class'], '')
+        if self.config.raw_directive is True:  # Raw directive allows for using icon directly
+            return icon
+        
+        if icon:  # Without raw directive, must use substitution
+            # self.header.append(f".. |{admonition['class']}| replace:: {icon}")  # TODO: add header with all icon subs
+            return f"|{admonition['class']}|"
+        return ''
 
     def resolve_readme(self, exception):
         print("RESOLVING THE README ")
