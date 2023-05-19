@@ -1,4 +1,5 @@
 import copy
+import os
 from pathlib import Path
 from collections import defaultdict
 from typing import Union, List, Dict
@@ -85,6 +86,17 @@ class READMEConfig:
             str((Path(self.src_dir) / Path(src_file)).resolve())
             for src_file in src_files
         ]
+
+    @property
+    def out_dir(self):
+        return self._out_dir
+
+    @out_dir.setter
+    def out_dir(self, out_dir: str):
+        if not os.path.exists(out_dir):
+            os.mkdir(out_dir)
+
+        self._out_dir = out_dir
 
     @property
     def docs_url_type(self):
