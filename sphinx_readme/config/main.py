@@ -105,7 +105,7 @@ class READMEConfig:
     @property
     def admonition_template(self):
         if self.raw_directive is True:
-            return '''
+            return r'''
 .. raw:: html
 
    <table>
@@ -118,17 +118,17 @@ class READMEConfig:
 .. raw:: html
 
    </td></tr>
-   </div>
+   </table>
 
-'''
+\1'''
         else:
-            return '''
+            return r'''
 .. csv-table::
    :header: {icon} {title}
 
-   "{text}"
-   
-'''
+   "\1"
+
+\2'''
 
 
 def _map_entry():

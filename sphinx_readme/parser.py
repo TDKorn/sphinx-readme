@@ -118,13 +118,8 @@ class READMEParser:
         src = doctree.get('source')
 
         for admonition in list(doctree.findall(nodes.Admonition)):
-            body = admonition.rawsource
-            sep = admonition.child_text_separator
-            lines = body.split(sep)
             info = {
-                'body': body,
-                'startswith': lines[0],
-                'endswith': lines[-1]
+                'body': admonition.rawsource
             }
             if isinstance(admonition, nodes.admonition):
                 # Generic Admonition (using admonition directive)
@@ -145,17 +140,16 @@ class READMEParser:
 
     def resolve(self):
         for readme_src, rst in self.config.readme_sources.items():
-            rst, autodoc_refs = self.resolve_autodoc_refs(rst)
-
-            # Use ref_map to generate header for cross-refs in the file
-            header_vals = self.get_header_vals(autodoc_refs)
+            rst = self.replace_admonitions(readme_src, rst)
 
             rst = self.replace_rst_images(readme_src, rst)
 
             for role in ('ref', 'doc'):
                 rst = self.replace_cross_refs(rst, role)
 
-            rst = self.replace_admonitions(readme_src, rst)
+            # Use ref_map to generate header for autodoc substitutions
+            rst, autodoc_refs = self.resolve_autodoc_refs(rst)
+            header_vals = self.get_header_vals(autodoc_refs)
 
             # Write the final output
             rst_out = Path(self.config.out_dir, Path(readme_src).name)
@@ -299,51 +293,59 @@ class READMEParser:
 
         for _type in ('generic', 'specific'):
             for admonition in admonitions[_type]:
-                pattern = self.get_admonition_regex(admonition, _type, rst)
-                icon = self.get_admonition_icon(admonition, _type)
-                rst = re.sub(
-                    pattern=pattern,
-                    repl=self.config.admonition_template.format(
-                        title=admonition['title'],
-                        text=admonition['body'],
-                        icon=icon),
-                    string=rst
-                )
+                if pattern := self.get_admonition_regex(admonition, _type):
+                    icon = self.get_admonition_icon(admonition, _type)
+                    if not self.config.raw_directive:
+                        rst = re.sub(
+                            pattern=pattern,
+                            repl=self.config.admonition_template.format(
+                                title=admonition['title'].title(),
+                                icon=icon),
+                            string=rst
+                        )
+                    else:
+                        rst = re.sub(
+                            pattern=pattern,
+                            repl=self.config.admonition_template.format(
+                                title=admonition['title'].title(),
+                                text=admonition['body'],
+                                icon=icon),
+                            string=rst
+                        )
         return rst
 
-    def get_admonition_regex(self, admonition, admonition_type, rst):
-        if not (rst_body := self.find_admonition_body(admonition, rst)):
-            return ''
+    def get_admonition_regex(self, admonition, admonition_type):
+        # Parse rawsource body to have same whitespace formatting as the rst file
+        lines = (line.replace('\n', '\n   ') for line in admonition['body'].split('\n\n'))
+        body = '\n\n   '.join(lines)
+
+        for char in ("*", "+", ".", "?"):
+            body = body.replace(char, rf"\{char}")
 
         if admonition_type == 'specific':
             # For example, .. note:: This is a note
-            pattern = fr".. {admonition['title']}::\n?\n?\s+{rst_body}"
+            pattern = fr"\.\. {admonition['title']}::\n?\n?\s+"
 
         else:
             # Any admonition that uses generic .. admonition:: directive
-            pattern = rf".. admonition:: {admonition['title']}" + r"\n"
+            pattern = rf"\.\. admonition:: {admonition['title']}" + r"\n"
 
             if cls := admonition['class']:
                 if 'admonition-' not in cls:
                     pattern += rf"\s+:class: {cls}" + r"\n"
 
-            pattern += r"\n" + rf"\s+{rst_body}"
+            pattern += r"\n" + rf"\s+"
 
+        if not self.config.raw_directive:
+            # csv-table template body uses match group
+            pattern += rf"({body})"
+        else:
+            # raw html template body uses string formatting
+            pattern += rf"{body}"
+
+        pattern += r"(\n+\S+|$)"
         return pattern
 
-    def find_admonition_body(self, admonition: Dict, rst: str) -> str:
-        """Return the exact ``rst`` corresponding to the body of the admonition"""
-        startswith = admonition['startswith']
-        endswith = admonition['endswith']
-
-        if not (startswith in rst and endswith in rst):
-            return ''
-
-        start = rst.find(startswith)
-        end = rst.find(endswith) + len(endswith)
-        body = rst[start:end]
-
-        return body.replace("*", r"\*").replace("+", r"\+").replace(".", r"\.").replace("?", r"\?")
 
     def get_admonition_icon(self, admonition: dict, admonition_type: str):
         types = ("attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning")
