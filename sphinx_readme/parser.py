@@ -1,14 +1,14 @@
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Set
 
 from docutils import nodes
 from docutils.nodes import Node
 from sphinx.application import Sphinx
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils import get_conf_val, set_conf_val, get_all_variants
+from sphinx_readme.utils import get_all_variants
 
 
 class READMEParser:
@@ -17,6 +17,7 @@ class READMEParser:
         self.config = READMEConfig(app)
         self.logger = self.config.logger
         self.ref_map = self.config.ref_map
+        self.sources = self.config.readme_sources
         self.admonitions = {}
 
     def parse(self, doctree: Node, docname: str):
@@ -132,27 +133,27 @@ class READMEParser:
                 # Specific Admonition (for example, .. note::)
                 info.update({
                     'class': admonition.tagname,
-                    'title': admonition.tagname,
+                    'title': admonition.tagname.title(),
                 })
                 admonitions['specific'].append(info)
 
         self.admonitions[src] = admonitions
 
     def resolve(self):
-        for readme_src, rst in self.config.readme_sources.items():
-            rst = self.replace_admonitions(readme_src, rst)
-
-            rst = self.replace_rst_images(readme_src, rst)
+        for src, rst in self.sources.items():
+            # Replace everything using data from ``parse()``
+            rst = self.replace_admonitions(src, rst)
+            rst = self.replace_rst_images(src, rst)
 
             for role in ('ref', 'doc'):
                 rst = self.replace_cross_refs(rst, role)
 
-            # Use ref_map to generate header for autodoc substitutions
-            rst, autodoc_refs = self.resolve_autodoc_refs(rst)
+            # Use ref_map to generate autodoc substitution definitions
+            rst, autodoc_refs = self.replace_autodoc_refs(rst)
             header_vals = self.get_header_vals(autodoc_refs)
 
             # Write the final output
-            rst_out = Path(self.config.out_dir, Path(readme_src).name)
+            rst_out = Path(self.config.out_dir, Path(src).name)
 
             with open(rst_out, 'w', encoding='utf-8') as f:
                 f.write(
@@ -160,7 +161,7 @@ class READMEParser:
             print(
                 f'``sphinx_readme``: saved generated .rst file to {rst_out}')
 
-    def resolve_autodoc_refs(self, rst: str) -> Tuple[str, Dict]:
+    def replace_autodoc_refs(self, rst: str) -> Tuple[str, Set]:
         """
         :param rst:
         :return:
@@ -189,7 +190,7 @@ class READMEParser:
         # Replace cross-refs with substitutions
         rst = re.sub(pattern, repl, rst)
 
-        # Use ref_map to generate header for cross-refs in the file
+        # Use autodoc_refs and ref_map to generate substitution definitions
         return rst, autodoc_refs
 
     def replace_autodoc_attrs(self, rst: str) -> str:
@@ -220,6 +221,10 @@ class READMEParser:
                 f".. |.{ref}| replace:: {info['replace']}",
                 f".. _.{ref}: {info['target']}"
             ])
+
+        if not self.config.raw_directive:
+            for _type, icon in self.config.icon_map.items():
+                header.append(f'.. |{_type}| replace:: {icon}')
 
         return header
 
@@ -294,12 +299,12 @@ class READMEParser:
         for _type in ('generic', 'specific'):
             for admonition in admonitions[_type]:
                 if pattern := self.get_admonition_regex(admonition, _type):
-                    icon = self.get_admonition_icon(admonition, _type)
+                    icon = self.get_admonition_icon(admonition)
                     if not self.config.raw_directive:
                         rst = re.sub(
                             pattern=pattern,
                             repl=self.config.admonition_template.format(
-                                title=admonition['title'].title(),
+                                title=admonition['title'],
                                 icon=icon),
                             string=rst
                         )
@@ -307,7 +312,7 @@ class READMEParser:
                         rst = re.sub(
                             pattern=pattern,
                             repl=self.config.admonition_template.format(
-                                title=admonition['title'].title(),
+                                title=admonition['title'],
                                 text=admonition['body'],
                                 icon=icon),
                             string=rst
@@ -318,17 +323,19 @@ class READMEParser:
         # Parse rawsource body to have same whitespace formatting as the rst file
         lines = (line.replace('\n', '\n   ') for line in admonition['body'].split('\n\n'))
         body = '\n\n   '.join(lines)
+        title = admonition['title']
 
         for char in ("*", "+", ".", "?"):
             body = body.replace(char, rf"\{char}")
+            title = title.replace(char, rf"\{char}")
 
         if admonition_type == 'specific':
             # For example, .. note:: This is a note
-            pattern = fr"\.\. {admonition['title']}::\n?\n?\s+"
+            pattern = fr"\.\. {admonition['class']}::\n?\n?\s+"
 
         else:
             # Any admonition that uses generic .. admonition:: directive
-            pattern = rf"\.\. admonition:: {admonition['title']}" + r"\n"
+            pattern = rf"\.\. admonition::\s+{title}" + r"\n"
 
             if cls := admonition['class']:
                 if 'admonition-' not in cls:
@@ -343,21 +350,19 @@ class READMEParser:
             # raw html template body uses string formatting
             pattern += rf"{body}"
 
-        pattern += r"(\n+\S+|$)"
+        pattern += r"\n*?(\S+|$)"
         return pattern
 
+    def get_admonition_icon(self, admonition: dict):
+        icon = self.config.icon_map.get(admonition['class'])
 
-    def get_admonition_icon(self, admonition: dict, admonition_type: str):
-        types = ("attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning")
-        icons = ("⚠", "⚠", "☢", "❌", "🧠", "‼", "📝", "💡", "❗")
-        icon_map = dict(zip(types, icons))
-        icon = icon_map.get(admonition['class'], '')
-        if self.config.raw_directive is True:  # Raw directive allows for using icon directly
-            return icon
+        # Raw directive allows for using icon directly
+        if self.config.raw_directive:
+            return icon if icon else self.config.default_admonition_icon
 
         if icon:  # Without raw directive, must use substitution
-            # self.header.append(f".. |{admonition['class']}| replace:: {icon}")  # TODO: add header with all icon subs
             return f"|{admonition['class']}|"
-        return ''
 
+        # Use default icon if admonition class isn't in icon map
+        return "|default|"
 

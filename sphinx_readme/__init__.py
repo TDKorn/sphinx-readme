@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Dict, Any
 from docutils.nodes import Node
 from sphinx.application import Sphinx
-from .utils import get_conf_val, set_conf_val
-from .parser import READMEParser
+from sphinx_readme.utils import get_conf_val, set_conf_val
+from sphinx_readme.parser import READMEParser
 
 
 __version__ = "v0.0.1"
@@ -14,14 +14,15 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.connect('doctree-resolved', parse_references)
     app.connect('build-finished', resolve_readme)
 
-    set_conf_val(app, 'READMEParser', READMEParser(app))
-
     app.add_config_value("readme_inline_markup", True, True)
     app.add_config_value("readme_raw_directive", True, True)
     app.add_config_value("readme_include_directive", True, True)
     app.add_config_value("readme_replace_attrs", True, True)
     app.add_config_value("readme_out_dir", Path(app.srcdir).parent.parent, True)
-    app.add_config_value("linkcode_blob", 'head', True)
+    app.add_config_value("readme_linkcode_blob", 'head', True)
+    app.add_config_value("readme_default_admonition_icon", "ℹ", True)
+
+    set_conf_val(app, 'READMEParser', READMEParser(app))
 
     app.setup_extension('sphinx.ext.linkcode')
 

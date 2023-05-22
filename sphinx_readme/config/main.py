@@ -1,5 +1,6 @@
 import copy
 import os
+from functools import cached_property
 from pathlib import Path
 from collections import defaultdict
 from typing import Union, List, Dict
@@ -26,7 +27,9 @@ class READMEConfig:
         self.replace_attrs = get_conf_val(app, 'readme_replace_attrs')
         self.inline_markup = get_conf_val(app, 'readme_inline_markup')
         self.raw_directive = get_conf_val(app, 'readme_raw_directive')
+        self.admonition_icons = get_conf_val(app, 'readme_admonition_icons')
         self.include_directive = get_conf_val(app, 'readme_include_directive')
+        self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
 
         self.docs_url = self.get_docs_url(app)
         self.linkcode_url = get_linkcode_url(
@@ -102,6 +105,19 @@ class READMEConfig:
     def docs_url_type(self):
         return 'code' if self.docs_url in self.linkcode_url else 'html'
 
+    @cached_property
+    def icon_map(self):
+        types = ("attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning", "default")
+        icons = ("⚠", "⚠", "☢", "❌", "🧠", "‼", "📝", "💡", "❗", self.default_admonition_icon)
+        icon_map = dict(zip(types, icons))
+
+        # Update/add custom admonition icons from conf.py
+        if self.admonition_icons:
+            if isinstance(self.admonition_icons, Dict):
+                icon_map.update(self.admonition_icons)
+
+        return icon_map
+
     @property
     def admonition_template(self):
         if self.raw_directive is True:
@@ -110,8 +126,14 @@ class READMEConfig:
 
    <table>
        <tr align="left">
-           <th>{icon} {title}</th>
-       <tr><td>
+           <th>
+
+{icon} {title}
+
+.. raw:: html
+
+   </th>
+   <tr><td>
 
 {text}
 
