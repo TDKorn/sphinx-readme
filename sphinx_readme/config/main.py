@@ -69,9 +69,8 @@ class READMEConfig:
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
 
     def read_source_files(self) -> Dict[str, str]:
-        # Create dict of {file: text} - all parsing is done on this text
         sources = {
-            src_file: read_rst(str(src_file), parse_include=self.include_directive)
+            src_file: read_rst(src_file, parse_include=self.include_directive)
             for src_file in self.src_files
         }
         return sources

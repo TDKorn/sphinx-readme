@@ -8,6 +8,7 @@ from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
 
+
 def get_conf_val(app: Sphinx, attr: str, default: Optional[Any] = None) -> Any:
     """Retrieve the value of a ``conf.py`` config variable
 
@@ -27,21 +28,33 @@ def set_conf_val(app: Sphinx, attr: str, value: Any) -> None:
     setattr(app.config, attr, value)
 
 
-def read_rst(rst_file: str, parse_include: bool = False):
+def read_rst(rst_file: Union[str, Path], parse_include: bool = False):
     with open(rst_file, 'r', encoding='utf-8') as f:
         rst = f.read()
+
     if parse_include:
-        rst = re.sub(
-            pattern=r".. include:: ([/\w]+.rst)",
-            repl=include_rst,
-            string=rst
+        # Find all included files
+        included = re.findall(
+            pattern=r"^\.\. include:: ([/\w]+\.rst)",
+            string=rst,
+            flags=re.M
         )
+        for include in included:
+            # Determine abs path of included file
+            file = (Path(rst_file).parent / Path(include)).resolve()
+
+            # Sub in the file content
+            rst = re.sub(
+                pattern=rf".. include:: {include}",
+                repl=read_rst(file, parse_include),
+                string=rst
+            )
+    else:
+        # Remove all include directives from the text
+        rst = re.sub(r"^\.\. include:: [/\w]+\.rst", '', rst, re.M)
+
     return rst
 
-
-def include_rst(match):
-    rst_file = match.group(1)
-    return read_rst(rst_file)
 
 def get_variants(obj: str):
     """
