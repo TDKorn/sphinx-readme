@@ -77,43 +77,6 @@ class READMEParser:
         target = self.config.docs_url + "/" + refuri
         self.add_variants(qualified_name, target)
 
-    def add_variants(self, qualified_name, target, is_method: bool = False):
-        short_ref = qualified_name.split('.')[-1]
-        variants = get_all_variants(qualified_name)
-
-        for variant in variants:
-            if variant in self.ref_map:
-                continue
-
-            if variant.startswith("~"):
-                replace = short_ref
-            else:
-                replace = variant.lstrip('.')
-
-            if is_method:
-                replace += "()"
-
-            if self.config.inline_markup:
-                replace = f"``{replace}``"
-
-            self.ref_map[variant].update({
-                'target': target,
-                'replace': replace
-            })
-
-    def get_cross_ref_target(self, node: Node) -> Dict:
-        """Helper function to parse target info of a :ref: or :doc: cross-reference"""
-        return {
-            'text': str(node.children[0]),
-            "refuri": self.config.docs_url + "/" + node.parent.get('refuri', '')
-        }
-
-    def get_internal_target(self, node: Node, qualified_name: str):
-        """Helper function to parse an internal target from a linkcode node"""
-        rst_source = os.path.basename(node.parent.document.get("source"))
-        html_file = rst_source.split(".rst")[0] + ".html"
-        return f"{self.config.docs_url}/{html_file}#{qualified_name}"
-
     def parse_admonitions(self, doctree: Node):
         admonitions = {'generic': [], 'specific': []}
         src = doctree.get('source')
@@ -139,6 +102,43 @@ class READMEParser:
 
         self.admonitions[src] = admonitions
 
+    def get_cross_ref_target(self, node: Node) -> Dict:
+        """Helper function to parse target info of a :ref: or :doc: cross-reference"""
+        return {
+            'text': str(node.children[0]),
+            "refuri": self.config.docs_url + "/" + node.parent.get('refuri', '')
+        }
+
+    def get_internal_target(self, node: Node, qualified_name: str):
+        """Helper function to parse an internal target from a linkcode node"""
+        rst_source = os.path.basename(node.parent.document.get("source"))
+        html_file = rst_source.split(".rst")[0] + ".html"
+        return f"{self.config.docs_url}/{html_file}#{qualified_name}"
+
+    def add_variants(self, qualified_name, target, is_method: bool = False):
+        short_ref = qualified_name.split('.')[-1]
+        variants = get_all_variants(qualified_name)
+
+        for variant in variants:
+            if variant in self.ref_map:
+                continue
+
+            if variant.startswith("~"):
+                replace = short_ref
+            else:
+                replace = variant.lstrip('.')
+
+            if is_method:
+                replace += "()"
+
+            if self.config.inline_markup:
+                replace = f"``{replace}``"
+
+            self.ref_map[variant].update({
+                'target': target,
+                'replace': replace
+            })
+
     def resolve(self):
         for src, rst in self.sources.items():
             # Replace everything using data from ``parse()``
@@ -160,6 +160,97 @@ class READMEParser:
                     "\n".join(header_vals) + "\n\n" + rst)
             print(
                 f'``sphinx_readme``: saved generated .rst file to {rst_out}')
+
+    def replace_admonitions(self, rst_src: str, rst: str) -> str:
+        admonitions = self.admonitions[rst_src]
+
+        for _type in ('generic', 'specific'):
+            for admonition in admonitions[_type]:
+                if pattern := self.get_admonition_regex(admonition, _type):
+                    icon = self.get_admonition_icon(admonition)
+                    if not self.config.raw_directive:
+                        rst = re.sub(
+                            pattern=pattern,
+                            repl=self.config.admonition_template.format(
+                                title=admonition['title'],
+                                icon=icon),
+                            string=rst
+                        )
+                    else:
+                        rst = re.sub(
+                            pattern=pattern,
+                            repl=self.config.admonition_template.format(
+                                title=admonition['title'],
+                                text=admonition['body'],
+                                icon=icon),
+                            string=rst
+                        )
+        return rst
+
+    def replace_rst_images(self, rst_src: str, rst: str) -> str:
+        """Resolves filepaths of ``image`` directives to be relative to the ``readme_out_dir``
+
+            ".. image:: /blah/blah.png"
+            ".. image:: /blah.png"
+            ".. image:: blah.png"
+            ".. image:: blah/blah.png"
+            ".. image:: ../blah/blah.png"
+
+        :param rst_src: filename of the rst file being parsed
+        :param rst: the content of the rst file being parsed
+        :return: the rst file content with correct image directives
+        """
+        src_dir_path = Path(self.config.src_dir)
+        out_dir_path = Path(self.config.out_dir)
+        rst_src_dir_path = Path(rst_src).parent
+
+        # These image paths are relative to the rst source file
+        # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
+        relative = r".. image:: ([\w\.]+[\w/]+\.\w{3,4})"
+        img_paths = re.findall(relative, rst)
+
+        for img_path in img_paths:
+            # Find absolute path of the image
+            abs_img_path = (rst_src_dir_path / Path(img_path)).resolve()
+
+            # Find path of image relative to the output directory
+            rel_img_path = abs_img_path.relative_to(out_dir_path).as_posix()
+
+            # Sub that hoe in!!!
+            rst = re.sub(
+                pattern=rf".. image:: {img_path}",
+                repl=fr".. image:: {rel_img_path}",
+                string=rst
+            )
+
+        # These image paths are "absolute" (relative to src_dir)
+        # .. image:: /path/to/image.ext
+        relpath_to_src_dir = src_dir_path.relative_to(out_dir_path).as_posix()
+
+        # Replace all image paths starting with "/"
+        return re.sub(
+            pattern=r".. image:: (/[\w/]+\.\w{3,4})",
+            repl=fr".. image:: {relpath_to_src_dir}\1",
+            string=rst
+        )
+
+    def replace_cross_refs(self, rst: str, ref_role: str) -> str:
+        # Find all :ref_role:`ref_id` cross-refs
+        cross_refs = re.findall(
+            pattern=fr":{ref_role}:`(.+)`",
+            string=rst
+        )
+        # Match these ids up with target data in the ref_map
+        cross_ref_map = dict(zip(cross_refs, self.ref_map[ref_role]))
+
+        # Replace cross-refs with `text <link>`_ format
+        for ref_id, target in cross_ref_map.items():
+            rst = re.sub(
+                pattern=rf":{ref_role}:`{ref_id}`",
+                repl=rf"`{target['text']} <{target['refuri']}>`_",
+                string=rst
+            )
+        return rst
 
     def replace_autodoc_refs(self, rst: str) -> Tuple[str, Set]:
         """
@@ -227,97 +318,6 @@ class READMEParser:
                 header.append(f'.. |{_type}| replace:: {icon}')
 
         return header
-
-    def replace_rst_images(self, rst_src: str, rst: str) -> str:
-        """Resolves filepaths of ``image`` directives to be relative to the ``readme_out_dir``
-
-            ".. image:: /blah/blah.png"
-            ".. image:: /blah.png"
-            ".. image:: blah.png"
-            ".. image:: blah/blah.png"
-            ".. image:: ../blah/blah.png"
-
-        :param rst_src: filename of the rst file being parsed
-        :param rst: the content of the rst file being parsed
-        :return: the rst file content with correct image directives
-        """
-        src_dir_path = Path(self.config.src_dir)
-        out_dir_path = Path(self.config.out_dir)
-        rst_src_dir_path = Path(rst_src).parent
-
-        # These image paths are relative to the rst source file
-        # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
-        relative = r".. image:: ([\w\.]+[\w/]+\.\w{3,4})"
-        img_paths = re.findall(relative, rst)
-
-        for img_path in img_paths:
-            # Find absolute path of the image
-            abs_img_path = (rst_src_dir_path / Path(img_path)).resolve()
-
-            # Find path of image relative to the output directory
-            rel_img_path = abs_img_path.relative_to(out_dir_path).as_posix()
-
-            # Sub that hoe in!!!
-            rst = re.sub(
-                pattern=rf".. image:: {img_path}",
-                repl=fr".. image:: {rel_img_path}",
-                string=rst
-            )
-
-        # These image paths are "absolute" (relative to src_dir)
-        # .. image:: /path/to/image.ext
-        relpath_to_src_dir = src_dir_path.relative_to(out_dir_path).as_posix()
-
-        # Replace all image paths starting with "/"
-        return re.sub(
-            pattern=r".. image:: (/[\w/]+\.\w{3,4})",
-            repl=fr".. image:: {relpath_to_src_dir}\1",
-            string=rst
-        )
-
-    def replace_cross_refs(self, rst: str, ref_role: str) -> str:
-        # Find all :ref_role:`ref_id` cross-refs
-        cross_refs = re.findall(
-            pattern=fr":{ref_role}:`(.+)`",
-            string=rst
-        )
-        # Match these ids up with target data in the ref_map
-        cross_ref_map = dict(zip(cross_refs, self.ref_map[ref_role]))
-
-        # Replace cross-refs with `text <link>`_ format
-        for ref_id, target in cross_ref_map.items():
-            rst = re.sub(
-                pattern=rf":{ref_role}:`{ref_id}`",
-                repl=rf"`{target['text']} <{target['refuri']}>`_",
-                string=rst
-            )
-        return rst
-
-    def replace_admonitions(self, rst_src: str, rst: str) -> str:
-        admonitions = self.admonitions[rst_src]
-
-        for _type in ('generic', 'specific'):
-            for admonition in admonitions[_type]:
-                if pattern := self.get_admonition_regex(admonition, _type):
-                    icon = self.get_admonition_icon(admonition)
-                    if not self.config.raw_directive:
-                        rst = re.sub(
-                            pattern=pattern,
-                            repl=self.config.admonition_template.format(
-                                title=admonition['title'],
-                                icon=icon),
-                            string=rst
-                        )
-                    else:
-                        rst = re.sub(
-                            pattern=pattern,
-                            repl=self.config.admonition_template.format(
-                                title=admonition['title'],
-                                text=admonition['body'],
-                                icon=icon),
-                            string=rst
-                        )
-        return rst
 
     def get_admonition_regex(self, admonition, admonition_type):
         # Parse rawsource body to have same whitespace formatting as the rst file
