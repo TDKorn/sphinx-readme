@@ -13,16 +13,13 @@ from sphinx_readme.config import get_linkcode_url, get_linkcode_resolve
 class READMEConfig:
 
     REFERENCE_MAPPING = {
-        "module": None,
-        "fullname": None,
         "replace": None,
-        "target": None
+        "target": None,
     }
 
     def __init__(self, app: Sphinx):
         self.logger = logger
         self.src_dir = app.srcdir
-
         self.out_dir = get_conf_val(app, 'readme_out_dir')
         self.src_files = get_conf_val(app, 'readme_src_files', [])
         self.replace_attrs = get_conf_val(app, 'readme_replace_attrs')

@@ -13,6 +13,7 @@ class READMEParser:
 
     def __init__(self, app: Sphinx):
         self.config = READMEConfig(app)
+        self.logger = self.config.logger
         self.ref_map = self.config.ref_map
 
     def parse_references(self, doctree: Node, docname: str):
@@ -32,44 +33,21 @@ class READMEParser:
                 if ":attr:" in node.parent.rawsource:
                     self.parse_attr_node(node)
 
-
     def parse_linkcode_node(self, node: Node):
         grandparent = node.parent.parent
+        is_method = grandparent.get("_toc_name", "").endswith("()")
 
         try:
             qualified_name = grandparent.get("ids")[0]
         except IndexError:
             qualified_name = grandparent.get("module", "") + grandparent.get("fullname", "")
 
-        short_ref = qualified_name.split(".")[-1]
-        is_method = grandparent.get("_toc_name", "").endswith("()")
-
         if self.config.docs_url_type == "code":
             target = node.parent.get("refuri")
         else:
             target = self.get_internal_target(node, qualified_name)
 
-        info = {
-            "target": target,
-            "module": grandparent.get("module"),
-            "fullname": grandparent.get("fullname"),
-        }
-        variants = get_all_variants(qualified_name)
-
-        for variant in variants:
-            if variant.startswith("~"):
-                replace = short_ref
-            else:
-                replace = variant.lstrip(".")
-
-            if is_method:
-                replace += "()"
-
-            if self.config.inline_markup:
-                replace = f"``{replace}``"
-
-            info["replace"] = replace
-            self.config.ref_map[variant].update(info)
+        self.add_variants(qualified_name, target, is_method)
 
     def parse_attr_node(self, node: Node):
         try:
@@ -77,31 +55,44 @@ class READMEParser:
         except (AttributeError, IndexError) as e:
             return
 
-        if isinstance(child, nodes.literal) and 'py-attr' in child.get('classes', []):
-            refuri = node.get("refuri", '').lstrip('./')
-            qualified_name = node.get("reftitle")
+        if not isinstance(child, nodes.literal):
+            return
 
-            if not all((refuri, qualified_name)):
-                return
+        if 'py-attr' not in child.get('classes', []):
+            return
 
-            target = self.config.docs_url + "/" + refuri
-            short_ref = qualified_name.split('.')[-1]
-            variants = get_all_variants(qualified_name)
+        refuri = node.get("refuri", '').lstrip('./')
+        qualified_name = node.get("reftitle")
 
-            for variant in variants:
-                if variant.startswith("~"):
-                    replace = short_ref
-                else:
-                    replace = variant.lstrip('.')
+        if not all((refuri, qualified_name)):
+            return
 
-                if self.config.inline_markup:
-                    replace = f"``{replace}``"
+        target = self.config.docs_url + "/" + refuri
+        self.add_variants(qualified_name, target)
 
-                self.ref_map[variant].update({
-                    'target': target,
-                    'replace': replace
-                })
+    def add_variants(self, qualified_name, target, is_method: bool = False):
+        short_ref = qualified_name.split('.')[-1]
+        variants = get_all_variants(qualified_name)
 
+        for variant in variants:
+            if variant in self.ref_map:
+                continue
+
+            if variant.startswith("~"):
+                replace = short_ref
+            else:
+                replace = variant.lstrip('.')
+
+            if is_method:
+                replace += "()"
+
+            if self.config.inline_markup:
+                replace = f"``{replace}``"
+
+            self.ref_map[variant].update({
+                'target': target,
+                'replace': replace
+            })
 
     def get_cross_ref_target(self, node: Node) -> Dict:
         """Helper function to parse target info of a :ref: or :doc: cross-reference"""
