@@ -144,6 +144,7 @@ class READMEParser:
             # Replace everything using data from ``parse()``
             rst = self.replace_admonitions(src, rst)
             rst = self.replace_rst_images(src, rst)
+            rst = self.replace_only_directives(rst)
 
             for role in ('ref', 'doc'):
                 rst = self.replace_cross_refs(rst, role)
@@ -233,6 +234,28 @@ class READMEParser:
             repl=fr".. image:: {relpath_to_src_dir}\1",
             string=rst
         )
+
+    def replace_only_directives(self, rst: str) -> str:
+        # Match all ``only`` directives
+        pattern = r"\.\. only:: ([\w\s]+?)\n+?((?:^[ ]+[\w\W]+?\n)+?)(?=\n+?\S+?)"
+        directives = re.findall(pattern, rst, re.M)
+
+        for expression, content in directives:
+            # Match each block exactly
+            pattern = rf"\.\. only:: {expression}\n+?{content}"
+
+            if 'readme' in expression:
+                # Remove preceding indent (3 spaces) from each line
+                text = '\n\n'.join(line[3:] for line in content.split('\n\n'))
+
+                # Replace directive with content
+                rst = re.sub(pattern, rf"{text}", rst, re.M)
+
+            else:
+                # Remove directive
+                rst = re.sub(pattern, '', rst, re.M)
+
+        return rst
 
     def replace_cross_refs(self, rst: str, ref_role: str) -> str:
         # Find all :ref_role:`ref_id` cross-refs
