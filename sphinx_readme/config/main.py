@@ -90,6 +90,34 @@ class READMEConfig:
     def docs_url_type(self):
         return 'code' if self.docs_url in self.linkcode_url else 'html'
 
+    @property
+    def admonition_template(self):
+        if self.raw_directive is True:
+            return '''
+.. raw:: html
+
+   <table>
+       <tr align="left">
+           <th>{icon} {title}</th>
+       <tr><td>
+
+{text}
+
+.. raw:: html
+
+   </td></tr>
+   </div>
+
+'''
+        else:
+            return '''
+.. csv-table::
+   :header: {icon} {title}
+
+   "{text}"
+   
+'''
+
 
 def _map_entry():
     return copy.deepcopy(READMEConfig.REFERENCE_MAPPING)

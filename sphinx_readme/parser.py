@@ -16,6 +16,7 @@ class READMEParser:
         self.config = READMEConfig(app)
         self.logger = self.config.logger
         self.ref_map = self.config.ref_map
+        self.admonitions = {}
 
     def parse_references(self, doctree: Node, docname: str):
         for node in list(doctree.findall(nodes.inline)):
@@ -111,53 +112,54 @@ class READMEParser:
         html_file = rst_source.split(".rst")[0] + ".html"
         return f"{self.config.docs_url}/{html_file}#{qualified_name}"
 
-    def parse_admonitions(self, doctree: Node, rst):
+    def parse_admonitions(self, doctree: Node):
+        src = doctree.get('source')
+        admonitions = []
+
         for admonition in list(doctree.findall(nodes.Admonition)):
-            cls = admonition.get('classes')[0]
-            title = admonition.children[0].rawsource
             sep = admonition.child_text_separator
             body = admonition.rawsource.split(sep)
-
-            startswith = body[0]
-            endswith = body[-1]
-
-            rst = list(self.config.readme_sources.values())[0]
-
-            if not (startswith in rst and endswith in rst):
-                continue
-
-            start = rst.find(startswith)
-            end = rst.find(endswith) + len(endswith)
-
-            rst_txt = rf".. admonition:: {title}" + r"\n"
-
-            if cls:
-                rst_txt += rf"   :class: {cls}" + r"\n"
-
-            rst_txt += r"\n" + rf"   {rst[start:end]}"
-            repl = '''
-.. raw:: html
-
-   <table>
-       <tr align="left">
-           <th>{icon} {title}</th>
-       <tr><td>
-
-
-{text}
-
-.. raw:: html
-
-   </td></tr>
-   </div>
-
-'''.format(icon=get_icon(cls), title=title, text=body)
-
-            re.sub(
-                pattern=rst_txt.replace("*", "\*").replace("+", "\+").replace(".", "\."),
-                repl=repl,
-                string=rst
+            info = dict(
+                cls=admonition.get('classes')[0],
+                title=admonition.children[0].rawsource,
+                body=body,
+                startswith=body[0],
+                endswith=body[-1]
             )
+            admonitions.append(info)
+
+        self.admonitions[src] = admonitions
+
+    def replace_admonitions(self):
+        for src, admonitions in self.admonitions.items():
+            rst = self.config.readme_sources[src]
+
+            for admonition in admonitions:
+                startswith = admonition['startswith']
+                endswith = admonition['endswith']
+
+                if not (startswith in rst and endswith in rst):
+                    continue
+
+                start = rst.find(startswith)
+                end = rst.find(endswith) + len(endswith)
+
+                rst_txt = rf".. admonition:: {admonition['title']}" + r"\n"
+
+                if admonition['class']:
+                    rst_txt += rf"   :class: {admonition['class']}" + r"\n"
+
+                rst_txt += r"\n" + rf"   {rst[start:end]}"
+                rst = re.sub(
+                    pattern=rst_txt.replace("*", r"\*").replace("+", r"\+").replace(".", r"\."),
+                    repl=self.config.admonition_template.format(
+                        title=admonition['title'],
+                        text=admonition['body']
+                    ),
+                    string=rst
+                )
+
+            self.config.readme_sources[src] = rst
 
     def resolve_readme(self, exception):
         print("RESOLVING THE README ")
