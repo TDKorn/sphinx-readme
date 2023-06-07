@@ -9,7 +9,7 @@ from collections import defaultdict
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 from .utils import get_conf_val, set_conf_val, read_rst
-from typing import Dict, Any, Optional, Callable, List
+from typing import Dict, Any, Optional, Callable, List, Union
 
 __version__ = "v0.0.1"
 
@@ -20,12 +20,11 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     app.add_config_value("readme_inline_markup", True, True)
     app.add_config_value("readme_raw_directive", True, True)
+    app.add_config_value("readme_include_directive", True, True)
     app.add_config_value("readme_replace_attrs", True, True)
     app.add_config_value("readme_out_dir", Path(app.srcdir).parent.parent, True)
 
     app.setup_extension('sphinx.ext.linkcode')
-
-
 
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
 
@@ -42,7 +41,6 @@ def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
     """Creates a mapping of Python cross-references and their targets
     """
     docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "html_baseurl", "")).rstrip("/")
-    refs = get_conf_val(app, "readme_refs")
     if not docs_url:
         raise ExtensionError(
             "sphinx_readme: conf.py value must be set for ``readme_docs_url`` or ``html_baseurl``"
@@ -51,7 +49,7 @@ def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
     set_conf_val(app, "readme_link_type", link_type)
 
     replace_attrs = get_conf_val(app, "readme_replace_attrs")
-    inline_markup = get_conf_val(app, "inline_markup")
+    inline_markup = get_conf_val(app, "readme_inline_markup")
     refs = get_conf_val(app, "readme_refs")
 
     if refs is None:
@@ -113,26 +111,39 @@ def parse_references(app: Sphinx, doctree: Node, docname: str) -> Dict:
 
     if replace_attrs and link_type == "html":
         for node in list(doctree.findall(nodes.reference)):
-            if "attr" in node.parent.rawsource:
-                target = docs_url + "/" + node.get("refuri")
-                qualified_name = node.get("reftitle")
-                short_ref = qualified_name.split('.')[-1]
+            if ":attr:" in node.parent.rawsource:
+                try:
+                    child = node.children[0]
+                except (AttributeError, IndexError) as e:
+                    continue
 
-                variants = get_all_variants(qualified_name)
+                if isinstance(child, nodes.literal) and 'py-attr' in child.get('classes', []):
+                    refuri = node.get("refuri", '').lstrip('./')
+                    qualified_name = node.get("reftitle")
 
-                for variant in variants:
-                    if variant.startswith("~"):
-                        replace = short_ref
-                    else:
-                        replace = variant.lstrip('.')
+                    if not all((refuri, qualified_name)):
+                        continue
 
-                    if inline_markup:
-                        replace = f"``{replace}``"
+                    target = docs_url + "/" + refuri
+                    short_ref = qualified_name.split('.')[-1]
+                    variants = get_all_variants(qualified_name)
 
-                    refs[variant].update({
-                        'target': target,
-                        'replace': replace
-                    })
+                    for variant in variants:
+                        if variant in refs:
+                            continue
+
+                        if variant.startswith("~"):
+                            replace = short_ref
+                        else:
+                            replace = variant.lstrip('.')
+
+                        if inline_markup:
+                            replace = f"``{replace}``"
+
+                        refs[variant].update({
+                            'target': target,
+                            'replace': replace
+                        })
 
     set_conf_val(app, "readme_refs", refs)
     return refs
