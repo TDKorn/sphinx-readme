@@ -232,17 +232,21 @@ def replace_rst_images(src_dir: str, out_dir: str, rst_src: str, rst: str) -> st
 
 
 def replace_admonitions(rst: str, raw_directive: bool = True) -> str:
-    pattern = r".. admonition:: \w?\n\W*\w*\n+W+"
+    pattern = r"\W*?(.. admonition:: .*\n(?:\W+:class: \w+\n)?\n\W+.+\n\n+)+\S*"
     if raw_directive:
         admonition = '''
 .. raw:: html
 
    <table>
       <tr align="left">
-         <th>{icon} {title}</th>
-      </tr>
-      <tr>
-         <td>
+         <th>
+
+{icon} {title}
+
+.. raw:: html
+    
+    </th></tr>
+    <tr><td>
 
 {text}
 
@@ -261,3 +265,4 @@ def replace_admonitions(rst: str, raw_directive: bool = True) -> str:
 
 '''
     return admonition   # obviously not
+

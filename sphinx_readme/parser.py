@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Dict
 
 from docutils import nodes
@@ -32,6 +33,9 @@ class READMEParser:
             for node in list(doctree.findall(nodes.reference)):
                 if ":attr:" in node.parent.rawsource:
                     self.parse_attr_node(node)
+
+        if doctree.get('source') in self.config.readme_sources:
+            self.parse_admonitions(doctree)
 
     def parse_linkcode_node(self, node: Node):
         grandparent = node.parent.parent
@@ -106,6 +110,54 @@ class READMEParser:
         rst_source = os.path.basename(node.parent.document.get("source"))
         html_file = rst_source.split(".rst")[0] + ".html"
         return f"{self.config.docs_url}/{html_file}#{qualified_name}"
+
+    def parse_admonitions(self, doctree: Node, rst):
+        for admonition in list(doctree.findall(nodes.Admonition)):
+            cls = admonition.get('classes')[0]
+            title = admonition.children[0].rawsource
+            sep = admonition.child_text_separator
+            body = admonition.rawsource.split(sep)
+
+            startswith = body[0]
+            endswith = body[-1]
+
+            rst = list(self.config.readme_sources.values())[0]
+
+            if not (startswith in rst and endswith in rst):
+                continue
+
+            start = rst.find(startswith)
+            end = rst.find(endswith) + len(endswith)
+
+            rst_txt = rf".. admonition:: {title}" + r"\n"
+
+            if cls:
+                rst_txt += rf"   :class: {cls}" + r"\n"
+
+            rst_txt += r"\n" + rf"   {rst[start:end]}"
+            repl = '''
+.. raw:: html
+
+   <table>
+       <tr align="left">
+           <th>{icon} {title}</th>
+       <tr><td>
+
+
+{text}
+
+.. raw:: html
+
+   </td></tr>
+   </div>
+
+'''.format(icon=get_icon(cls), title=title, text=body)
+
+            re.sub(
+                pattern=rst_txt.replace("*", "\*").replace("+", "\+").replace(".", "\."),
+                repl=repl,
+                string=rst
+            )
 
     def resolve_readme(self, exception):
         print("RESOLVING THE README ")
