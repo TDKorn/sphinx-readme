@@ -145,6 +145,7 @@ class READMEParser:
             rst = self.replace_admonitions(src, rst)
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_only_directives(rst)
+            rst = self.replace_rst_rubrics(rst)
 
             for role in ('ref', 'doc'):
                 rst = self.replace_cross_refs(rst, role)
@@ -256,6 +257,15 @@ class READMEParser:
                 # Remove directive
                 rst = re.sub(pattern, '', rst, re.M)
 
+        return rst
+
+    def replace_rst_rubrics(self, rst: str):
+        if heading := self.config.rubric_heading:
+            return re.sub(
+                pattern=r'\.\. rubric:: (.*)\n',
+                repl=r"\1\n" + heading * 100 + r"\n",
+                string=rst
+            )
         return rst
 
     def replace_cross_refs(self, rst: str, ref_role: str) -> str:

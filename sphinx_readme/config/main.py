@@ -27,6 +27,7 @@ class READMEConfig:
         self.replace_attrs = get_conf_val(app, 'readme_replace_attrs')
         self.inline_markup = get_conf_val(app, 'readme_inline_markup')
         self.raw_directive = get_conf_val(app, 'readme_raw_directive')
+        self.rubric_heading = get_conf_val(app, 'readme_rubric_heading')
         self.admonition_icons = get_conf_val(app, 'readme_admonition_icons')
         self.include_directive = get_conf_val(app, 'readme_include_directive')
         self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
