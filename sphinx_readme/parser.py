@@ -204,6 +204,7 @@ class READMEParser:
         src_dir_path = Path(self.config.src_dir)
         out_dir_path = Path(self.config.out_dir)
         rst_src_dir_path = Path(rst_src).parent
+        repo_url = self.config.linkcode_url.split('/{filepath}')[0]
 
         # These image paths are relative to the rst source file
         # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
@@ -220,7 +221,7 @@ class READMEParser:
             # Sub that hoe in!!!
             rst = re.sub(
                 pattern=rf".. image:: {img_path}",
-                repl=fr".. image:: {rel_img_path}",
+                repl=fr".. image:: {repo_url}/{rel_img_path}",
                 string=rst
             )
 
@@ -231,7 +232,7 @@ class READMEParser:
         # Replace all image paths starting with "/"
         return re.sub(
             pattern=r".. image:: (/[\w/]+\.\w{3,4})",
-            repl=fr".. image:: {relpath_to_src_dir}\1",
+            repl=fr".. image:: {repo_url}/{relpath_to_src_dir}\1",
             string=rst
         )
 
