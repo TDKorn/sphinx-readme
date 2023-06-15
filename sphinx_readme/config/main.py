@@ -1,5 +1,6 @@
 import copy
 import os
+import re
 from functools import cached_property
 from pathlib import Path
 from collections import defaultdict
@@ -7,7 +8,7 @@ from typing import Union, List, Dict
 
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
-from sphinx_readme.utils import get_conf_val, set_conf_val, read_rst, logger
+from sphinx_readme.utils import get_conf_val, set_conf_val, logger
 from sphinx_readme.config import get_linkcode_url, get_linkcode_resolve
 
 
@@ -71,10 +72,42 @@ class READMEConfig:
 
     def read_source_files(self) -> Dict[str, str]:
         sources = {
-            src_file: read_rst(src_file, parse_include=self.include_directive)
+            src_file: self.read_rst(src_file)
             for src_file in self.src_files
         }
         return sources
+
+    def read_rst(self, rst_file: Union[str, Path]):
+        with open(rst_file, 'r', encoding='utf-8') as f:
+            rst = f.read()
+
+        if self.include_directive:
+            # Find all included files with a relative file path
+            included = re.findall(
+                pattern=r"^\.\. include:: ([/\.]*?[\w/-]+\.rst)",
+                string=rst,
+                flags=re.M
+            )
+            for include in included:
+                # Determine abs path of included file
+                if include.startswith("/"):
+                    # These paths are relative to source dir
+                    file = Path(f"{self.src_dir}/{include}").resolve()
+                else:
+                    # These paths are relative to rst_file dir
+                    file = (Path(rst_file).parent / Path(include)).resolve()
+
+                # Sub in the file content
+                rst = re.sub(
+                    pattern=rf".. include:: {include}",
+                    repl=self.read_rst(file).replace(r'\n', r'\\n'),
+                    string=rst
+                )
+        else:
+            # Remove all include directives from the text
+            rst = re.sub(r"^\.\. include:: [\./\w-]+\.rst", '', rst, re.M)
+
+        return rst
 
     @property
     def src_files(self):
@@ -99,7 +132,7 @@ class READMEConfig:
         if not os.path.exists(out_dir):
             os.mkdir(out_dir)
 
-        self._out_dir = out_dir
+        self._out_dir = Path(out_dir).resolve()
 
     @property
     def docs_url_type(self):

@@ -209,7 +209,7 @@ class READMEParser:
 
         # These image paths are relative to the rst source file
         # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
-        relative = r".. image:: ([\w\.]+[\w/]+\.\w{3,4})"
+        relative = r".. image:: ([\w\.-]+[\w/-]+\.\w{3,4})"
         img_paths = re.findall(relative, rst)
 
         for img_path in img_paths:
@@ -228,11 +228,11 @@ class READMEParser:
 
         # These image paths are "absolute" (relative to src_dir)
         # .. image:: /path/to/image.ext
-        relpath_to_src_dir = src_dir_path.relative_to(out_dir_path).as_posix()
+        relpath_to_src_dir = Path(os.path.relpath(src_dir_path, out_dir_path)).as_posix()
 
         # Replace all image paths starting with "/"
         return re.sub(
-            pattern=r".. image:: (/[\w/]+\.\w{3,4})",
+            pattern=r".. image:: (/[\w/-]+\.\w{3,4})",
             repl=fr".. image:: {repo_url}/{relpath_to_src_dir}\1",
             string=rst
         )
