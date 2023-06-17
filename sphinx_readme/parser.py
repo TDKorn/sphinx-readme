@@ -26,21 +26,14 @@ class READMEParser:
         self.titles = {}
 
     def parse(self, doctree: Node, docname: str):
-        for node in list(doctree.findall(nodes.inline)):
-            if 'doc' in node['classes']:
-                self.ref_map['doc'].append(self.get_cross_ref_target(node))
+        inline_nodes = list(doctree.findall(nodes.inline))
+        literal_nodes = list(doctree.findall(nodes.literal))
 
-            elif 'std-ref' in node['classes']:
-                self.ref_map['ref'].append(self.get_cross_ref_target(node))
+        self.parse_xref_nodes(inline_nodes)
+        self.parse_autodoc_nodes(literal_nodes, docname)
 
-            elif 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
-                if node.parent.get('internal') is False:
-                    self.parse_linkcode_node(node)
-
-        if self.config.replace_attrs and self.config.docs_url_type == 'html':
-            for node in list(doctree.findall(nodes.reference)):
-                if ":attr:" in node.parent.rawsource:
-                    self.parse_attr_node(node)
+        if self.config.docs_url_type == "code":
+            self.parse_linkcode_nodes(inline_nodes)
 
         for node in list(doctree.findall(addnodes.toctree)):
             self.parse_toctree(node, doctree)
@@ -48,7 +41,93 @@ class READMEParser:
         if doctree.get('source') in self.sources:
             self.parse_admonitions(doctree)
 
-    def parse_linkcode_node(self, node: Node):
+    def parse_xref_nodes(self, inline_nodes: List[nodes.inline]):
+        for node in inline_nodes:
+            if 'doc' in node['classes']:
+                self.ref_map['doc'].append(self._parse_xref(node))
+
+            elif 'std-ref' in node['classes']:
+                self.ref_map['ref'].append(self._parse_xref(node))
+
+    def _parse_xref(self, node: nodes.inline) -> Dict:
+        """Helper function to parse target info of a ``:ref:`` or ``:doc:`` xref"""
+        return {
+            'text': node.children[0].astext(),
+            "refuri": self.config.html_baseurl + "/" + node.parent.get('refuri', '')
+        }
+
+    def parse_autodoc_nodes(self, literal_nodes: List[nodes.literal], docname: str):
+        for node in literal_nodes:
+            if 'py' not in node['classes']:
+                continue
+
+            if node.parent.get('internal') is False:
+                # External links are xrefs from intersphinx
+                self.parse_intersphinx_node(node)
+
+            elif 'py-mod' in node['classes']:
+                # Parse :mod: xrefs regardless of docs_url_type
+                self.parse_module_node(node, docname)
+
+            elif self.config.docs_url_type == "html":
+                # Only parse remaining py xrefs if linking to html
+                self.parse_autodoc_node(node, docname)
+
+    def parse_intersphinx_node(self, node: nodes.literal):
+        pattern = r":(mod|class|meth|func|attr):`~?\.?([.\w]+)`"
+        match = re.match(pattern, node.rawsource)
+        target = node.parent.get('refuri')
+
+        if not all((match, target)):
+            return
+
+        qualified_name = match.group(2)
+        is_method = match.group(1) == "meth"
+        self.add_variants(qualified_name, target, is_method)
+
+    def parse_module_node(self, node: Node, docname: str):
+        qualified_name = node.parent.get("reftitle", "")
+
+        if self.config.docs_url_type == 'code':
+            # Ex. sphinx_readme.parser -> sphinx_readme/parser.py
+            refuri = qualified_name.replace('.', '/') + '.py'
+        else:
+            refuri = self._parse_refuri(node, docname)
+
+        if not all((qualified_name, refuri)):
+            return
+
+        target = f"{self.config.docs_url}/{refuri}"
+        self.add_variants(qualified_name, target)
+
+    def parse_autodoc_node(self, node: nodes.literal, docname: str):
+        qualified_name = node.parent.get("reftitle")
+        refuri = self._parse_refuri(node, docname)
+
+        if not all((refuri, qualified_name)):
+            return
+
+        is_method = 'py-meth' in node['classes']
+        target = f"{self.config.docs_url}/{refuri}"
+        self.add_variants(qualified_name, target, is_method)
+
+    def _parse_refuri(self, node: Node, docname: str):
+        if 'refuri' in node.parent:
+            # Ex. ../parser.html#sphinx_readme.parser.READMEParser
+            return node.parent["refuri"].lstrip("./")
+
+        elif 'refid' in node.parent:
+            # Ex. sphinx_readme.parser.READMEParser
+            return f"{docname}.html#{node.parent['refid']}"
+
+    def parse_linkcode_nodes(self, inline_nodes: List[nodes.inline]):
+        for node in inline_nodes:
+            if 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
+                if node.parent.get('internal') is False:
+                    # Only parse links to external source code
+                    self.parse_linkcode_node(node)
+
+    def parse_linkcode_node(self, node: nodes.inline):
         grandparent = node.parent.parent
         is_method = grandparent.get("_toc_name", "").endswith("()")
 
@@ -57,33 +136,32 @@ class READMEParser:
         except IndexError:
             qualified_name = grandparent.get("module", "") + grandparent.get("fullname", "")
 
-        if self.config.docs_url_type == "code":
-            target = node.parent.get("refuri")
-        else:
-            target = self.get_internal_target(node, qualified_name)
-
+        target = node.parent.get("refuri")
         self.add_variants(qualified_name, target, is_method)
 
-    def parse_attr_node(self, node: Node):
-        try:
-            child = node.children[0]
-        except (AttributeError, IndexError) as e:
-            return
+    def add_variants(self, qualified_name, target, is_method: bool = False):
+        short_ref = qualified_name.split('.')[-1]
+        variants = get_all_variants(qualified_name)
 
-        if not isinstance(child, nodes.literal):
-            return
+        for variant in variants:
+            if variant in self.ref_map:
+                continue
 
-        if 'py-attr' not in child.get('classes', []):
-            return
+            if variant.startswith("~"):
+                replace = short_ref
+            else:
+                replace = variant.lstrip('.')
 
-        refuri = node.get("refuri", '').lstrip('./')
-        qualified_name = node.get("reftitle")
+            if is_method:
+                replace += "()"
 
-        if not all((refuri, qualified_name)):
-            return
+            if self.config.inline_markup:
+                replace = f"``{replace}``"
 
-        target = self.config.docs_url + "/" + refuri
-        self.add_variants(qualified_name, target)
+            self.ref_map[variant].update({
+                'target': target,
+                'replace': replace
+            })
 
     def parse_titles(self, env: BuildEnvironment):
         for fname, title_node in env.titles.items():
@@ -135,43 +213,6 @@ class READMEParser:
                 admonitions['specific'].append(info)
 
         self.admonitions[src] = admonitions
-
-    def get_cross_ref_target(self, node: Node) -> Dict:
-        """Helper function to parse target info of a :ref: or :doc: cross-reference"""
-        return {
-            'text': str(node.children[0]),
-            "refuri": self.config.html_baseurl + "/" + node.parent.get('refuri', '')
-        }
-
-    def get_internal_target(self, node: Node, qualified_name: str):
-        """Helper function to parse an internal target from a linkcode node"""
-        rst_source = os.path.basename(node.parent.document.get("source"))
-        html_file = rst_source.split(".rst")[0] + ".html"
-        return f"{self.config.docs_url}/{html_file}#{qualified_name}"
-
-    def add_variants(self, qualified_name, target, is_method: bool = False):
-        short_ref = qualified_name.split('.')[-1]
-        variants = get_all_variants(qualified_name)
-
-        for variant in variants:
-            if variant in self.ref_map:
-                continue
-
-            if variant.startswith("~"):
-                replace = short_ref
-            else:
-                replace = variant.lstrip('.')
-
-            if is_method:
-                replace += "()"
-
-            if self.config.inline_markup:
-                replace = f"``{replace}``"
-
-            self.ref_map[variant].update({
-                'target': target,
-                'replace': replace
-            })
 
     def resolve(self):
         for src, rst in self.sources.items():
@@ -371,12 +412,12 @@ class READMEParser:
         :return:
         """
         # :role:`{~.}{module|class}{.}target` where {} is optional
-        pattern = r":(?:class|meth|func):`([~\.\w]+)`"
+        pattern = r":(?:mod|class|meth|func):`([~\.\w]+)`"
 
         if self.config.replace_attrs:
             if self.config.docs_url_type == 'html':
                 # If linking to HTML docs, we can generate cross-refs for attributes
-                pattern = r":(?:class|meth|func|attr):`([~\.\w]+)`"
+                pattern = r":(?:mod|class|meth|func|attr):`([~\.\w]+)`"
             else:
                 # If linking to source code, just replace :attr:`~.attribute` with ``attribute``
                 rst = self.replace_autodoc_attrs(rst)
