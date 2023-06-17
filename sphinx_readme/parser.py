@@ -357,19 +357,23 @@ class READMEParser:
         body = escape_rst(admonition['body'])
         title = escape_rst(admonition['title'])
 
+        # Account for arbitrary whitespace before each line of directive content
+        lines = (line.replace('\n', '\n\s+') for line in body.split('\n\n'))
+        body = '\n\n\s+'.join(lines)
+
         if admonition_type == 'specific':
             # For example, .. note:: This is a note
-            pattern = fr"\.\. {admonition['class']}::\n?\n?\s+"
+            pattern = fr"\.\. {admonition['class']}::\n*?\s+"
 
         else:
-            # Any admonition that uses generic .. admonition:: directive
+            # Generic admonition directives with/without class option
             pattern = rf"\.\. admonition::\s+{title}" + r"\n"
 
             if cls := admonition['class']:
                 if 'admonition-' not in cls:
                     pattern += rf"\s+:class: {cls}" + r"\n"
 
-            pattern += r"\n" + rf"\s+"
+            pattern += r"\n*?\s+"
 
         if not self.config.raw_directive:
             # csv-table template body uses match group
@@ -378,7 +382,7 @@ class READMEParser:
             # raw html template body uses string formatting
             pattern += rf"{body}"
 
-        pattern += r"\n*?(\S+|$)"
+        pattern += r"(?=[\n\S]+?)"
         return pattern
 
     def get_admonition_icon(self, admonition: dict):

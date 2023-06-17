@@ -174,16 +174,14 @@ class READMEConfig:
 
    </td></tr>
    </table>
-
-\1'''
+'''
         else:
             return r'''
 .. csv-table::
    :header: {icon} {title}
 
    "\1"
-
-\2'''
+'''
 
 
 def _map_entry():
