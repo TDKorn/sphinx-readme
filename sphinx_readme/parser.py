@@ -8,7 +8,7 @@ from docutils.nodes import Node
 from sphinx.application import Sphinx
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils import get_all_variants
+from sphinx_readme.utils import get_all_variants, escape_rst
 
 
 class READMEParser:
@@ -354,14 +354,8 @@ class READMEParser:
         return header
 
     def get_admonition_regex(self, admonition, admonition_type):
-        # Parse rawsource body to have same whitespace formatting as the rst file
-        lines = (line.replace('\n', '\n   ') for line in admonition['body'].split('\n\n'))
-        body = '\n\n   '.join(lines)
-        title = admonition['title']
-
-        for char in ("*", "+", ".", "?"):
-            body = body.replace(char, rf"\{char}")
-            title = title.replace(char, rf"\{char}")
+        body = escape_rst(admonition['body'])
+        title = escape_rst(admonition['title'])
 
         if admonition_type == 'specific':
             # For example, .. note:: This is a note
@@ -399,4 +393,3 @@ class READMEParser:
 
         # Use default icon if admonition class isn't in icon map
         return "|default|"
-

@@ -28,6 +28,10 @@ def set_conf_val(app: Sphinx, attr: str, value: Any) -> None:
     setattr(app.config, attr, value)
 
 
+def escape_rst(rst: str) -> str:
+    """Escape regex special characters from the content of an ``rst`` file"""
+    for char in ".+?*|()":
+        rst = rst.replace(char, rf"\{char}")
     return rst
 
 
