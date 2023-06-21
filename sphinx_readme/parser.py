@@ -1,11 +1,14 @@
 import os
 import re
 from pathlib import Path
+from collections import defaultdict
 from typing import Dict, List, Tuple, Set
 
 from docutils import nodes
 from docutils.nodes import Node
 from sphinx.application import Sphinx
+from sphinx.environment import BuildEnvironment
+from sphinx import addnodes
 
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils import get_all_variants, escape_rst
@@ -18,7 +21,9 @@ class READMEParser:
         self.logger = self.config.logger
         self.ref_map = self.config.ref_map
         self.sources = self.config.readme_sources
+        self.toctrees = defaultdict(list)
         self.admonitions = {}
+        self.titles = {}
 
     def parse(self, doctree: Node, docname: str):
         for node in list(doctree.findall(nodes.inline)):
@@ -36,6 +41,9 @@ class READMEParser:
             for node in list(doctree.findall(nodes.reference)):
                 if ":attr:" in node.parent.rawsource:
                     self.parse_attr_node(node)
+
+        for node in list(doctree.findall(addnodes.toctree)):
+            self.parse_toctree(node, doctree)
 
         if doctree.get('source') in self.config.readme_sources:
             self.parse_admonitions(doctree)
@@ -76,6 +84,32 @@ class READMEParser:
 
         target = self.config.docs_url + "/" + refuri
         self.add_variants(qualified_name, target)
+
+    def parse_titles(self, env: BuildEnvironment):
+        for fname, title_node in env.titles.items():
+            parts = []
+
+            for child in title_node.children:
+                text = child.astext()
+                if isinstance(child, nodes.literal):
+                    parts.append(f"``{text}``")
+                else:
+                    parts.append(text)
+
+            self.titles[fname] = ' '.join(parts)
+
+    def parse_toctree(self, toctree: Node, doctree: addnodes.document):
+        src = doctree.get('source')
+        toc = {
+            'caption': toctree.get('caption'),
+            'entries': []
+        }
+        for _, entry in toctree.get('entries', []):
+            toc['entries'].append({
+                'entry': entry,
+                'title': self.titles.get(entry),
+            })
+        self.toctrees[src].append(toc)
 
     def parse_admonitions(self, doctree: Node):
         admonitions = {'generic': [], 'specific': []}
@@ -144,6 +178,7 @@ class READMEParser:
             # Replace everything using data from ``parse()``
             rst = self.replace_admonitions(src, rst)
             rst = self.replace_rst_images(src, rst)
+            rst = self.replace_toctrees(src, rst)
             rst = self.replace_only_directives(rst)
             rst = self.replace_rst_rubrics(rst)
 
@@ -187,6 +222,47 @@ class READMEParser:
                                 icon=icon),
                             string=rst
                         )
+        return rst
+
+    def replace_toctrees(self, rst_src: str, rst: str) -> str:
+        if self.config.docs_url_type == 'html':
+            base_url = self.config.docs_url
+        else:
+            base_url = self.config.html_baseurl
+
+        pattern = r".. toctree::\n+?(?:\s+:\w+:\s*?\w*?\n\s+)*?(?:\s+\w+\n)+?(?=\n+\S+?)"
+        toctrees = re.findall(pattern, rst)
+
+        for toctree, info in zip(toctrees, self.toctrees[rst_src]):
+            substitutions = []
+            repl = ""
+
+            if info['caption']:
+                repl += f"**{info['caption']}**\n\n"
+
+            for entry in info['entries']:
+                # Replace each entry with a link to html docs
+                target = f"{base_url}/{entry['entry']}.html"
+
+                if "`" in entry['title']:
+                    # Inline markup in links must be inserted with substitutions
+                    sub = entry['title'].replace('`', '')
+                    substitutions.extend([
+                        f".. |{sub}| replace:: {entry['title']}",
+                        f".. _{sub}: {target}"
+                    ])
+                    repl += f"* |{sub}|_\n"
+
+                else:
+                    # Replace with a normal link otherwise
+                    repl += f"* `{entry['title']} <{target}>`_\n"
+
+            if substitutions:
+                repl += '\n\n' + '\n'.join(substitutions) + '\n\n'
+
+            # Replace toctree directive with links and substitution defs
+            rst = rst.replace(toctree, repl)
+
         return rst
 
     def replace_rst_images(self, rst_src: str, rst: str) -> str:

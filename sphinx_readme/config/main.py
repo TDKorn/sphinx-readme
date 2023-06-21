@@ -6,6 +6,7 @@ from pathlib import Path
 from collections import defaultdict
 from typing import Union, List, Dict
 
+from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 from sphinx_readme.utils import get_conf_val, set_conf_val, logger
@@ -32,6 +33,7 @@ class READMEConfig:
         self.admonition_icons = get_conf_val(app, 'readme_admonition_icons')
         self.include_directive = get_conf_val(app, 'readme_include_directive')
         self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
+        self.html_baseurl = get_conf_val(app, "html_baseurl", "").rstrip("/")
 
         self.docs_url = self.get_docs_url(app)
         self.linkcode_url = get_linkcode_url(
@@ -45,7 +47,7 @@ class READMEConfig:
         self.ref_map = self.get_ref_map()
 
     def get_docs_url(self, app: Sphinx) -> str:
-        docs_url = get_conf_val(app, "readme_docs_url", get_conf_val(app, "html_baseurl", "")).rstrip("/")
+        docs_url = get_conf_val(app, "readme_docs_url", self.html_baseurl).rstrip("/")
         if not docs_url:
             raise ExtensionError(
                 "sphinx_readme: conf.py value must be set for ``readme_docs_url`` or ``html_baseurl``"

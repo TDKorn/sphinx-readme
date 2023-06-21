@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, Any
 from docutils.nodes import Node
 from sphinx.application import Sphinx
+from sphinx.environment import BuildEnvironment
 from sphinx_readme.utils import get_conf_val, set_conf_val
 from sphinx_readme.parser import READMEParser
 
@@ -11,6 +12,7 @@ __version__ = "v0.0.1"
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    app.connect('env-check-consistency', parse_titles)
     app.connect('doctree-resolved', parse_references)
     app.connect('build-finished', resolve_readme)
 
@@ -27,6 +29,11 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.setup_extension('sphinx.ext.linkcode')
 
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
+
+
+def parse_titles(app: Sphinx, env: BuildEnvironment):
+    readme = get_conf_val(app, 'READMEParser')
+    readme.parse_titles(env)
 
 
 def parse_references(app: Sphinx, doctree: Node, docname: str):
