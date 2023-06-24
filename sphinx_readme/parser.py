@@ -20,7 +20,7 @@ class READMEParser:
         self.config = READMEConfig(app)
         self.logger = self.config.logger
         self.ref_map = self.config.ref_map
-        self.sources = self.config.readme_sources
+        self.sources = self.config.source_files
         self.toctrees = defaultdict(list)
         self.admonitions = {}
         self.titles = {}
@@ -45,7 +45,7 @@ class READMEParser:
         for node in list(doctree.findall(addnodes.toctree)):
             self.parse_toctree(node, doctree)
 
-        if doctree.get('source') in self.config.readme_sources:
+        if doctree.get('source') in self.sources:
             self.parse_admonitions(doctree)
 
     def parse_linkcode_node(self, node: Node):
@@ -281,7 +281,6 @@ class READMEParser:
         src_dir_path = Path(self.config.src_dir)
         out_dir_path = Path(self.config.out_dir)
         rst_src_dir_path = Path(rst_src).parent
-        repo_url = self.config.linkcode_url.split('/{filepath}')[0]
 
         # These image paths are relative to the rst source file
         # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
@@ -298,7 +297,7 @@ class READMEParser:
             # Sub that hoe in!!!
             rst = re.sub(
                 pattern=rf".. image:: {img_path}",
-                repl=fr".. image:: {repo_url}/{rel_img_path}",
+                repl=fr".. image:: {self.config.repo_url}/{rel_img_path}",
                 string=rst
             )
 
@@ -309,7 +308,7 @@ class READMEParser:
         # Replace all image paths starting with "/"
         return re.sub(
             pattern=r".. image:: (/[\w/-]+\.\w{3,4})",
-            repl=fr".. image:: {repo_url}/{relpath_to_src_dir}\1",
+            repl=fr".. image:: {self.config.repo_url}/{relpath_to_src_dir}\1",
             string=rst
         )
 

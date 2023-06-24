@@ -1,17 +1,16 @@
-import copy
 import os
 import re
-from functools import cached_property
+import copy
 from pathlib import Path
 from collections import defaultdict
 from typing import Union, List, Dict
+from functools import cached_property
 
-from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
-from sphinx_readme.utils import get_conf_val, set_conf_val, logger
-from sphinx_readme.config import get_linkcode_url, get_linkcode_resolve
 
+from sphinx_readme.utils import get_conf_val, set_conf_val, logger
+from sphinx_readme.config import get_repo_url, get_linkcode_url, get_linkcode_resolve
 
 
 class READMEConfig:
@@ -26,6 +25,9 @@ class READMEConfig:
         self.src_dir = app.srcdir
         self.out_dir = get_conf_val(app, 'readme_out_dir')
         self.src_files = get_conf_val(app, 'readme_src_files', [])
+        self.html_context = get_conf_val(app, "html_context")
+        self.html_baseurl = get_conf_val(app, "html_baseurl", "").rstrip("/")
+        self.docs_url_type = get_conf_val(app, 'readme_docs_url_type')
         self.replace_attrs = get_conf_val(app, 'readme_replace_attrs')
         self.inline_markup = get_conf_val(app, 'readme_inline_markup')
         self.raw_directive = get_conf_val(app, 'readme_raw_directive')
@@ -33,32 +35,42 @@ class READMEConfig:
         self.admonition_icons = get_conf_val(app, 'readme_admonition_icons')
         self.include_directive = get_conf_val(app, 'readme_include_directive')
         self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
-        self.html_baseurl = get_conf_val(app, "html_baseurl", "").rstrip("/")
 
+        self.repo_url = self.get_repo_url(app)
         self.docs_url = self.get_docs_url(app)
-        self.linkcode_url = get_linkcode_url(
-            blob=get_conf_val(app, 'linkcode_blob'),
-            url=get_conf_val(app, 'linkcode_url'),
-            context=get_conf_val(app, 'html_context')
-        )
-        self.setup_linkcode_resolve(app)
-
-        self.readme_sources = self.read_source_files()
         self.ref_map = self.get_ref_map()
+        self.source_files = self.read_source_files()
+
+        if self.docs_url_type == "code":
+            self.setup_linkcode_resolve(app)
+
+    def get_repo_url(self, app: Sphinx):
+        if repo_url := get_conf_val(app, "readme_repo_url"):
+            return repo_url.rstrip("/")
+
+        if self.html_context:
+            return get_repo_url(self.html_context)
+
+        raise ExtensionError(
+            "sphinx_readme: conf.py value must be set for "
+            "``readme_repo_url`` or ``html_context``"
+        )
 
     def get_docs_url(self, app: Sphinx) -> str:
-        docs_url = get_conf_val(app, "readme_docs_url", self.html_baseurl).rstrip("/")
-        if not docs_url:
-            raise ExtensionError(
-                "sphinx_readme: conf.py value must be set for ``readme_docs_url`` or ``html_baseurl``"
-            )
-        return docs_url
+        if docs_url := get_conf_val(app, "readme_docs_url") is None:
+            # Generate docs URL from other conf.py values
+            if self.docs_url_type == "html":
+                if self.html_baseurl:
+                    docs_url = self.html_baseurl
+                else:
+                    raise ExtensionError(
+                        "sphinx_readme: conf.py value must be set for "
+                        "``readme_docs_url`` or ``html_baseurl``"
+                    )
+            else:  # ``docs_url_type`` is "code"
+                docs_url = self.repo_url
 
-    def get_ref_map(self) -> Dict:
-        refs = defaultdict(_map_entry)
-        refs['ref'] = []
-        refs['doc'] = []
-        return refs
+        return docs_url.rstrip("/")
 
     def setup_linkcode_resolve(self, app: Sphinx) -> None:
         linkcode_func = get_conf_val(app, "linkcode_resolve")
@@ -68,9 +80,22 @@ class READMEConfig:
                 "``sphinx_readme:`` Function `linkcode_resolve` not found in ``conf.py``; "
                 "using default function from ``sphinx_readme``"
             )
-            linkcode_func = get_linkcode_resolve(self.linkcode_url)
+            # Get the template for linking to source code
+            linkcode_url = get_linkcode_url(
+                url=self.repo_url,
+                context=self.html_context,
+                blob=get_conf_val(app, 'linkcode_blob')
+            )
+            linkcode_func = get_linkcode_resolve(linkcode_url)
 
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
+        app.setup_extension("sphinx.ext.linkcode")
+
+    def get_ref_map(self) -> Dict:
+        refs = defaultdict(_map_entry)
+        refs['ref'] = []
+        refs['doc'] = []
+        return refs
 
     def read_source_files(self) -> Dict[str, str]:
         sources = {
@@ -95,8 +120,10 @@ class READMEConfig:
             for include in included:
                 # Determine abs path of included file
                 if include.startswith("/"):
+
                     # These paths are relative to source dir
                     file = Path(f"{self.src_dir}/{include}").resolve()
+
                 else:
                     # These paths are relative to rst_file dir
                     file = (Path(rst_file).parent / Path(include)).resolve()
@@ -122,7 +149,7 @@ class READMEConfig:
         if isinstance(src_files, str):
             src_files = [src_files]
 
-        self._src_files = [  # Absolute path of files; files should be relative to source directory
+        self._src_files = [  # Absolute paths of files; files should be relative to source directory
             str((Path(self.src_dir) / Path(src_file)).resolve())
             for src_file in src_files
         ]
@@ -140,7 +167,19 @@ class READMEConfig:
 
     @property
     def docs_url_type(self):
-        return 'code' if self.docs_url in self.linkcode_url else 'html'
+        return self._docs_url_type
+
+    @docs_url_type.setter
+    def docs_url_type(self, docs_url_type: str):
+        if docs_url_type not in ('html', 'code'):
+            raise ExtensionError(
+                "``sphinx_readme``: ``readme_docs_url_type`` value must be ``code`` or ``html``"
+            )
+        if docs_url_type == "code" and not self.html_baseurl:
+            raise ExtensionError(  # HTML url is needed for non-source code xrefs
+                "``sphinx_readme``: conf.py value missing for ``html_baseurl``"
+            )
+        self._docs_url_type = docs_url_type
 
     @cached_property
     def icon_map(self):

@@ -26,8 +26,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     set_conf_val(app, 'READMEParser', READMEParser(app))
 
-    app.setup_extension('sphinx.ext.linkcode')
-
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
 
 

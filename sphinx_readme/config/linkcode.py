@@ -1,9 +1,10 @@
-import inspect
 import os
-import subprocess
+import re
 import sys
+import inspect
+import subprocess
 from pathlib import Path
-from typing import Union, List, Dict, Optional, Callable
+from typing import Dict, Optional, Callable
 from sphinx.errors import ExtensionError
 from sphinx_readme.utils import logger
 
@@ -14,29 +15,50 @@ def get_linkcode_url(blob: Optional[str] = None, context: Optional[Dict] = None,
     Formatted into the final link by ``linkcode_resolve()``
     """
     if url is None:
-        if context is None or not all(context.get(key) for key in ("github_user", "github_repo")):
+        if context is None:
             raise ExtensionError(
-                "``sphinx_readme:`` config value ``linkcode_url`` is missing")
+                "``sphinx_readme:`` config value ``html_context`` is missing")
         else:
-            logger.info(
-                "``sphinx_readme``: config value ``linkcode_url`` is missing. "
-                "Creating link from ``html_context`` values..."
-            )
-            url = f"https://github.com/{context['github_user']}/{context['github_repo']}"
+            url = get_repo_url(context)
 
-    blob = get_linkcode_revision(blob) if blob else context.get('github_version')
+    host = get_repo_host(url)
+    blob = get_linkcode_revision(blob) if blob else context.get(f'{host}_version')
 
-    if blob is not None:
-        url = url.strip("/") + f"/blob/{blob}/"  # URL should be "https://github.com/user/repo"
-    else:
+    if blob is None:
         raise ExtensionError(
-            "``sphinx_readme:`` must provide a blob or GitHub version to link to")
+            "``sphinx_readme:`` conf.py value must be set for "
+            f"``linkcode_blob`` or html_context[``{host}_version``]"
+        )
 
-    return url + "{filepath}#L{linestart}-L{linestop}"
+    if host == "bitbucket":
+        return url.strip('/') + f"/src/{blob}/" + "{filepath}#lines-{linestart}:{linestop}"
+    else:
+        return url.strip("/") + f"/blob/{blob}/" + "{filepath}#L{linestart}-L{linestop}"
+
+
+def get_repo_url(context: Dict):
+    for host in ('github', 'gitlab', 'bitbucket'):
+        user = context.get(f"{host}_user")
+        repo = context.get(f"{host}_repo")
+
+        if not all((user, repo)):
+            continue
+
+        tld = "org" if host == "bitbucket" else "com"
+        return f"https://{host}.{tld}/{user}/{repo}"
+
+    logger.error("``sphinx_readme``: unable to determine repo url")
+    return None
+
+
+def get_repo_host(url: str):
+    if match := re.match(r"https?://(\w+)\.(?:com|org)", url):
+        return match.group(1)
+    return None
 
 
 def get_linkcode_revision(blob: str) -> str:
-    """Get the blob to link to on GitHub
+    """Get the blob to link to
 
     .. note::
 
@@ -77,7 +99,7 @@ def get_head(errors: bool = False) -> Optional[str]:
         if errors:
             raise e
         else:
-            return print("Failed to get head")  # so no head?
+            return logger.error("Failed to get head")  # so no head?
 
 
 def get_last_tag() -> str:
@@ -151,7 +173,7 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
             linestart=linestart,
             linestop=linestop
         )
-        print(f"Final Link for {fullname}: {final_link}")
+        logger.debug(f"Final Link for {fullname}: {final_link}")
         return final_link
 
     return linkcode_resolve
