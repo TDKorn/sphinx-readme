@@ -140,7 +140,7 @@ class READMEParser:
         """Helper function to parse target info of a :ref: or :doc: cross-reference"""
         return {
             'text': str(node.children[0]),
-            "refuri": self.config.docs_url + "/" + node.parent.get('refuri', '')
+            "refuri": self.config.html_baseurl + "/" + node.parent.get('refuri', '')
         }
 
     def get_internal_target(self, node: Node, qualified_name: str):
@@ -266,25 +266,29 @@ class READMEParser:
         return rst
 
     def replace_rst_images(self, rst_src: str, rst: str) -> str:
-        """Resolves filepaths of ``image`` directives to be relative to the ``readme_out_dir``
+        """Replaces filepaths in ``image`` directives with repository links
 
-            ".. image:: /blah/blah.png"
-            ".. image:: /blah.png"
-            ".. image:: blah.png"
-            ".. image:: blah/blah.png"
-            ".. image:: ../blah/blah.png"
+        :Example:
+            :rst:`.. image:: /_static/logo.png`
+
+            would be replaced with
+
+            :rst:`.. image:: https://github.com/tdkorn/sphinx-readme/blob/docs/docs/source/_static/logo.png`
+
+        .. note:: Your repository will be used as the image source regardless of the
+           value of :confval:`readme_docs_url_type`
 
         :param rst_src: filename of the rst file being parsed
         :param rst: the content of the rst file being parsed
-        :return: the rst file content with correct image directives
         """
         src_dir_path = Path(self.config.src_dir)
-        out_dir_path = Path(self.config.out_dir)
         rst_src_dir_path = Path(rst_src).parent
+        repo_dir_path = self.config.repo_dir
+        blob_url = self.config.blob_url
 
         # These image paths are relative to the rst source file
         # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
-        relative = r".. image:: ([\w\.-]+[\w/-]+\.\w{3,4})"
+        relative = r"\.\. image:: ([^/][./\w-]+\.\w{3,4})"
         img_paths = re.findall(relative, rst)
 
         for img_path in img_paths:
@@ -292,23 +296,23 @@ class READMEParser:
             abs_img_path = (rst_src_dir_path / Path(img_path)).resolve()
 
             # Find path of image relative to the output directory
-            rel_img_path = abs_img_path.relative_to(out_dir_path).as_posix()
+            rel_img_path = abs_img_path.relative_to(repo_dir_path).as_posix()
 
             # Sub that hoe in!!!
             rst = re.sub(
-                pattern=rf".. image:: {img_path}",
-                repl=fr".. image:: {self.config.repo_url}/{rel_img_path}",
+                pattern=rf"\.\. image:: {img_path}",
+                repl=fr".. image:: {blob_url}/{rel_img_path}",
                 string=rst
             )
 
         # These image paths are "absolute" (relative to src_dir)
         # .. image:: /path/to/image.ext
-        relpath_to_src_dir = Path(os.path.relpath(src_dir_path, out_dir_path)).as_posix()
+        relpath_to_src_dir = src_dir_path.relative_to(repo_dir_path).as_posix()
 
         # Replace all image paths starting with "/"
         return re.sub(
-            pattern=r".. image:: (/[\w/-]+\.\w{3,4})",
-            repl=fr".. image:: {self.config.repo_url}/{relpath_to_src_dir}\1",
+            pattern=r"\.\. image:: (/[\w/-]+\.\w{3,4})",
+            repl=fr".. image:: {blob_url}/{relpath_to_src_dir}\1",
             string=rst
         )
 

@@ -5,6 +5,7 @@ from docutils.nodes import Node
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 from sphinx_readme.utils import get_conf_val, set_conf_val
+from sphinx_readme.config import get_repo_dir
 from sphinx_readme.parser import READMEParser
 
 
@@ -20,7 +21,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("readme_raw_directive", True, True)
     app.add_config_value("readme_include_directive", True, True)
     app.add_config_value("readme_replace_attrs", True, True)
-    app.add_config_value("readme_out_dir", app.outdir, True)
+    app.add_config_value("readme_out_dir", get_repo_dir(), True)
     app.add_config_value("readme_blob", 'head', True)
     app.add_config_value("readme_default_admonition_icon", "📄", True)
 

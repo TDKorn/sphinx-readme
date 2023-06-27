@@ -3,6 +3,7 @@ import re
 import sys
 import inspect
 import subprocess
+import pkg_resources
 from pathlib import Path
 from typing import Dict, Optional, Callable
 from sphinx.errors import ExtensionError
@@ -135,11 +136,28 @@ def get_last_tag() -> str:
         raise RuntimeError("No tags exist for the repo") from e
 
 
+def get_repo_dir() -> Path:
+    """Get the root directory of the repository
+
+    :raises RuntimeError: if the directory can't be determined
+    """
+    try:
+        cmd = "git rev-parse --show-toplevel"
+        return Path(subprocess.check_output(cmd.split(" ")).strip().decode('utf-8'))
+
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError("Unable to determine the repository directory") from e
+
+
 def get_linkcode_resolve(linkcode_url: str) -> Callable:
     """Defines and returns a ``linkcode_resolve`` function for your package
 
     Used by default if ``linkcode_resolve`` isn't defined in ``conf.py``
     """
+
+    repo_dir = get_repo_dir()
+    pkg = pkg_resources.require(repo_dir.name)[0]
+    top_level = pkg.get_metadata('top_level.txt').strip()
 
     def linkcode_resolve(domain, info):
         """Returns a link to the source code on GitHub, with appropriate lines highlighted
@@ -166,10 +184,6 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
             except AttributeError:
                 return None
 
-        pkg_name = modname.split('.')[0]
-        pkg_dir = sys.modules.get(pkg_name).__file__
-        repo_dir = Path(pkg_dir).parent.parent
-
         try:
             filepath = os.path.relpath(inspect.getsourcefile(obj), repo_dir)
             if filepath is None:
@@ -185,7 +199,7 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
             linestart, linestop = lineno, lineno + len(source) - 1
 
         # Fix links with "../../../" or "..\\..\\..\\"
-        filepath = '/'.join(filepath[filepath.find(pkg_name):].split('\\'))
+        filepath = '/'.join(filepath[filepath.find(top_level):].split('\\'))
 
         # Example: https://github.com/TDKorn/my-magento/blob/docs/magento/models/model.py#L28-L59
         final_link = linkcode_url.format(

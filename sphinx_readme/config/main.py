@@ -10,7 +10,7 @@ from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 
 from sphinx_readme.utils import get_conf_val, set_conf_val, logger
-from sphinx_readme.config import get_repo_url, get_linkcode_url, get_linkcode_resolve
+from sphinx_readme.config import get_repo_dir, get_blob_url, get_repo_url, get_linkcode_url, get_linkcode_resolve
 
 
 class READMEConfig:
@@ -23,6 +23,7 @@ class READMEConfig:
     def __init__(self, app: Sphinx):
         self.logger = logger
         self.src_dir = app.srcdir
+        self.repo_dir = get_repo_dir()
         self.out_dir = get_conf_val(app, 'readme_out_dir')
         self.src_files = get_conf_val(app, 'readme_src_files', [])
         self.html_context = get_conf_val(app, "html_context")
@@ -36,7 +37,12 @@ class READMEConfig:
         self.include_directive = get_conf_val(app, 'readme_include_directive')
         self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
 
+        self.repo_blob = get_conf_val(app, "readme_blob")
         self.repo_url = self.get_repo_url(app)
+        self.blob_url = get_blob_url(
+            repo_url=self.repo_url,
+            blob=self.repo_blob
+        )
         self.docs_url = self.get_docs_url(app)
         self.ref_map = self.get_ref_map()
         self.source_files = self.read_source_files()
@@ -68,7 +74,7 @@ class READMEConfig:
                         "``readme_docs_url`` or ``html_baseurl``"
                     )
             else:  # ``docs_url_type`` is "code"
-                docs_url = self.repo_url
+                docs_url = self.blob_url
 
         return docs_url.rstrip("/")
 
@@ -81,11 +87,7 @@ class READMEConfig:
                 "using default function from ``sphinx_readme``"
             )
             # Get the template for linking to source code
-            linkcode_url = get_linkcode_url(
-                url=self.repo_url,
-                context=self.html_context,
-                blob=get_conf_val(app, 'readme_blob')
-            )
+            linkcode_url = get_linkcode_url(self.blob_url)
             linkcode_func = get_linkcode_resolve(linkcode_url)
 
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
