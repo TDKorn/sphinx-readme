@@ -83,10 +83,12 @@ class READMEConfig:
         with open(rst_file, 'r', encoding='utf-8') as f:
             rst = f.read()
 
+        include_pattern = r"^\.\. include:: ([./]*?[\w/-]+\.rst)"
+
         if self.include_directive:
-            # Find all included files with a relative file path
+            # Find all included files
             included = re.findall(
-                pattern=r"^\.\. include:: ([/\.]*?[\w/-]+\.rst)",
+                pattern=include_pattern,
                 string=rst,
                 flags=re.M
             )
@@ -107,7 +109,7 @@ class READMEConfig:
                 )
         else:
             # Remove all include directives from the text
-            rst = re.sub(r"^\.\. include:: [\./\w-]+\.rst", '', rst, re.M)
+            rst = re.sub(include_pattern, '', rst, flags=re.M)
 
         return rst
 
