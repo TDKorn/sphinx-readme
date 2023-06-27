@@ -9,31 +9,22 @@ from sphinx.errors import ExtensionError
 from sphinx_readme.utils import logger
 
 
-def get_linkcode_url(blob: Optional[str] = None, context: Optional[Dict] = None, url: Optional[str] = None) -> str:
+def get_linkcode_url(repo_url: Optional[str] = None, blob: Optional[str] = None, context: Optional[Dict] = None) -> str:
     """Get the template URL for linking to highlighted GitHub source code
 
     Formatted into the final link by ``linkcode_resolve()``
     """
-    if url is None:
+    if repo_url is None:
         if context is None:
             raise ExtensionError(
                 "``sphinx_readme:`` config value ``html_context`` is missing")
         else:
-            url = get_repo_url(context)
+            repo_url = get_repo_url(context)
 
-    host = get_repo_host(url)
-    blob = get_linkcode_revision(blob) if blob else context.get(f'{host}_version')
-
-    if blob is None:
-        raise ExtensionError(
-            "``sphinx_readme:`` conf.py value must be set for "
-            f"``linkcode_blob`` or html_context[``{host}_version``]"
-        )
-
-    if host == "bitbucket":
-        return url.strip('/') + f"/src/{blob}/" + "{filepath}#lines-{linestart}:{linestop}"
+    if 'bitbucket' in blob_url:
+        return blob_url + "/{filepath}#lines-{linestart}:{linestop}"
     else:
-        return url.strip("/") + f"/blob/{blob}/" + "{filepath}#L{linestart}-L{linestop}"
+        return blob_url + "/{filepath}#L{linestart}-L{linestop}"
 
 
 def get_repo_url(context: Dict):
@@ -49,6 +40,30 @@ def get_repo_url(context: Dict):
 
     logger.error("``sphinx_readme``: unable to determine repo url")
     return None
+
+
+def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Dict] = None) -> str:
+    """Generate the url for a specific blob of a repository
+
+    If ``blob`` and ``context`` are not provided, the most recent commit hash will be used
+    """
+    host = get_repo_host(repo_url)
+
+    if context:
+        blob = context.get(f"{host}_version")
+
+    if blob:
+        # Use blob from kwarg/html_context
+        blob = get_linkcode_revision(blob)
+
+    else:
+        # Use hash of the most recent commit
+        blob = get_linkcode_revision('head')
+
+    if host == "bitbucket":
+        return repo_url.strip('/') + f"/src/{blob}"
+    else:
+        return repo_url.strip("/") + f"/blob/{blob}"
 
 
 def get_repo_host(url: str):

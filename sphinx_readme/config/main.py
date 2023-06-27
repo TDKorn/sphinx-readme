@@ -84,7 +84,7 @@ class READMEConfig:
             linkcode_url = get_linkcode_url(
                 url=self.repo_url,
                 context=self.html_context,
-                blob=get_conf_val(app, 'linkcode_blob')
+                blob=get_conf_val(app, 'readme_blob')
             )
             linkcode_func = get_linkcode_resolve(linkcode_url)
 
