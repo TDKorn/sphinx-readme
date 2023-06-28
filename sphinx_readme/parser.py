@@ -361,8 +361,17 @@ class READMEParser:
         )
 
     def replace_only_directives(self, rst: str) -> str:
+        """Replaces and removes``only`` directives
+
+        If ``"readme"`` is in the``<expression>`` part of the
+        ``only`` directive, the content will be used.
+
+        If not, the directive is removed
+
+        :param rst: the content of the ``rst`` file
+        """
         # Match all ``only`` directives
-        pattern = r"\.\. only:: ([\w\s]+?)\n+?((?:^[ ]+[\w\W]+?\n)+?)(?=\n+?\S+?)"
+        pattern = r"\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?\n)+?)(?=[\n\S]+?|$)"
         directives = re.findall(pattern, rst, re.M)
 
         for expression, content in directives:
@@ -394,7 +403,7 @@ class READMEParser:
     def replace_cross_refs(self, rst: str, ref_role: str) -> str:
         # Find all :ref_role:`ref_id` cross-refs
         cross_refs = re.findall(
-            pattern=fr":{ref_role}:`(.+)`",
+            pattern=fr"(?:\s*?):{ref_role}:`([^`]+)`(?=\s*?)",
             string=rst
         )
         # Match these ids up with target data in the ref_map
