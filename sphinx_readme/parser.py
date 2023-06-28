@@ -61,6 +61,9 @@ class READMEParser:
             if 'py' not in node['classes']:
                 continue
 
+            if not isinstance(node.parent, nodes.reference):
+                continue
+
             if node.parent.get('internal') is False:
                 # External links are xrefs from intersphinx
                 self.parse_intersphinx_node(node)
@@ -74,15 +77,15 @@ class READMEParser:
                 self.parse_autodoc_node(node, docname)
 
     def parse_intersphinx_node(self, node: nodes.literal):
-        pattern = r":(mod|class|meth|func|attr):`~?\.?([.\w]+)`"
+        pattern = r":(mod|class|meth|func|attr):`~?\.?[.\w]+`"
         match = re.match(pattern, node.rawsource)
         target = node.parent.get('refuri')
 
         if not all((match, target)):
             return
 
-        qualified_name = match.group(2)
         is_method = match.group(1) == "meth"
+        qualified_name = target.split("#")[-1].split("-")[-1]
         self.add_variants(qualified_name, target, is_method)
 
     def parse_module_node(self, node: Node, docname: str):
