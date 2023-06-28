@@ -9,17 +9,22 @@ from sphinx.errors import ExtensionError
 from sphinx_readme.utils import logger
 
 
-def get_linkcode_url(repo_url: Optional[str] = None, blob: Optional[str] = None, context: Optional[Dict] = None) -> str:
+def get_linkcode_url(blob_url: Optional[str] = None,
+                     repo_url: Optional[str] = None,
+                     context: Optional[Dict] = None,
+                     blob: Optional[str] = None) -> str:
     """Get the template URL for linking to highlighted GitHub source code
 
     Formatted into the final link by ``linkcode_resolve()``
     """
-    if repo_url is None:
-        if context is None:
-            raise ExtensionError(
-                "``sphinx_readme:`` config value ``html_context`` is missing")
-        else:
-            repo_url = get_repo_url(context)
+    if blob_url is None:
+        if repo_url is None:
+            if context is None:
+                raise ExtensionError(
+                    "``sphinx_readme:`` config value ``html_context`` is missing")
+            else:
+                repo_url = get_repo_url(context)
+        blob_url = get_blob_url(repo_url, blob, context)
 
     if 'bitbucket' in blob_url:
         return blob_url + "/{filepath}#lines-{linestart}:{linestop}"
