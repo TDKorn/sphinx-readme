@@ -22,7 +22,7 @@ class READMEConfig:
 
     def __init__(self, app: Sphinx):
         self.logger = logger
-        self.src_dir = app.srcdir
+        self.src_dir = Path(app.srcdir)
         self.repo_dir = get_repo_dir()
         self.out_dir = get_conf_val(app, 'readme_out_dir')
         self.src_files = get_conf_val(app, 'readme_src_files', [])
@@ -161,11 +161,16 @@ class READMEConfig:
         return self._out_dir
 
     @out_dir.setter
-    def out_dir(self, out_dir: str):
-        if not os.path.exists(out_dir):
-            os.mkdir(out_dir)
+    def out_dir(self, out: str):
+        out_dir = Path(out)
 
-        self._out_dir = Path(out_dir).resolve()
+        if not out_dir.is_absolute():
+            out_dir = (self.src_dir / out_dir).resolve()
+
+        if not out_dir.exists():
+            out_dir.mkdir()
+
+        self._out_dir = out_dir
 
     @property
     def docs_url_type(self):

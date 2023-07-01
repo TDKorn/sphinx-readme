@@ -1,4 +1,3 @@
-import os
 import re
 from pathlib import Path
 from collections import defaultdict
@@ -322,12 +321,12 @@ class READMEParser:
         .. note:: Your repository will be used as the image source regardless of the
            value of :confval:`readme_docs_url_type`
 
-        :param rst_src: filename of the rst file being parsed
+        :param rst_src: absolute path of the rst file being parsed
         :param rst: the content of the rst file being parsed
         """
-        src_dir_path = Path(self.config.src_dir)
-        rst_src_dir_path = Path(rst_src).parent
-        repo_dir_path = self.config.repo_dir
+        src_dir = self.config.src_dir
+        repo_dir = self.config.repo_dir
+        rst_src_dir = Path(rst_src).parent
         blob_url = self.config.blob_url
 
         # These image paths are relative to the rst source file
@@ -337,10 +336,10 @@ class READMEParser:
 
         for img_path in img_paths:
             # Find absolute path of the image
-            abs_img_path = (rst_src_dir_path / Path(img_path)).resolve()
+            abs_img_path = (rst_src_dir / Path(img_path)).resolve()
 
             # Find path of image relative to the output directory
-            rel_img_path = abs_img_path.relative_to(repo_dir_path).as_posix()
+            rel_img_path = abs_img_path.relative_to(repo_dir).as_posix()
 
             # Sub that hoe in!!!
             rst = re.sub(
@@ -351,7 +350,7 @@ class READMEParser:
 
         # These image paths are "absolute" (relative to src_dir)
         # .. image:: /path/to/image.ext
-        relpath_to_src_dir = src_dir_path.relative_to(repo_dir_path).as_posix()
+        relpath_to_src_dir = src_dir.relative_to(repo_dir).as_posix()
 
         # Replace all image paths starting with "/"
         return re.sub(
@@ -461,7 +460,7 @@ class READMEParser:
         rst = re.sub(long_ref, repl, rst)
         return rst
 
-    def get_header_vals(self, autodoc_refs: Dict) -> List[str]:
+    def get_header_vals(self, autodoc_refs: Set) -> List[str]:
         header = []
 
         for ref in autodoc_refs:
