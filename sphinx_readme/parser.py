@@ -370,19 +370,19 @@ class READMEParser:
         :param rst: the content of the ``rst`` file
         """
         # Match all ``only`` directives
-        pattern = r"\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?\n)+?)(?=[\n\S]+?|$)"
-        directives = re.findall(pattern, rst, re.M)
+        pattern = r"\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)"
+        directives = re.findall(pattern, rst, re.M | re.DOTALL)
 
         for expression, content in directives:
-            # Match each block exactly
+            # Pattern to match each block exactly
             pattern = rf"\.\. only:: {expression}\n+?{content}"
 
             if 'readme' in expression:
-                # Remove preceding indent (3 spaces) from each line
-                text = '\n\n'.join(line[3:] for line in content.split('\n\n'))
+                # For replacement, remove preceding indent (3 spaces) from each line
+                content = '\n'.join(line[3:] for line in content.split('\n'))
 
                 # Replace directive with content
-                rst = re.sub(pattern, rf"{text}", rst, re.M)
+                rst = re.sub(pattern, rf"{content}", rst, re.M)
 
             else:
                 # Remove directive
