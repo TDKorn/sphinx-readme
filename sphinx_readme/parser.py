@@ -1,13 +1,17 @@
 import re
+from copy import copy
 from pathlib import Path
 from collections import defaultdict
 from typing import Dict, List, Tuple, Set
 
 from docutils import nodes
-from docutils.nodes import Node
-from sphinx.application import Sphinx
-from sphinx.environment import BuildEnvironment
+from docutils.nodes import Node, document
+
 from sphinx import addnodes
+from sphinx.application import Sphinx
+from sphinx.testing import restructuredtext
+from sphinx.transforms import SphinxTransformer
+from sphinx.environment import BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils import get_all_variants, escape_rst
@@ -24,11 +28,14 @@ class READMEParser:
         self.admonitions = {}
         self.titles = {}
 
-    def parse(self, doctree: Node, docname: str):
+    def parse(self, app: Sphinx, doctree: document, docname: str):
+        # If a source has ``only`` directives, its doctree will have missing/extra content
+        # Replace the ``only`` directives, then generate a new doctree if needed
+        doctree = self.get_doctree(app, doctree, docname)
+
         inline_nodes = list(doctree.findall(nodes.inline))
         literal_nodes = list(doctree.findall(nodes.literal))
 
-        self.parse_xref_nodes(inline_nodes)
         self.parse_autodoc_nodes(literal_nodes, docname)
 
         if self.config.docs_url_type == "code":
@@ -38,7 +45,46 @@ class READMEParser:
             self.parse_toctree(node, doctree)
 
         if doctree.get('source') in self.sources:
+            self.parse_xref_nodes(inline_nodes)
             self.parse_admonitions(doctree)
+
+    def get_doctree(self, app: Sphinx, doctree: document, docname: str) -> document:
+        # Return original doctree if file is not a readme source
+        if (src := doctree.get('source')) not in self.sources:
+            return doctree
+
+        # Parse ``only`` directives to get true source rst of README version
+        parsed_rst = self.config.read_rst(src, replace_only=True)
+        raw_rst = self.sources[src]
+
+        # Return original doctree if file had no ``only`` directives
+        if parsed_rst == raw_rst:
+            return doctree
+
+        self.sources[src] = parsed_rst
+
+        # Use temp docname to avoid duplicate warnings
+        docname = docname + "_readme"
+
+        # Generate new doctree from parsed rst using Sphinx application
+        doctree = restructuredtext.parse(app, parsed_rst, docname)
+
+        # Resolve references in the doctree
+        try:
+            backup = copy(app.env.temp_data)
+            app.env.temp_data['docname'] = docname
+
+            transformer = SphinxTransformer(doctree)
+            transformer.set_environment(app.env)
+            transformer.add_transforms(app.registry.get_post_transforms())
+            transformer.apply_transforms()
+
+        finally:
+            app.env.temp_data = backup
+
+        # Replace temp source with actual source
+        doctree['source'] = src
+        return doctree
 
     def parse_xref_nodes(self, inline_nodes: List[nodes.inline]):
         for node in inline_nodes:
@@ -222,7 +268,6 @@ class READMEParser:
             rst = self.replace_admonitions(src, rst)
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_toctrees(src, rst)
-            rst = self.replace_only_directives(rst)
             rst = self.replace_rst_rubrics(rst)
 
             for role in ('ref', 'doc'):
@@ -358,37 +403,6 @@ class READMEParser:
             repl=fr".. image:: {blob_url}/{relpath_to_src_dir}\1",
             string=rst
         )
-
-    def replace_only_directives(self, rst: str) -> str:
-        """Replaces and removes``only`` directives
-
-        If ``"readme"`` is in the``<expression>`` part of the
-        ``only`` directive, the content will be used.
-
-        If not, the directive is removed
-
-        :param rst: the content of the ``rst`` file
-        """
-        # Match all ``only`` directives
-        pattern = r"\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)"
-        directives = re.findall(pattern, rst, re.M | re.DOTALL)
-
-        for expression, content in directives:
-            # Pattern to match each block exactly
-            pattern = rf"\.\. only:: {expression}\n+?{content}"
-
-            if 'readme' in expression:
-                # For replacement, remove preceding indent (3 spaces) from each line
-                content = '\n'.join(line[3:] for line in content.split('\n'))
-
-                # Replace directive with content
-                rst = re.sub(pattern, rf"{content}", rst, re.M)
-
-            else:
-                # Remove directive
-                rst = re.sub(pattern, '', rst, re.M)
-
-        return rst
 
     def replace_rst_rubrics(self, rst: str):
         if heading := self.config.rubric_heading:

@@ -35,6 +35,38 @@ def escape_rst(rst: str) -> str:
     return rst
 
 
+def replace_only_directives(rst: str) -> str:
+    """Replaces and removes ``only`` directives
+
+    If ``"readme"`` is in the ``<expression>`` part of the
+    ``only`` directive, the content will be used.
+
+    Otherwise, the directive will be removed
+
+    :param rst: the content of an ``rst`` file
+    """
+    # Match all ``only`` directives
+    pattern = r"\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)"
+    directives = re.findall(pattern, rst, re.M | re.DOTALL)
+
+    for expression, content in directives:
+        # Pattern to match each block exactly
+        pattern = rf"\.\. only:: {expression}\n+?{escape_rst(content)}\n*?"
+
+        if 'readme' in expression:
+            # For replacement, remove preceding indent (3 spaces) from each line
+            content = '\n'.join(line[3:] for line in content.split('\n'))
+
+            # Replace directive with content
+            rst = re.sub(pattern, rf"{content}", rst)
+
+        else:
+            # Remove directive
+            rst = re.sub(pattern, '', rst)
+
+    return rst
+
+
 def get_variants(obj: str):
     """
 

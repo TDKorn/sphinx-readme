@@ -9,7 +9,7 @@ from functools import cached_property
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 
-from sphinx_readme.utils import get_conf_val, set_conf_val, logger
+from sphinx_readme.utils import get_conf_val, set_conf_val, logger, replace_only_directives
 from sphinx_readme.config import get_repo_dir, get_blob_url, get_repo_url, get_linkcode_url, get_linkcode_resolve
 
 
@@ -106,9 +106,12 @@ class READMEConfig:
         }
         return sources
 
-    def read_rst(self, rst_file: Union[str, Path]):
+    def read_rst(self, rst_file: Union[str, Path], replace_only: bool = False) -> str:
         with open(rst_file, 'r', encoding='utf-8') as f:
             rst = f.read()
+
+        if replace_only:
+            rst = replace_only_directives(rst)
 
         include_pattern = r"^\.\. include:: ([./]*?[\w/-]+\.rst)"
 

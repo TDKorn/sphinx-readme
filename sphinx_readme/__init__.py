@@ -1,7 +1,7 @@
 import sphinx
 from pathlib import Path
 from typing import Dict, Any
-from docutils.nodes import Node
+from docutils.nodes import document
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 from sphinx_readme.utils import get_conf_val, set_conf_val
@@ -35,9 +35,9 @@ def parse_titles(app: Sphinx, env: BuildEnvironment):
     readme.parse_titles(env)
 
 
-def parse_references(app: Sphinx, doctree: Node, docname: str):
+def parse_references(app: Sphinx, doctree: document, docname: str):
     readme = get_conf_val(app, 'READMEParser')
-    readme.parse(doctree, docname)
+    readme.parse(app, doctree, docname)
 
 
 def resolve_readme(app: Sphinx, exception):
