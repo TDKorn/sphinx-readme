@@ -361,7 +361,7 @@ class READMEParser:
 
             would be replaced with
 
-            :rst:`.. image:: https://github.com/tdkorn/sphinx-readme/blob/docs/docs/source/_static/logo.png`
+            :rst:`.. image:: https://github.com/tdkorn/sphinx-readme/blob/main/docs/source/_static/logo.png?raw=True`
 
         .. note:: Your repository will be used as the image source regardless of the
            value of :confval:`readme_docs_url_type`
@@ -371,38 +371,35 @@ class READMEParser:
         """
         src_dir = self.config.src_dir
         repo_dir = self.config.repo_dir
+        relpath_to_src_dir = src_dir.relative_to(repo_dir)
         rst_src_dir = Path(rst_src).parent
         blob_url = self.config.blob_url
 
-        # These image paths are relative to the rst source file
-        # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
-        relative = r"\.\. image:: ([^/][./\w-]+\.\w{3,4})"
-        img_paths = re.findall(relative, rst)
+        # Find the targets of all image directives
+        img_pattern = r"\.\. image:: ([./\w-]+\.\w{3,4})"
+        img_paths = re.findall(img_pattern, rst)
 
         for img_path in img_paths:
-            # Find absolute path of the image
-            abs_img_path = (rst_src_dir / Path(img_path)).resolve()
+            if img_path.startswith("/"):
+                # These image paths are "absolute" (relative to src_dir)
+                # .. image:: /path/to/image.ext
+                path_to_img = (relpath_to_src_dir / Path(img_path.lstrip("/"))).as_posix()
 
-            # Find path of image relative to the output directory
-            rel_img_path = abs_img_path.relative_to(repo_dir).as_posix()
+            else:
+                # These image paths are relative to the rst source file
+                # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
+                abs_img_path = (rst_src_dir / Path(img_path)).resolve()
+
+                # Find path of image relative to the repo directory
+                path_to_img = abs_img_path.relative_to(repo_dir).as_posix()
 
             # Sub that hoe in!!!
             rst = re.sub(
                 pattern=rf"\.\. image:: {img_path}",
-                repl=fr".. image:: {blob_url}/{rel_img_path}",
+                repl=fr".. image:: {blob_url}/{path_to_img}?raw=True",
                 string=rst
             )
-
-        # These image paths are "absolute" (relative to src_dir)
-        # .. image:: /path/to/image.ext
-        relpath_to_src_dir = src_dir.relative_to(repo_dir).as_posix()
-
-        # Replace all image paths starting with "/"
-        return re.sub(
-            pattern=r"\.\. image:: (/[\w/-]+\.\w{3,4})",
-            repl=fr".. image:: {blob_url}/{relpath_to_src_dir}\1",
-            string=rst
-        )
+        return rst
 
     def replace_rst_rubrics(self, rst: str):
         heading_chars = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
