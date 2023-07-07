@@ -99,6 +99,13 @@ def replace_only_directives(rst: str) -> str:
     return rst
 
 
+def remove_raw_directives(rst: str) -> str:
+    return re.sub(
+        pattern=r"(\.\. raw::\s+\S.*?\n+?(?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)",
+        repl='', string=rst, flags=re.M | re.DOTALL
+    )
+
+
 def get_variants(obj: str):
     """
 

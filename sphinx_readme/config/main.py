@@ -9,7 +9,7 @@ from functools import cached_property
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 
-from sphinx_readme.utils import get_conf_val, set_conf_val, logger, replace_only_directives
+from sphinx_readme.utils import get_conf_val, set_conf_val, logger, replace_only_directives, remove_raw_directives
 from sphinx_readme.config import get_repo_dir, get_blob_url, get_repo_url, get_linkcode_url, get_linkcode_resolve
 
 
@@ -142,6 +142,9 @@ class READMEConfig:
         else:
             # Remove all include directives from the text
             rst = re.sub(include_pattern, '', rst, flags=re.M)
+
+        if self.raw_directive is False:
+            rst = remove_raw_directives(rst)
 
         return rst
 
