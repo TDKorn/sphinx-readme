@@ -1,5 +1,5 @@
+import os
 import sphinx
-from pathlib import Path
 from typing import Dict, Any
 from docutils.nodes import document
 from sphinx.application import Sphinx
@@ -13,6 +13,10 @@ __version__ = "v0.0.1"
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
+    # Avoid setting up extension if building on ReadTheDocs
+    if os.environ.get("READTHEDOCS") == "True":
+        return {}
+
     app.connect('env-check-consistency', parse_titles)
     app.connect('doctree-resolved', parse_references)
     app.connect('build-finished', resolve_readme)
@@ -28,7 +32,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     set_conf_val(app, 'READMEParser', READMEParser(app))
 
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
-
 
 def parse_titles(app: Sphinx, env: BuildEnvironment):
     readme = get_conf_val(app, 'READMEParser')
