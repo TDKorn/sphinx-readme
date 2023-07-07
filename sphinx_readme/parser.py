@@ -14,7 +14,7 @@ from sphinx.transforms import SphinxTransformer
 from sphinx.environment import BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils import get_all_variants, escape_rst
+from sphinx_readme.utils import get_all_variants, escape_rst, format_rst
 
 
 class READMEParser:
@@ -405,13 +405,21 @@ class READMEParser:
         )
 
     def replace_rst_rubrics(self, rst: str):
+        heading_chars = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+        rubric_pattern = r'\.\. rubric:: (.+?)(?=\n)'
+
         if heading := self.config.rubric_heading:
-            return re.sub(
-                pattern=r'\.\. rubric:: (.*)\n',
-                repl=r"\1\n" + heading * 100 + r"\n",
-                string=rst
-            )
-        return rst
+            if heading in heading_chars:
+                return re.sub(
+                    pattern=rubric_pattern,
+                    repl=lambda m: f"{m.group(1)}\n{heading * len(m.group(1))}",
+                    string=rst
+                )
+        return re.sub(
+            pattern=rubric_pattern,
+            repl=lambda m: format_rst("bold", m.group(1)),
+            string=rst
+        )
 
     def replace_cross_refs(self, rst: str, ref_role: str) -> str:
         # Find all :ref_role:`ref_id` cross-refs

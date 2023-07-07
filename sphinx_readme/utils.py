@@ -35,6 +35,38 @@ def escape_rst(rst: str) -> str:
     return rst
 
 
+def format_rst(inline_markup: str, rst: str) -> str:
+    """Formats text with the specified type of inline markup
+
+    Preserves any ``inline literals`` within the text
+
+    :Example::
+
+        >>> format_rst("bold", "This is part of the ``sphinx_readme.utils`` module")
+        "**This is part of the** ``sphinx_readme.utils`` **module**"
+
+    :param inline_markup: either "bold" or "italic"
+    :param rst: the rst content to format
+    """
+    if inline_markup == "bold":
+        markup = "**"
+    elif inline_markup == "italic":
+        markup = "*"
+    else:
+        raise ValueError("``inline_markup`` must be either 'bold' or 'italic'")
+
+    split = re.split(r"(?<=\S)(\s*?``.+?``\s*?)(?=\S)", rst)
+    parts = []
+
+    for part in split:
+        if "`" in part:
+            parts.append(part.strip())
+        else:
+            parts.append(f"{markup}{part}{markup}")
+
+    return " ".join(parts)
+
+
 def replace_only_directives(rst: str) -> str:
     """Replaces and removes ``only`` directives
 
