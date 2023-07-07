@@ -197,7 +197,7 @@ class READMEConfig:
     @cached_property
     def icon_map(self):
         types = ("attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning", "default")
-        icons = ("⚠", "⚠", "☢", "❌", "🧠", "‼", "📝", "💡", "❗", self.default_admonition_icon)
+        icons = ("🔔️", "⚠️", "☢️", '⛔', "🧠", "📢", "📝", "💡", "🚩", self.default_admonition_icon)
         icon_map = dict(zip(types, icons))
 
         # Update/add custom admonition icons from conf.py
