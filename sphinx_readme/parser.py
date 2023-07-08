@@ -371,9 +371,8 @@ class READMEParser:
         """
         src_dir = self.config.src_dir
         repo_dir = self.config.repo_dir
-        relpath_to_src_dir = src_dir.relative_to(repo_dir)
         rst_src_dir = Path(rst_src).parent
-        blob_url = self.config.blob_url
+        relpath_to_src_dir = src_dir.relative_to(repo_dir)
 
         # Find the targets of all image directives
         img_pattern = r"\.\. image:: ([./\w-]+\.\w{3,4})"
@@ -396,7 +395,7 @@ class READMEParser:
             # Sub that hoe in!!!
             rst = re.sub(
                 pattern=rf"\.\. image:: {img_path}",
-                repl=fr".. image:: {blob_url}/{path_to_img}?raw=True",
+                repl=fr".. image:: {self.config.image_baseurl}/{path_to_img}",
                 string=rst
             )
         return rst

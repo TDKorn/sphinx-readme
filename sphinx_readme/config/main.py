@@ -10,7 +10,7 @@ from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 
 from sphinx_readme.utils import get_conf_val, set_conf_val, logger, replace_only_directives, remove_raw_directives
-from sphinx_readme.config import get_repo_dir, get_blob_url, get_repo_url, get_linkcode_url, get_linkcode_resolve
+from sphinx_readme.config import get_repo_dir, get_repo_host, get_blob_url, get_repo_url, get_linkcode_url, get_linkcode_resolve
 
 
 class READMEConfig:
@@ -193,6 +193,25 @@ class READMEConfig:
                 "``sphinx_readme``: conf.py value missing for ``html_baseurl``"
             )
         self._docs_url_type = docs_url_type
+
+    @cached_property
+    def repo_host(self):
+        return get_repo_host(self.repo_url)
+
+    @cached_property
+    def image_baseurl(self):
+        if self.repo_host == "github":
+            # Ex. https://raw.githubusercontent.com/TDKorn/sphinx-readme/main
+            return self.blob_url.replace("github.com", "raw.githubusercontent.com").replace('blob/', '')
+
+        elif self.repo_host == "gitlab":
+            # Ex. https://gitlab.com/TDKorn/sphinx-readme/raw/main
+            return self.blob_url.replace("/blob/", "/raw/")
+
+        else:
+            # Ex. https://bitbucket.org/TDKorn/sphinx-readme/raw/main
+            return self.blob_url.replace("/src/", "/raw/")
+
 
     @cached_property
     def icon_map(self):
