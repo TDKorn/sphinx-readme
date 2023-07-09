@@ -168,8 +168,11 @@ readme_docs_url_type = 'code'
 if on_rtd or bool(os.getenv('local')):
     readme_blob = 'last_tag'
 else:
-    # For gh-pages
-    readme_blob = 'main'
+    # For gh-pages, don't need to generate README
+    extensions.remove('sphinx_readme')
+    # Use sphinx-github-style for linkcode
+    linkcode_blob = 'main'
+
 
 readme_admonition_icons = {
     'client': '💻',
