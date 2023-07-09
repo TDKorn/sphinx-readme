@@ -380,13 +380,11 @@ class READMEParser:
 
         for img_path in img_paths:
             if img_path.startswith("/"):
-                # These image paths are "absolute" (relative to src_dir)
-                # .. image:: /path/to/image.ext
-                path_to_img = (relpath_to_src_dir / Path(img_path.lstrip("/"))).as_posix()
+                # These paths are relative to source dir
+                path_to_img = Path(f"{relpath_to_src_dir}{img_path}").as_posix()
 
             else:
-                # These image paths are relative to the rst source file
-                # .. image:: image.png || .. image:: images/image.png || .. image:: ../images/image.png
+                # These paths are relative to rst_file dir
                 abs_img_path = (rst_src_dir / Path(img_path)).resolve()
 
                 # Find path of image relative to the repo directory

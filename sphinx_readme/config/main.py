@@ -125,10 +125,8 @@ class READMEConfig:
             for include in included:
                 # Determine abs path of included file
                 if include.startswith("/"):
-
                     # These paths are relative to source dir
-                    file = Path(f"{self.src_dir}/{include}").resolve()
-
+                    file = Path(f"{self.src_dir}{include}").resolve()
                 else:
                     # These paths are relative to rst_file dir
                     file = (Path(rst_file).parent / Path(include)).resolve()
@@ -136,7 +134,7 @@ class READMEConfig:
                 # Sub in the file content
                 rst = re.sub(
                     pattern=rf".. include:: {include}",
-                    repl=self.read_rst(file).replace(r'\n', r'\\n'),
+                    repl=self.read_rst(file, replace_only).replace(r'\n', r'\\n'),
                     string=rst
                 )
         else:
