@@ -73,7 +73,9 @@ span#readme-title h1,
 .rst-content .note .admonition-title::before {
     content: "📄";
 }
-
+.rst-content .about .admonition-title::before {
+    content: "📚";
+}
 /* Important Admonitions */
 .rst-content .important .admonition-title {
     background: #c71427;

@@ -23,7 +23,7 @@ Sample ``conf.py``
 .. only:: readme
 
    .. |readme_raw_directive| replace:: ``readme_raw_directive``
-   .. _readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuring.html#confval-readme_raw_directive
+   .. _readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_raw_directive
 
 
    .. important:: If generating a ``README`` for a platform that doesn't support ``raw``
