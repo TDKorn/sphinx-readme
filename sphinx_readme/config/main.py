@@ -38,43 +38,51 @@ class READMEConfig:
         self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
 
         self.repo_blob = get_conf_val(app, "readme_blob")
-        self.repo_url = self.get_repo_url(app)
+        self.repo_url = self.get_repo_url()
         self.blob_url = get_blob_url(
             repo_url=self.repo_url,
             blob=self.repo_blob
         )
-        self.docs_url = self.get_docs_url(app)
+        self.docs_url = self.get_docs_url()
         self.ref_map = self.get_ref_map()
         self.source_files = self.read_source_files()
 
         if self.docs_url_type == "code":
             self.setup_linkcode_resolve(app)
 
-    def get_repo_url(self, app: Sphinx):
-        if repo_url := get_conf_val(app, "readme_repo_url"):
-            return repo_url.rstrip("/")
+    def get_repo_url(self) -> str:
+        """Generates the repository URL from the :external+sphinx:confval:`html_context` dict
 
-        if self.html_context:
-            return get_repo_url(self.html_context)
+        :raises ExtensionError: if ``html_context`` is not set or missing values
+        """
+        if not self.html_context:
+            raise ExtensionError(
+                "``sphinx_readme``: conf.py value "
+                "must be set for ``html_context``"
+            )
+        return get_repo_url(self.html_context)
 
-        raise ExtensionError(
-            "sphinx_readme: conf.py value must be set for "
-            "``readme_repo_url`` or ``html_context``"
-        )
+    def get_docs_url(self) -> str:
+        """Returns the base URL of the documentation source to use
+        when resolving :mod:`~.sphinx.ext.autodoc` cross-references
 
-    def get_docs_url(self, app: Sphinx) -> str:
-        if docs_url := get_conf_val(app, "readme_docs_url") is None:
-            # Generate docs URL from other conf.py values
-            if self.docs_url_type == "html":
-                if self.html_baseurl:
-                    docs_url = self.html_baseurl
-                else:
-                    raise ExtensionError(
-                        "sphinx_readme: conf.py value must be set for "
-                        "``readme_docs_url`` or ``html_baseurl``"
-                    )
-            else:  # ``docs_url_type`` is "code"
-                docs_url = self.blob_url
+         If :attr:`docs_url_type` is
+
+         * ``"code"``: uses the :attr:`blob_url`
+         * ``"html"``: uses the :confval:`html_baseurl`
+
+        :raises ExtensionError: if ``html_baseurl`` is missing
+        """
+        if self.docs_url_type == "html":
+            if self.html_baseurl:
+                docs_url = self.html_baseurl
+            else:
+                raise ExtensionError(
+                    "``sphinx_readme``: conf.py value "
+                    "must be set for ``html_baseurl``"
+                )
+        else:  # ``docs_url_type`` is "code"
+            docs_url = self.blob_url
 
         return docs_url.rstrip("/")
 
@@ -83,8 +91,7 @@ class READMEConfig:
 
         if not callable(linkcode_func):
             self.logger.info(
-                "``sphinx_readme:`` Function `linkcode_resolve` not found in ``conf.py``; "
-                "using default function from ``sphinx_readme``"
+                "``sphinx_readme:`` using default ``linkcode_resolve``"
             )
             # Get the template for linking to source code
             linkcode_url = get_linkcode_url(self.blob_url)
