@@ -129,9 +129,9 @@ class READMEParser:
         if not all((match, target)):
             return
 
-        is_method = match.group(1) == "meth"
+        is_callable = match.group(1) in ("meth", "func")
         qualified_name = target.split("#")[-1].split("-")[-1]
-        self.add_variants(qualified_name, target, is_method)
+        self.add_variants(qualified_name, target, is_callable)
 
     def parse_module_node(self, node: Node, docname: str):
         qualified_name = node.parent.get("reftitle", "")
@@ -155,9 +155,9 @@ class READMEParser:
         if not all((refuri, qualified_name)):
             return
 
-        is_method = 'py-meth' in node['classes']
+        is_callable = bool(re.match(r":(meth|func):", node.rawsource))
         target = f"{self.config.docs_url}/{refuri}"
-        self.add_variants(qualified_name, target, is_method)
+        self.add_variants(qualified_name, target, is_callable)
 
     def _parse_refuri(self, node: Node, docname: str):
         if 'refuri' in node.parent:
@@ -177,7 +177,7 @@ class READMEParser:
 
     def parse_linkcode_node(self, node: nodes.inline):
         grandparent = node.parent.parent
-        is_method = grandparent.get("_toc_name", "").endswith("()")
+        is_callable = grandparent.get("_toc_name", "").endswith("()")
 
         try:
             qualified_name = grandparent.get("ids")[0]
@@ -185,9 +185,9 @@ class READMEParser:
             qualified_name = grandparent.get("module", "") + grandparent.get("fullname", "")
 
         target = node.parent.get("refuri")
-        self.add_variants(qualified_name, target, is_method)
+        self.add_variants(qualified_name, target, is_callable)
 
-    def add_variants(self, qualified_name, target, is_method: bool = False):
+    def add_variants(self, qualified_name, target, is_callable: bool = False):
         short_ref = qualified_name.split('.')[-1]
         variants = get_all_variants(qualified_name)
 
@@ -200,7 +200,7 @@ class READMEParser:
             else:
                 replace = variant.lstrip('.')
 
-            if is_method:
+            if is_callable:
                 replace += "()"
 
             if self.config.inline_markup:
