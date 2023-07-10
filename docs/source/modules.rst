@@ -23,7 +23,7 @@ The ``sphinx_readme`` package
    <h2>Subpackages</h2>
 
 .. |config_subpackage| replace:: The ``config`` Subpackage
-.. _config_subpackage: config.html
+.. _config_subpackage: config_subpackage.html
 
 .. |READMEConfig| replace:: The ``READMEConfig`` class
 .. _READMEConfig: readme_config.html

@@ -4,14 +4,15 @@ Table Of Contents
 
 .. toctree::
    :maxdepth: 3
+   :glob:
    :caption: README
 
    index
-   configuring
+   configuration/*
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
    :caption: Documentation
 
    modules
@@ -21,7 +22,6 @@ Table Of Contents
 .. toctree::
    :caption: Extras
 
-   configuration/sample_conf
    self
 
 Indices and tables

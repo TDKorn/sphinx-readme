@@ -52,7 +52,7 @@ master_doc = 'contents'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'configuration/mandatory_config.rst']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -175,7 +175,7 @@ else:
 
 
 readme_admonition_icons = {
-    'client': '💻',
+    'about': '📚',
 }
 
 readme_rubric_heading = "="

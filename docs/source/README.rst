@@ -45,7 +45,6 @@ A Sphinx extension to generate ``README.rst`` files that render beautifully on G
 
    |RTD|_
 
-|
 
 .. image:: https://img.shields.io/pypi/v/sphinx-readme?color=eb5202
    :target: https://pypi.org/project/sphinx-readme
@@ -74,7 +73,7 @@ About Sphinx README
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. admonition:: What's Sphinx README?
-   :class: question
+   :class: about
 
    ``sphinx_readme`` is a ``reStructuredText`` parser that uses Sphinx
    to generate ``rst`` files that render beautifully on
@@ -118,14 +117,12 @@ Features
 Installation
 ~~~~~~~~~~~~~
 
-To install with pip:
-
-.. code-block:: console
+Install using pip::
 
    pip install sphinx-readme
 
 
-Add the following to your ``conf.py``:
+Add the extension to your ``conf.py``:
 
 .. code-block:: python
 
@@ -134,29 +131,28 @@ Add the following to your ``conf.py``:
    ]
 
 
+
 Configuration
 ~~~~~~~~~~~~~~~
 
-The behaviour and output of ``sphinx_readme`` can be customized by setting
-configuration variables in your ``conf.py``
-
-Please see :doc:`configuring` for documentation on all possible configuration variables
-
-
-Mandatory Configuration Values
-==================================
 
 .. only:: html
 
-   .. include:: configuration/mandatory_config.rst
-      :start-line: 3
+   Please see :doc:`configuration/configuring`
 
-.. Use substitutions for README until confval directive parsing is implemented
 
 .. only:: readme
 
+   Please see :doc:`configuration/configuring` for full documentation on configuration variables
+
+
+   Mandatory ``conf.py`` Values
+   ==================================
+
    |html_context|_
     A dictionary containing info about your repository
+
+     Type: ``dict``
 
     * At minimum, the username and repository name must be specified
     * Please see `HTML Context Settings <https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html>`_
@@ -169,6 +165,8 @@ Mandatory Configuration Values
 
    |html_baseurl|_
     The base URL which points to the root of the HTML documentation
+
+     Type: ``str``
 
    .. |html_baseurl| replace:: ``html_baseurl``
    .. _html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
@@ -189,6 +187,8 @@ Mandatory Configuration Values
 
    |readme_docs_url_type|_
     The documentation source to link to when resolving :mod:`~.sphinx.ext.autodoc` cross-references
+
+     Type: ``str``
 
     Must be either ``"code"`` or ``"html"``
 
@@ -216,9 +216,8 @@ Mandatory Configuration Values
    .. _readme_inline_markup: https://sphinx-readme.readthedocs.io/en/latest/configuring.html#confval-readme_inline_markup
 
 
-.. include:: configuration/sample_conf.rst
+   .. include:: configuration/sample_conf.rst
 
-.. only:: readme
 
    Documentation
    ~~~~~~~~~~~~~~~~
