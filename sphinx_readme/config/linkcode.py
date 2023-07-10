@@ -41,11 +41,15 @@ def get_repo_url(context: Dict):
         if not all((user, repo)):
             continue
 
-        tld = "org" if host == "bitbucket" else "com"
+        if host == "bitbucket":
+            tld = "org"
+        else:
+            tld = "com"
+
         return f"https://{host}.{tld}/{user}/{repo}"
 
-    logger.error("``sphinx_readme``: unable to determine repo url")
-    return None
+    raise ExtensionError(
+        "``sphinx_readme``: unable to determine repo url")
 
 
 def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Dict] = None) -> str:
@@ -53,20 +57,18 @@ def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Di
 
     If ``blob`` and ``context`` are not provided, the most recent commit hash will be used
     """
-    host = get_repo_host(repo_url)
-
     if context:
+        host = get_repo_host(repo_url)
         blob = context.get(f"{host}_version")
 
-    if blob:
+    if blob is not None:
         # Use blob from kwarg/html_context
         blob = get_linkcode_revision(blob)
-
     else:
         # Use hash of the most recent commit
         blob = get_linkcode_revision('head')
 
-    if host == "bitbucket":
+    if "bitbucket" in repo_url:
         return repo_url.strip('/') + f"/src/{blob}"
     else:
         return repo_url.strip("/") + f"/blob/{blob}"
