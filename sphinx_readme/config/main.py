@@ -106,7 +106,7 @@ class READMEConfig:
         if replace_only:
             rst = replace_only_directives(rst)
 
-        include_pattern = r"^\.\. include:: ([./]*?[\w/-]+\.rst)"
+        include_pattern = r"\.\. include:: ([./]*?[\w/-]+\.\w+?)$"
 
         if self.include_directive:
             # Find all included files
@@ -124,10 +124,18 @@ class READMEConfig:
                     # These paths are relative to rst_file dir
                     file = (Path(rst_file).parent / Path(include)).resolve()
 
-                # Sub in the file content
+                if file.exists():
+                    # Replace directive with the file content
+                    repl = self.read_rst(file, replace_only).replace(r'\n', r'\\n')
+                else:
+                    # Remove the directive
+                    repl = ''
+                    self.logger.error(
+                        f"``sphinx_readme``: included file {file} does not exist"
+                    )
                 rst = re.sub(
                     pattern=rf".. include:: {include}",
-                    repl=self.read_rst(file, replace_only).replace(r'\n', r'\\n'),
+                    repl=repl,
                     string=rst
                 )
         else:
