@@ -1,8 +1,5 @@
-import os
 import re
-import copy
 from pathlib import Path
-from collections import defaultdict
 from typing import Union, List, Dict
 from functools import cached_property
 
@@ -14,11 +11,6 @@ from sphinx_readme.config import get_repo_dir, get_repo_host, get_blob_url, get_
 
 
 class READMEConfig:
-
-    REFERENCE_MAPPING = {
-        "replace": None,
-        "target": None,
-    }
 
     def __init__(self, app: Sphinx):
         self.logger = logger
@@ -44,7 +36,6 @@ class READMEConfig:
             blob=self.repo_blob
         )
         self.docs_url = self.get_docs_url()
-        self.ref_map = self.get_ref_map()
         self.source_files = self.read_source_files()
 
         if self.docs_url_type == "code":
@@ -100,11 +91,6 @@ class READMEConfig:
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
         app.setup_extension("sphinx.ext.linkcode")
 
-    def get_ref_map(self) -> Dict:
-        refs = defaultdict(_map_entry)
-        refs['ref'] = []
-        refs['doc'] = []
-        return refs
 
     def read_source_files(self) -> Dict[str, str]:
         sources = {
@@ -262,7 +248,3 @@ class READMEConfig:
 
    "\1"
 '''
-
-
-def _map_entry():
-    return copy.deepcopy(READMEConfig.REFERENCE_MAPPING)

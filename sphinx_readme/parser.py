@@ -1,5 +1,5 @@
 import re
-from copy import copy
+import copy
 from pathlib import Path
 from collections import defaultdict
 from typing import Dict, List, Tuple, Set
@@ -19,10 +19,15 @@ from sphinx_readme.utils import get_all_variants, escape_rst, format_rst
 
 class READMEParser:
 
+    REFERENCE_MAP = {
+        "ref": [],
+        "doc": []
+    }
+
     def __init__(self, app: Sphinx):
         self.config = READMEConfig(app)
         self.logger = self.config.logger
-        self.ref_map = self.config.ref_map
+        self.ref_map = copy.deepcopy(self.REFERENCE_MAP)
         self.sources = self.config.source_files
         self.toctrees = defaultdict(list)
         self.admonitions = {}
@@ -71,7 +76,7 @@ class READMEParser:
 
         # Resolve references in the doctree
         try:
-            backup = copy(app.env.temp_data)
+            backup = copy.deepcopy(app.env.temp_data)
             app.env.temp_data['docname'] = docname
 
             transformer = SphinxTransformer(doctree)
@@ -206,10 +211,10 @@ class READMEParser:
             if self.config.inline_markup:
                 replace = f"``{replace}``"
 
-            self.ref_map[variant].update({
-                'target': target,
-                'replace': replace
-            })
+            self.ref_map[variant] = {
+                'replace': replace,
+                'target': target
+            }
 
     def parse_titles(self, env: BuildEnvironment):
         for fname, title_node in env.titles.items():
@@ -480,10 +485,10 @@ class READMEParser:
         header = []
 
         for ref in autodoc_refs:
-            info = self.ref_map[ref]
+            info = self.ref_map.get(ref)
 
-            # Check for empty REFERENCE_MAPPING
-            if not any(info.values()):
+            # Check for invalid ref
+            if info is None:
                 continue
 
             if self.config.inline_markup:
