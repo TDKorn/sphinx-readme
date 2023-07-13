@@ -46,12 +46,10 @@ class READMEParser:
         if self.config.docs_url_type == "code":
             self.parse_linkcode_nodes(inline_nodes)
 
-        for node in list(doctree.findall(addnodes.toctree)):
-            self.parse_toctree(node, doctree)
-
         if doctree.get('source') in self.sources:
             self.parse_xref_nodes(inline_nodes)
             self.parse_admonitions(doctree)
+            self.parse_toctrees(doctree)
 
     def get_doctree(self, app: Sphinx, doctree: document, docname: str) -> document:
         # Return original doctree if file is not a readme source
@@ -229,18 +227,19 @@ class READMEParser:
 
             self.titles[fname] = ' '.join(parts)
 
-    def parse_toctree(self, toctree: Node, doctree: addnodes.document):
-        src = doctree.get('source')
-        toc = {
-            'caption': toctree.get('caption'),
-            'entries': []
-        }
-        for _, entry in toctree.get('entries', []):
-            toc['entries'].append({
-                'entry': entry,
-                'title': self.titles.get(entry),
-            })
-        self.toctrees[src].append(toc)
+    def parse_toctrees(self, doctree: addnodes.document) -> None:
+        source = doctree.get('source')
+        for toctree in list(doctree.findall(addnodes.toctree)):
+            toc = {
+                'caption': toctree.get('caption'),
+                'entries': []
+            }
+            for _, entry in toctree.get('entries', []):
+                toc['entries'].append({
+                    'entry': entry,
+                    'title': self.titles.get(entry),
+                })
+            self.toctrees[source].append(toc)
 
     def parse_admonitions(self, doctree: Node):
         admonitions = {'generic': [], 'specific': []}
