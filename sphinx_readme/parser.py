@@ -406,11 +406,6 @@ class READMEParser:
         :param rst_src: absolute path of the source file
         :param rst: content of the source file
         """
-        if self.config.docs_url_type == 'html':
-            base_url = self.config.docs_url
-        else:
-            base_url = self.config.html_baseurl
-
         pattern = r".. toctree::\n+?(?:\s+:\w+:\s*?\w*?\n\s+)*?(?:\s+\w+\n)+?(?=\n+\S+?)"
         toctrees = re.findall(pattern, rst)
 
@@ -423,7 +418,7 @@ class READMEParser:
 
             for entry in info['entries']:
                 # Replace each entry with a link to html docs
-                target = f"{base_url}/{entry['entry']}.html"
+                target = f"{self.config.html_baseurl}/{entry['entry']}.html"
 
                 if "`" in entry['title']:
                     # Inline markup in links must be inserted with substitutions
