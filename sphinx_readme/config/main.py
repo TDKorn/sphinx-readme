@@ -125,7 +125,7 @@ class READMEConfig:
         if replace_only:
             rst = replace_only_directives(rst)
 
-        include_pattern = r"\.\. include:: ([./]*?[\w/-]+\.\w+?)$"
+        include_pattern = r"\.\. include:: ([./]*?[\w/-]+\.\w+?)\s*?$"
 
         if self.include_directive:
             # Find all included files
@@ -153,9 +153,10 @@ class READMEConfig:
                         f"``sphinx_readme``: included file {file} does not exist"
                     )
                 rst = re.sub(
-                    pattern=rf".. include:: {include}",
+                    pattern=rf"\.\. include:: {include}\s*?$",
                     repl=repl,
-                    string=rst
+                    string=rst,
+                    flags=re.M
                 )
         else:
             # Remove all include directives from the text
