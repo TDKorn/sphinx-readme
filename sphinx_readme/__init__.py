@@ -9,7 +9,7 @@ from sphinx_readme.config import get_repo_dir
 from sphinx_readme.parser import READMEParser
 
 
-__version__ = "v0.0.1b6"
+__version__ = "v0.0.1"
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
