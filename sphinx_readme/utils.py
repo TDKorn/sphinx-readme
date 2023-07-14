@@ -40,10 +40,13 @@ def format_rst(inline_markup: str, rst: str) -> str:
 
     Preserves any ``inline literals`` within the text
 
-    :Example::
+    **Example:**
 
-        >>> format_rst("bold", "This is part of the ``sphinx_readme.utils`` module")
-        "**This is part of the** ``sphinx_readme.utils`` **module**"
+    >>> format_rst("bold", "This is part of the ``sphinx_readme.utils`` module")
+    "**This is part of the** ``sphinx_readme.utils`` **module**"
+
+
+    **This is part of the** ``sphinx_readme.utils`` **module**
 
     :param inline_markup: either "bold" or "italic"
     :param rst: the rst content to format
@@ -68,12 +71,12 @@ def format_rst(inline_markup: str, rst: str) -> str:
 
 
 def replace_only_directives(rst: str) -> str:
-    """Replaces and removes ``only`` directives
+    """Replaces and removes :rst:dir:`only` directives.
 
     If ``"readme"`` is in the ``<expression>`` part of the
-    ``only`` directive, the content will be used.
+    directive, the content of the directive will be used.
 
-    Otherwise, the directive will be removed
+    Otherwise, the directive will be removed.
 
     :param rst: the content of an ``rst`` file
     """
@@ -100,42 +103,48 @@ def replace_only_directives(rst: str) -> str:
 
 
 def remove_raw_directives(rst: str) -> str:
+    """Removes all ``raw`` directives from ``rst``
+
+    :param rst: the rst to remove ``raw`` directives from
+    """
     return re.sub(
         pattern=r"(\.\. raw::\s+\S.*?\n+?(?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)",
         repl='', string=rst, flags=re.M | re.DOTALL
     )
 
 
-def get_variants(obj: str):
+def get_xref_variants(target: str) -> List[str]:
+    """Returns a list of ways to make a cross-reference to ``target``
+
+    **Example:**
+
+    >>> get_xref_variants('mod.Class.meth')
+    ['mod.Class.meth', '.mod.Class.meth', '~mod.Class.meth', '~.mod.Class.meth']
+
+    :param target: the object to generate cross-reference syntax for
     """
-
-    >>> get_variants('mod.Class.meth')
-    >>> ['mod.Class.meth', '.mod.Class.meth', '~mod.Class.meth', '~.mod.Class.meth']
-    """
-    return [prefix + obj for prefix in ('', '.', '~', '~.')]
+    return [prefix + target for prefix in ('', '.', '~', '~.')]
 
 
-def get_all_variants(fully_qualified_name: str) -> List[str]:
-    """Generates a list of all possible ways to cross-reference a class/method/function
+def get_all_xref_variants(fully_qualified_name: str) -> List[str]:
+    """Generates a list of all possible ways to cross-reference an object
 
-    >>> get_all_variants("sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer")
+    **Example:**
 
-    ['get_pkg_lexer', '.get_pkg_lexer', '~get_pkg_lexer', '~.get_pkg_lexer', 'TDKMethLexer.get_pkg_lexer',
-    '.TDKMethLexer.get_pkg_lexer', '~TDKMethLexer.get_pkg_lexer', '~.TDKMethLexer.get_pkg_lexer',
-    'meth_lexer.TDKMethLexer.get_pkg_lexer', '.meth_lexer.TDKMethLexer.get_pkg_lexer',
-    '~meth_lexer.TDKMethLexer.get_pkg_lexer', '~.meth_lexer.TDKMethLexer.get_pkg_lexer',
-    'sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
-     '.sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
-     '~sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer',
-      '~.sphinx_github_style.meth_lexer.TDKMethLexer.get_pkg_lexer']
+    >>> get_all_xref_variants("sphinx_readme.utils.get_all_xref_variants") # doctest: +NORMALIZE_WHITESPACE
+    ['get_all_xref_variants', '.get_all_xref_variants', '~get_all_xref_variants',
+    '~.get_all_xref_variants', 'utils.get_all_xref_variants', '.utils.get_all_xref_variants',
+    '~utils.get_all_xref_variants', '~.utils.get_all_xref_variants',
+    'sphinx_readme.utils.get_all_xref_variants', '.sphinx_readme.utils.get_all_xref_variants',
+    '~sphinx_readme.utils.get_all_xref_variants', '~.sphinx_readme.utils.get_all_xref_variants']
 
-    :param fully_qualified_name: the fully qualified name (pkg.module.class.method)
+    :param fully_qualified_name: the fully qualified name of the target (ex. ``pkg.module.class.method``)
     """
     parts = fully_qualified_name.split(".")[::-1]  # => ['meth', 'Class', 'mod', "pkg"]
     variants = []
 
     for i, part in enumerate(parts):
-        ref = '.'.join(parts[i::-1])  # 'meth', 'Class.meth', 'mod.class.meth', 'pkg.mod.class.meth'
-        variants.extend(get_variants(ref))
+        target = '.'.join(parts[i::-1])  # 'meth', 'Class.meth', 'mod.class.meth', 'pkg.mod.class.meth'
+        variants.extend(get_xref_variants(target))
 
     return variants

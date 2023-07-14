@@ -263,9 +263,9 @@ Optional ``conf.py`` values
 
    The repository blob to link to - any of ``"head"``, ``"last_tag"``, or ``"{blob}"``
 
-   * ``head``: links to the most recent commit hash; if this commit is tagged, uses the tag instead
-   * ``last_tag``: links to the most recently tagged commit; if no tags exist, uses ``head``
-   * ``blob``: links to any blob you want, for example ``"master"`` or ``"v2.0.1"``
+   * ``"head"``: links to the most recent commit hash; if this commit is tagged, uses the tag instead
+   * ``"last_tag"``: links to the most recently tagged commit; if no tags exist, uses ``"head"``
+   * ``"{blob}"``: links to the specified blob, for example ``"master"`` or ``"v2.0.1"``
 
    :type: *str*
    :default: ``"head"``
@@ -277,7 +277,7 @@ Optional ``conf.py`` values
 .. confval:: linkcode_resolve
 
    A ``linkcode_resolve()`` function for :mod:`sphinx.ext.linkcode` to use
-   when resolving the target of :mod:`~.autodoc` cross-references
+   when resolving the target of :mod:`~sphinx.ext.autodoc` cross-references
 
    :type: *Callable*
    :default: return value of :func:`~.get_linkcode_resolve`

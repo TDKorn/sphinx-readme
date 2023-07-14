@@ -81,6 +81,11 @@ rst_prolog = """
    :class: highlight
 
 """
+
+# Use default Pygments style if not html
+if 'html' not in sys.argv:
+    pygments_style = 'sphinx'
+
 # ============================ HTML Theme Settings ============================
 
 # The theme to use for HTML and HTML Help pages.
@@ -177,8 +182,6 @@ else:
 readme_admonition_icons = {
     'about': '📚',
 }
-
-readme_rubric_heading = "="
 
 readme_raw_directive = True
 

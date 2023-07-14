@@ -2,7 +2,7 @@ import re
 import copy
 from pathlib import Path
 from collections import defaultdict
-from typing import Dict, List, Tuple, Set
+from typing import Dict, List, Tuple, Set, Union
 
 from docutils import nodes
 from docutils.nodes import Node, document
@@ -14,7 +14,7 @@ from sphinx.transforms import SphinxTransformer
 from sphinx.environment import BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils import get_all_variants, escape_rst, format_rst
+from sphinx_readme.utils import get_all_xref_variants, escape_rst, format_rst
 
 
 class READMEParser:
@@ -25,17 +25,24 @@ class READMEParser:
     }
 
     def __init__(self, app: Sphinx):
-        self.config = READMEConfig(app)
+        #: The :class:`~.READMEConfig` for the parser
+        self.config: READMEConfig = READMEConfig(app)
         self.logger = self.config.logger
-        self.ref_map = copy.deepcopy(self.REFERENCE_MAP)
-        self.sources = self.config.source_files
-        self.toctrees = defaultdict(list)
-        self.admonitions = {}
-        self.titles = {}
+        #: Mapping of info for standard and :mod:`sphinx.ext.autodoc` cross-references
+        self.ref_map: Dict[str, Union[List, Dict]] = copy.deepcopy(self.REFERENCE_MAP)
+        #: Mapping of source files to their content
+        self.sources: Dict[str, str] = self.config.sources
+        #: Mapping of source files to their toctree data
+        self.toctrees: Dict[str, List[Dict]] = defaultdict(list)
+        # Mapping of source files to their admonition data
+        self.admonitions: Dict[str, Dict[str, List[Dict]]] = {}
+        # Mapping of docnames to their parsed titles
+        self.titles: Dict[str, str] = {}
 
-    def parse(self, app: Sphinx, doctree: document, docname: str):
+    def parse(self, app: Sphinx, doctree: document, docname: str) -> None:
+        """Parses cross-reference, admonition, and toctree data from a resolved doctree"""
         # If a source has ``only`` directives, its doctree will have missing/extra content
-        # Replace the ``only`` directives, then generate a new doctree if needed
+        # Replace the ``only`` directives, then generate a new doctree to parse if needed
         doctree = self.get_doctree(app, doctree, docname)
 
         inline_nodes = list(doctree.findall(nodes.inline))
@@ -52,6 +59,9 @@ class READMEParser:
             self.parse_toctrees(doctree)
 
     def get_doctree(self, app: Sphinx, doctree: document, docname: str) -> document:
+        """Generates and resolves a new doctree for :attr:`~.src_files`
+        that contain :rst:dir:`only` directives
+        """
         # Return original doctree if file is not a readme source
         if (src := doctree.get('source')) not in self.sources:
             return doctree
@@ -89,7 +99,11 @@ class READMEParser:
         doctree['source'] = src
         return doctree
 
-    def parse_xref_nodes(self, inline_nodes: List[nodes.inline]):
+    def parse_xref_nodes(self, inline_nodes: List[nodes.inline]) -> None:
+        """Adds node data from :rst:role:`doc` or :rst:role:`ref` cross-references to the :attr:`~ref_map`
+
+        :param inline_nodes: the inline nodes from the document being parsed
+        """
         for node in inline_nodes:
             if 'doc' in node['classes']:
                 self.ref_map['doc'].append(self._parse_xref(node))
@@ -97,14 +111,18 @@ class READMEParser:
             elif 'std-ref' in node['classes']:
                 self.ref_map['ref'].append(self._parse_xref(node))
 
-    def _parse_xref(self, node: nodes.inline) -> Dict:
+    def _parse_xref(self, node: nodes.inline) -> Dict[str, str]:
         """Helper function to parse target info of a ``:ref:`` or ``:doc:`` xref"""
         return {
             'text': node.children[0].astext(),
             "refuri": self.config.html_baseurl + "/" + node.parent.get('refuri', '')
         }
 
-    def parse_autodoc_nodes(self, literal_nodes: List[nodes.literal], docname: str):
+    def parse_autodoc_nodes(self, literal_nodes: List[nodes.literal], docname: str) -> None:
+        """Parses node data from :mod:`sphinx.ext.autodoc` cross-references
+
+        :param literal_nodes: the literal nodes from the document being parsed
+        """
         for node in literal_nodes:
             if 'py' not in node['classes']:
                 continue
@@ -124,7 +142,11 @@ class READMEParser:
                 # Only parse remaining py xrefs if linking to html
                 self.parse_autodoc_node(node, docname)
 
-    def parse_intersphinx_node(self, node: nodes.literal):
+    def parse_intersphinx_node(self, node: nodes.literal) -> None:
+        """Adds node data from a :mod:`sphinx.ext.intersphinx` cross-reference to the :attr:`~ref_map`
+
+        :param node: the literal node of an external :mod:`~sphinx.ext.autodoc` reference
+        """
         pattern = r":(mod|class|meth|func|attr):`~?\.?[.\w]+`"
         match = re.match(pattern, node.rawsource)
         target = node.parent.get('refuri')
@@ -136,7 +158,12 @@ class READMEParser:
         qualified_name = target.split("#")[-1].split("-")[-1]
         self.add_variants(qualified_name, target, is_callable)
 
-    def parse_module_node(self, node: Node, docname: str):
+    def parse_module_node(self, node: nodes.literal, docname: str) -> None:
+        """Adds node data from a ``:mod:`` cross-reference to the :attr:`ref_map`
+
+        :param node: a literal node with the ``"py-mod"`` class
+        :param docname: the name of the document containing the node
+        """
         qualified_name = node.parent.get("reftitle", "")
 
         if self.config.docs_url_type == 'code':
@@ -151,7 +178,12 @@ class READMEParser:
         target = f"{self.config.docs_url}/{refuri}"
         self.add_variants(qualified_name, target)
 
-    def parse_autodoc_node(self, node: nodes.literal, docname: str):
+    def parse_autodoc_node(self, node: nodes.literal, docname: str) -> None:
+        """Adds node data from any :mod:`sphinx.ext.autodoc` cross-reference except ``:mod:`` to the :attr:`ref_map`
+
+        :param node: a literal node with the ``"py-{class|func|meth|attr}"`` class
+        :param docname: the name of the document containing the node
+        """
         qualified_name = node.parent.get("reftitle")
         refuri = self._parse_refuri(node, docname)
 
@@ -162,7 +194,8 @@ class READMEParser:
         target = f"{self.config.docs_url}/{refuri}"
         self.add_variants(qualified_name, target, is_callable)
 
-    def _parse_refuri(self, node: Node, docname: str):
+    def _parse_refuri(self, node: nodes.literal, docname: str) -> str:
+        """Helper function to parse the target of a :mod:`sphinx.ext.autodoc` cross-reference"""
         if 'refuri' in node.parent:
             # Ex. ../parser.html#sphinx_readme.parser.READMEParser
             return node.parent["refuri"].lstrip("./")
@@ -171,14 +204,22 @@ class READMEParser:
             # Ex. sphinx_readme.parser.READMEParser
             return f"{docname}.html#{node.parent['refid']}"
 
-    def parse_linkcode_nodes(self, inline_nodes: List[nodes.inline]):
+    def parse_linkcode_nodes(self, inline_nodes: List[nodes.inline]) -> None:
+        """Parses data from nodes added by :mod:`sphinx.ext.linkcode`
+
+        :param inline_nodes: the inline nodes from the document being parsed
+        """
         for node in inline_nodes:
             if 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
                 if node.parent.get('internal') is False:
                     # Only parse links to external source code
                     self.parse_linkcode_node(node)
 
-    def parse_linkcode_node(self, node: nodes.inline):
+    def parse_linkcode_node(self, node: nodes.inline) -> None:
+        """Adds node data from a :mod:`~sphinx.ext.linkcode` node to the :attr:`ref_map`
+
+        :param node: an inline node added by :mod:`sphinx.ext.linkcode`
+        """
         grandparent = node.parent.parent
         is_callable = grandparent.get("_toc_name", "").endswith("()")
 
@@ -190,9 +231,21 @@ class READMEParser:
         target = node.parent.get("refuri")
         self.add_variants(qualified_name, target, is_callable)
 
-    def add_variants(self, qualified_name, target, is_callable: bool = False):
+    def add_variants(self, qualified_name: str, target: str, is_callable: bool = False):
+        """Adds substitution information for an object to the :attr:`ref_map`
+
+        This data is used to replace any :mod:`~sphinx.ext.autodoc` cross-reference to
+        the object with a substitution, hyperlinked to the corresponding
+        source code or documentation entry
+
+        .. tip:: See :func:`~.get_all_xref_variants` and :meth:`replace_autodoc_refs`
+
+        :param qualified_name: the fully qualified name of an object (ex. ``"sphinx_readme.parser.add_variants"``)
+        :param target: the refuri of the object's corresponding source code or documentation entry
+        :param is_callable: specifies if the object is a method or function
+        """
         short_ref = qualified_name.split('.')[-1]
-        variants = get_all_variants(qualified_name)
+        variants = get_all_xref_variants(qualified_name)
 
         for variant in variants:
             if variant in self.ref_map:
@@ -214,8 +267,9 @@ class READMEParser:
                 'target': target
             }
 
-    def parse_titles(self, env: BuildEnvironment):
-        for fname, title_node in env.titles.items():
+    def parse_titles(self, env: BuildEnvironment) -> None:
+        """Parses document titles from the :class:`~.BuildEnvironment`"""
+        for docname, title_node in env.titles.items():
             parts = []
 
             for child in title_node.children:
@@ -225,9 +279,15 @@ class READMEParser:
                 else:
                     parts.append(text)
 
-            self.titles[fname] = ' '.join(parts)
+            self.titles[docname] = ' '.join(parts)
 
     def parse_toctrees(self, doctree: addnodes.document) -> None:
+        """Parses the caption and entry data from :class:`~.sphinx.addnodes.toctree` nodes
+
+        .. caution:: Toctrees are currently parsed as if the directive has the ``:titlesonly:`` option
+
+        :param doctree: the doctree from one of the :attr:`~.src_files`
+        """
         source = doctree.get('source')
         for toctree in list(doctree.findall(addnodes.toctree)):
             toc = {
@@ -241,7 +301,11 @@ class READMEParser:
                 })
             self.toctrees[source].append(toc)
 
-    def parse_admonitions(self, doctree: Node):
+    def parse_admonitions(self, doctree: nodes.document) -> None:
+        """Parses data from generic and specific admonitions
+
+        :param doctree: the doctree from one of the :attr:`~.src_files`
+        """
         admonitions = {'generic': [], 'specific': []}
         src = doctree.get('source')
 
@@ -266,7 +330,11 @@ class READMEParser:
 
         self.admonitions[src] = admonitions
 
-    def resolve(self):
+    def resolve(self) -> None:
+        """Uses the data from :meth:`parse` to replace cross-references and directives in the :attr:`~.src_files`
+
+        Once resolved, files are written to the :attr:`~.out_dir`.
+        """
         for src, rst in self.sources.items():
             # Replace everything using data from ``parse()``
             rst = self.replace_admonitions(src, rst)
@@ -275,7 +343,7 @@ class READMEParser:
             rst = self.replace_rst_rubrics(rst)
 
             for role in ('ref', 'doc'):
-                rst = self.replace_cross_refs(rst, role)
+                rst = self.replace_cross_refs(role, rst)
 
             # Use ref_map to generate autodoc substitution definitions
             rst, autodoc_refs = self.replace_autodoc_refs(rst)
@@ -291,6 +359,19 @@ class READMEParser:
                 f'``sphinx_readme``: saved generated .rst file to {rst_out}')
 
     def replace_admonitions(self, rst_src: str, rst: str) -> str:
+        """Replaces generic and specific admonition directives with HTML tables or :rst:dir:`csv-table`
+        directives, depending on the value of :confval:`readme_raw_directive`
+
+        .. admonition:: Customizing Admonitions
+           :class: about
+
+           The :attr:`~.icon_map` can be overriden to use custom admonition icons/classes
+
+           * See :confval:`readme_admonition_icons` and :confval:`readme_default_admonition_icon`
+
+        :param rst_src: absolute path of the source file
+        :param rst: content of the source file
+        """
         admonitions = self.admonitions[rst_src]
 
         for _type in ('generic', 'specific'):
@@ -317,6 +398,14 @@ class READMEParser:
         return rst
 
     def replace_toctrees(self, rst_src: str, rst: str) -> str:
+        """Replaces :rst:dir:`toctree` directives with hyperlinked bullet lists
+
+        .. note:: Entries will link to HTML documentation regardless of the
+           value of :confval:`readme_docs_url_type`
+
+        :param rst_src: absolute path of the source file
+        :param rst: content of the source file
+        """
         if self.config.docs_url_type == 'html':
             base_url = self.config.docs_url
         else:
@@ -360,18 +449,19 @@ class READMEParser:
     def replace_rst_images(self, rst_src: str, rst: str) -> str:
         """Replaces filepaths in ``image`` directives with repository links
 
-        :Example:
-            :rst:`.. image:: /_static/logo.png`
+        **Example:**
+
+            :rst:`.. image:: /_static/logo_readme.png`
 
             would be replaced with
 
-            :rst:`.. image:: https://github.com/tdkorn/sphinx-readme/blob/main/docs/source/_static/logo.png?raw=True`
+            :rst:`.. image:: https://raw.githubusercontent.com/tdkorn/sphinx-readme/main/docs/source/_static/logo_readme.png`
 
         .. note:: Your repository will be used as the image source regardless of the
            value of :confval:`readme_docs_url_type`
 
-        :param rst_src: absolute path of the rst file being parsed
-        :param rst: the content of the rst file being parsed
+        :param rst_src: absolute path of the source file
+        :param rst: content of the source file
         """
         src_dir = self.config.src_dir
         repo_dir = self.config.repo_dir
@@ -402,7 +492,31 @@ class READMEParser:
             )
         return rst
 
-    def replace_rst_rubrics(self, rst: str):
+    def replace_rst_rubrics(self, rst: str) -> str:
+        """Replaces :rst:dir:`rubric` directives with the section heading
+        character specified by :confval:`readme_rubric_heading`
+
+        If :confval:`readme_rubric_heading` is not specified, the rubric
+        will be replaced with bold text instead
+
+        ...
+
+        **Example:**
+
+        Consider a source file that contains
+        :rst:`.. rubric:: This is a \`\`rubric\`\` directive`
+
+        * Replacement without specifying ``readme_rubric_heading``::
+
+              **This is a** ``rubric`` **directive**
+
+        * Replacement if :code:`readme_rubric_heading = "^"`::
+
+              This is a ``rubric`` directive
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+        :param rst: content of the source file
+        """
         heading_chars = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
         rubric_pattern = r'\.\. rubric:: (.+?)(?=\n)'
 
@@ -419,7 +533,12 @@ class READMEParser:
             string=rst
         )
 
-    def replace_cross_refs(self, rst: str, ref_role: str) -> str:
+    def replace_cross_refs(self, ref_role: str, rst: str) -> str:
+        """Replaces cross-references using the :rst:role:`doc` or :rst:role:`ref` role
+
+        :param ref_role: the name of the cross-reference role
+        :param rst: content of the source file
+        """
         # Find all :ref_role:`ref_id` cross-refs
         cross_refs = re.findall(
             pattern=fr"(?:\s*?):{ref_role}:`([^`]+)`(?=\s*?)",
@@ -438,9 +557,17 @@ class READMEParser:
         return rst
 
     def replace_autodoc_refs(self, rst: str) -> Tuple[str, Set]:
-        """
-        :param rst:
-        :return:
+        """Replace :mod:`~sphinx.ext.autodoc` cross-references with substitutions
+
+        These substitutions will be hyperlinked to the corresponding source code
+        or HTML documentation entry, depending on the value of
+        :confval:`readme_docs_url_type`
+
+        .. note: Attributes will only be hyperlinked
+           if linking to HTML documentation
+
+        :param rst: content of the source file
+        :returns: subbed rst and all autodoc xref targets found within it
         """
         # :role:`{~.}{module|class}{.}target` where {} is optional
         pattern = r":(?:mod|class|meth|func):`([~\.\w]+)`"
@@ -460,7 +587,7 @@ class READMEParser:
         else:
             repl = r"|.\1|_"
 
-        # Get a list of all autodoc cross-refs
+        # Get a set of all autodoc cross-refs
         autodoc_refs = set(re.findall(pattern, rst))
 
         # Replace cross-refs with substitutions
@@ -470,6 +597,15 @@ class READMEParser:
         return rst, autodoc_refs
 
     def replace_autodoc_attrs(self, rst: str) -> str:
+        """Replaces ``:attr:`` cross-references with ``inline literals``
+
+        .. hint::
+
+           This method is only called if both
+
+           1. :confval:`readme_docs_url_type` is ``"code"``
+           2. :confval:`readme_replace_attrs` is ``True``
+        """
         # Ex. ~.Class.meth => ``meth``
         short_ref = r" :attr:`~\.?(\w+)`"
         # Ex. .Class.meth => ``Class.meth``
@@ -481,6 +617,10 @@ class READMEParser:
         return rst
 
     def get_header_vals(self, autodoc_refs: Set) -> List[str]:
+        """Returns a list of substitution definitions and hyperlink references to prepend to the file
+
+        :param autodoc_refs: :mod:`sphinx.ext.autodoc` targets to define substitutions for
+        """
         header = []
 
         for ref in autodoc_refs:
@@ -504,7 +644,12 @@ class READMEParser:
 
         return header
 
-    def get_admonition_regex(self, admonition, admonition_type):
+    def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
+        """Returns the regex to match a specific admonition directive
+
+        :param admonition: a dict containing admonition data
+        :param admonition_type: ``"generic"`` or ``"specific"``
+        """
         body = escape_rst(admonition['body'])
         title = escape_rst(admonition['title'])
 
@@ -537,6 +682,10 @@ class READMEParser:
         return pattern
 
     def get_admonition_icon(self, admonition: dict):
+        """Returns the icon to use for an admonition
+
+        :param admonition: a dict of admonition data
+        """
         icon = self.config.icon_map.get(admonition['class'])
 
         # Raw directive allows for using icon directly

@@ -26,8 +26,8 @@ Sample ``conf.py``
    .. _readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_raw_directive
 
 
-   .. important:: If generating a ``README`` for a platform that doesn't support ``raw``
-      directives (PyPi, GitLab, and BitBucket), be sure to disable |readme_raw_directive|_:
+   .. important:: For platforms that don't support the ``raw`` directive (PyPi, GitLab, and BitBucket),
+      be sure to disable |readme_raw_directive|_:
 
       .. code-block:: python
 
@@ -35,8 +35,8 @@ Sample ``conf.py``
 
 .. only:: html
 
-   .. important:: If generating a ``README`` for a platform that doesn't support ``raw``
-      directives (PyPi, GitLab, and BitBucket), be sure to disable :confval:`readme_raw_directive`:
+   .. important:: For platforms that don't support the ``raw`` directive (PyPi, GitLab, and BitBucket),
+      be sure to disable :confval:`readme_raw_directive`:
 
       .. code-block:: python
 

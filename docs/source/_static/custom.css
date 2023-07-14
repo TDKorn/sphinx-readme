@@ -9,14 +9,23 @@ body {
     line-height: 1.36;
 }
 
+ol li {
+    margin-bottom: 12px;
+}
+
 /* Make properties not stack */
 dl.py.property {
     display: block !important;
 }
 
-/* Change color of inline literals within hyperlinks */
-.rst-content a code.literal {
-    color: #ff0000;
+/* Change color of inline literals */
+code.literal {
+    color: #e74c3c !important;
+}
+/* Change style of inline literals within hyperlinks */
+.rst-content a.reference.external > code.literal,
+.rst-content a code.xref.literal {
+    color: #ff0000 !important;
     font-weight: bold;
 }
 

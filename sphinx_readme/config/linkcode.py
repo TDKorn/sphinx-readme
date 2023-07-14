@@ -10,14 +10,25 @@ from sphinx.errors import ExtensionError
 from sphinx_readme.utils import logger
 
 
-def get_linkcode_url(blob_url: Optional[str] = None,
-                     repo_url: Optional[str] = None,
-                     context: Optional[Dict] = None,
-                     blob: Optional[str] = None) -> str:
-    """Get the template URL for linking to highlighted GitHub source code
+def get_linkcode_url(
+        blob_url: Optional[str] = None,
+        repo_url: Optional[str] = None,
+        context: Optional[Dict] = None,
+        blob: Optional[str] = None
+) -> str:
+    """Generates the template URL for linking to highlighted source code
 
-    Formatted into the final link by ``linkcode_resolve()``
+    Final links are generated from the template by a ``linkcode_resolve()`` function
+
+    .. note:: Only one of ``blob_url``, ``repo_url``, or ``context`` needs to be specified
+
+    :param blob_url: the base URL for a specific blob of a repository
+    :param repo_url: the base URL of a repository
+    :param context: the Sphinx :external+sphinx:confval:`html_context` dict
+    :param blob: the blob of the repository to generate the link for
+    :raises ExtensionError: if none of ``blob_url``, ``repo_url``, or ``context`` are provided
     """
+    # """
     if blob_url is None:
         if repo_url is None:
             if context is None:
@@ -33,7 +44,13 @@ def get_linkcode_url(blob_url: Optional[str] = None,
         return blob_url + "/{filepath}#L{linestart}-L{linestop}"
 
 
-def get_repo_url(context: Dict):
+def get_repo_url(context: Dict) -> str:
+    """Parses the repository URL from the Sphinx :external+sphinx:confval:`html_context` dict
+
+    :param context: the ``html_context`` dict
+    :return: the base URL of the project's repository
+    :raises ExtensionError: if the repository URL cannot be parsed from ``html_context``
+    """
     for host in ('github', 'gitlab', 'bitbucket'):
         user = context.get(f"{host}_user")
         repo = context.get(f"{host}_repo")
@@ -53,9 +70,11 @@ def get_repo_url(context: Dict):
 
 
 def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Dict] = None) -> str:
-    """Generate the url for a specific blob of a repository
+    """Generates the base URL for a specific blob of a repository
 
-    If ``blob`` and ``context`` are not provided, the most recent commit hash will be used
+    :param repo_url: the base URL of the repository
+    :param blob: the blob of the repository to generate the link for
+    :param context: the Sphinx :external+sphinx:confval:`html_context` dict
     """
     if context:
         host = get_repo_host(repo_url)
@@ -63,10 +82,10 @@ def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Di
 
     if blob is not None:
         # Use blob from kwarg/html_context
-        blob = get_linkcode_revision(blob)
+        blob = get_blob(blob)
     else:
         # Use hash of the most recent commit
-        blob = get_linkcode_revision('head')
+        blob = get_blob('head')
 
     if "bitbucket" in repo_url:
         return repo_url.strip('/') + f"/src/{blob}"
@@ -74,35 +93,42 @@ def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Di
         return repo_url.strip("/") + f"/blob/{blob}"
 
 
-def get_repo_host(url: str):
-    if match := re.match(r"https?://(\w+)\.(?:com|org)", url):
+def get_repo_host(repo_url: str) -> Optional[str]:
+    """Returns the hosting platform of a repository
+
+    >>> get_repo_host("https://github.com/TDKorn/sphinx-readme")
+    'github'
+
+    :param repo_url: the URL of the repository
+    """
+    if match := re.match(r"https?://(\w+)\.(?:com|org)", repo_url):
         return match.group(1)
     return None
 
 
-def get_linkcode_revision(blob: str) -> str:
-    """Get the blob to link to
+def get_blob(blob: str) -> str:
+    """Returns the git blob corresponding to ``blob``
 
-    .. note::
+    The value of ``blob`` can be any of ``"head"``, ``"last_tag"``, or ``"{blob}"``
 
-       The value of ``blob`` can be any of ``"head"``, ``"last_tag"``, or ``"{blob}"``
-
-       * ``head`` (default): links to the most recent commit hash; if this commit is tagged, uses the tag instead
-       * ``last_tag``: links to the most recently tagged commit; if no tags exist, uses ``head``
-       * ``blob``: links to any blob you want, for example ``"master"`` or ``"v2.0.1"``
+    * ``"head"``: returns the hash of the most recent commit; if this commit is tagged, uses the tag instead
+    * ``"last_tag"``: returns the most recent commit tag; if no tags exist, uses ``"head"``
+    * ``"{blob}"``: returns the specified blob as is, for example ``"master"`` or ``"v2.0.1"``
     """
     if blob == "head":
         return get_head()
     if blob == 'last_tag':
         return get_last_tag()
-    # Link to the branch/tree/blob you provided, ex. "master"
+    # Return the branch/tree/blob you provided
     return blob
 
 
-def get_head(errors: bool = False) -> Optional[str]:
-    """Gets the most recent commit hash or tag
+def get_head() -> str:
+    """Returns the hash of the most recent commit
 
-    :raises subprocess.CalledProcessError: if the commit can't be found and ``errors`` is ``True``
+    If the most recent commit is tagged, the tag is returned instead
+
+    :raises RuntimeError: if the most recent commit can't be found
     """
     cmd = "git log -n1 --pretty=%H"
     try:
@@ -119,14 +145,11 @@ def get_head(errors: bool = False) -> Optional[str]:
             return head
 
     except subprocess.CalledProcessError as e:
-        if errors:
-            raise e
-        else:
-            return logger.error("Failed to get head")  # so no head?
+        raise RuntimeError("Failed to get head") from e  # so no head?
 
 
 def get_last_tag() -> str:
-    """Get the most recent commit tag
+    """Returns the most recent commit tag
 
     :raises RuntimeError: if there are no tagged commits
     """
@@ -139,7 +162,7 @@ def get_last_tag() -> str:
 
 
 def get_repo_dir() -> Path:
-    """Get the root directory of the repository
+    """Returns the root directory of the repository
 
     :raises RuntimeError: if the directory can't be determined
     """
@@ -158,11 +181,10 @@ def get_repo_dir() -> Path:
 
 
 def get_linkcode_resolve(linkcode_url: str) -> Callable:
-    """Defines and returns a ``linkcode_resolve`` function for your package
+    """Defines and returns a ``linkcode_resolve()`` function for your package
 
-    Used by default if ``linkcode_resolve`` isn't defined in ``conf.py``
+    :param linkcode_url: the template URL for linking to source code (see :meth:`~get_linkcode_url`)
     """
-
     repo_dir = get_repo_dir()
     pkg = pkg_resources.require(repo_dir.name)[0]
     top_level = pkg.get_metadata('top_level.txt').strip()

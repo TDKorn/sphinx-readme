@@ -29,22 +29,25 @@ class READMEConfig:
         self.include_directive = get_conf_val(app, 'readme_include_directive')
         self.default_admonition_icon = get_conf_val(app, 'readme_default_admonition_icon')
 
-        self.repo_blob = get_conf_val(app, "readme_blob")
-        self.repo_url = self.get_repo_url()
-        self.blob_url = get_blob_url(
+        #: The git blob to use when linking to the project's repository
+        self.repo_blob: str = get_conf_val(app, "readme_blob")
+        #: The base URL of the project's repository
+        self.repo_url: str = self.get_repo_url()
+        #: The base URL for the :attr:`repo_blob` blob of the project's repository
+        self.blob_url: str = get_blob_url(
             repo_url=self.repo_url,
             blob=self.repo_blob
         )
-        self.docs_url = self.get_docs_url()
-        self.source_files = self.read_source_files()
+        #: The URL to use when resolving :mod:`~.sphinx.ext.autodoc` cross-references
+        self.docs_url: str = self.get_docs_url()
 
         if self.docs_url_type == "code":
             self.setup_linkcode_resolve(app)
 
     def get_repo_url(self) -> str:
-        """Generates the repository URL from the :external+sphinx:confval:`html_context` dict
+        """Generates the URL of the project's repository from the :external+sphinx:confval:`html_context` dict
 
-        :raises ExtensionError: if ``html_context`` is not set or missing values
+        :raises ExtensionError: if ``html_context`` is undefined or missing values
         """
         if not self.html_context:
             raise ExtensionError(
@@ -60,9 +63,9 @@ class READMEConfig:
          If :attr:`docs_url_type` is
 
          * ``"code"``: uses the :attr:`blob_url`
-         * ``"html"``: uses the :confval:`html_baseurl`
+         * ``"html"``: uses the :external+sphinx:confval:`html_baseurl`
 
-        :raises ExtensionError: if ``html_baseurl`` is missing
+        :raises ExtensionError: if ``html_baseurl`` is undefined
         """
         if self.docs_url_type == "html":
             if self.html_baseurl:
@@ -78,10 +81,16 @@ class READMEConfig:
         return docs_url.rstrip("/")
 
     def setup_linkcode_resolve(self, app: Sphinx) -> None:
+        """Retrieves or defines a ``linkcode_resolve()`` function for your package
+        and enables the :mod:`sphinx.ext.linkcode` extension
+
+        .. tip:: The linkcode extension is only used if
+           :confval:`readme_docs_url_type` is ``"code"``
+        """
         linkcode_func = get_conf_val(app, "linkcode_resolve")
 
         if not callable(linkcode_func):
-            self.logger.info(
+            self.logger.debug(
                 "``sphinx_readme:`` using default ``linkcode_resolve``"
             )
             # Get the template for linking to source code
@@ -91,15 +100,25 @@ class READMEConfig:
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
         app.setup_extension("sphinx.ext.linkcode")
 
-
-    def read_source_files(self) -> Dict[str, str]:
-        sources = {
-            src_file: self.read_rst(src_file)
-            for src_file in self.src_files
-        }
-        return sources
-
     def read_rst(self, rst_file: Union[str, Path], replace_only: bool = False) -> str:
+        """Reads and partially parses an ``rst`` file
+
+        .. hint::
+
+           Files are parsed as follows:
+
+           1. If ``replace_only`` is ``True``, only directives are replaced via
+              :func:`~.replace_only_directives`
+
+           2. If :confval:`readme_include_directive` is ``True``, include directives are
+              replaced with the content of the included file;
+              otherwise, the directives will be removed
+
+           3. If :confval:`readme_raw_directive` is ``False``, raw directives are removed
+
+        :param rst_file: the ``rst`` file to read
+        :param replace_only: specifies if :rst:dir:`only` directives should be replaced or not
+        """
         with open(rst_file, 'r', encoding='utf-8') as f:
             rst = f.read()
 
@@ -148,7 +167,8 @@ class READMEConfig:
         return rst
 
     @property
-    def src_files(self):
+    def src_files(self) -> List[str]:
+        """Absolute paths of the :confval:`readme_src_files`"""
         return self._src_files
 
     @src_files.setter
@@ -161,8 +181,19 @@ class READMEConfig:
             for src_file in src_files
         ]
 
+    @cached_property
+    def sources(self) -> Dict[str, str]:
+        """Absolute paths of source files mapped to their file content"""
+        return {
+            src_file: self.read_rst(src_file)
+            for src_file in self.src_files
+        }
+
     @property
-    def out_dir(self):
+    def out_dir(self) -> Path:
+        """Absolute path of the directory to save generated ``rst`` files to
+        (from :confval:`readme_out_dir`)
+        """
         return self._out_dir
 
     @out_dir.setter
@@ -178,7 +209,12 @@ class READMEConfig:
         self._out_dir = out_dir
 
     @property
-    def docs_url_type(self):
+    def docs_url_type(self) -> str:
+        """Documentation source type (``"code"`` or ``"html``") for
+        resolving :mod:`~.sphinx.ext.autodoc` cross-references
+
+        See :confval:`readme_docs_url_type`
+        """
         return self._docs_url_type
 
     @docs_url_type.setter
@@ -194,11 +230,13 @@ class READMEConfig:
         self._docs_url_type = docs_url_type
 
     @cached_property
-    def repo_host(self):
+    def repo_host(self) -> str:
+        """The platform that the project's repository is hosted on"""
         return get_repo_host(self.repo_url)
 
     @cached_property
-    def image_baseurl(self):
+    def image_baseurl(self) -> str:
+        """The base URL to use when replacing images with :meth:`~.replace_rst_images`"""
         if self.repo_host == "github":
             # Ex. https://raw.githubusercontent.com/TDKorn/sphinx-readme/main
             return self.blob_url.replace("github.com", "raw.githubusercontent.com").replace('blob/', '')
@@ -211,9 +249,28 @@ class READMEConfig:
             # Ex. https://bitbucket.org/TDKorn/sphinx-readme/raw/main
             return self.blob_url.replace("/src/", "/raw/")
 
-
     @cached_property
-    def icon_map(self):
+    def icon_map(self) -> Dict[str, str]:
+        """A mapping of admonition classes to their icons
+
+        The default mapping is as follows, but can be modified
+        via :confval:`readme_admonition_icons`
+
+        .. code-block:: python
+
+            {
+             'attention': '🔔️',
+             'caution': '⚠️',
+             'danger': '☢',
+             'error': '⛔',
+             'hint': '🧠',
+             'important': '📢',
+             'note': '📝',
+             'tip': '💡',
+             'warning': '🚩',
+             'default': '📄'
+            }
+        """
         types = ("attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning", "default")
         icons = ("🔔️", "⚠️", "☢️", '⛔', "🧠", "📢", "📝", "💡", "🚩", self.default_admonition_icon)
         icon_map = dict(zip(types, icons))
@@ -226,7 +283,8 @@ class READMEConfig:
         return icon_map
 
     @property
-    def admonition_template(self):
+    def admonition_template(self) -> str:
+        """The template to use when replacing admonitions with :meth:`~.replace_admonitions`"""
         if self.raw_directive is True:
             return r'''
 .. raw:: html
