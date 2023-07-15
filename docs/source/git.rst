@@ -1,7 +1,7 @@
-The ``sphinx_readme.utils.linkcode`` submodule
+The ``sphinx_readme.utils.git`` submodule
 ================================================
 
-.. automodule:: sphinx_readme.utils.linkcode
+.. automodule:: sphinx_readme.utils.git
    :members:
    :undoc-members:
    :show-inheritance:

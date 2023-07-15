@@ -1,5 +1,5 @@
-The ``parser`` module
-~~~~~~~~~~~~~~~~~~~~~~~~
+The ``READMEParser`` Class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: sphinx_readme.parser
    :members:

@@ -12,17 +12,10 @@ Table Of Contents
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Documentation
 
    modules
-   config_subpackage
-
-
-.. toctree::
-   :caption: Extras
-
-   self
 
 Indices and tables
 ~~~~~~~~~~~~~~~~~~~

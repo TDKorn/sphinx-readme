@@ -4,8 +4,9 @@ from typing import Dict, Any
 from docutils.nodes import document
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
-from sphinx_readme.utils import get_conf_val, set_conf_val
-from sphinx_readme.config import get_repo_dir
+
+from sphinx_readme.utils.sphinx import get_conf_val, set_conf_val
+from sphinx_readme.utils.git import get_repo_dir
 from sphinx_readme.parser import READMEParser
 
 

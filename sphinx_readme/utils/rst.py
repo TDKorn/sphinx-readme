@@ -1,31 +1,5 @@
 import re
-import subprocess
-from pathlib import Path
-from sphinx.application import Sphinx
-from typing import Dict, List, Optional, Any, Union
-from sphinx.util import logging
-
-
-logger = logging.getLogger(__name__)
-
-
-def get_conf_val(app: Sphinx, attr: str, default: Optional[Any] = None) -> Any:
-    """Retrieve the value of a ``conf.py`` config variable
-
-    :param attr: the config variable to retrieve
-    :param default: the default value to return if the variable isn't found
-    """
-    return app.config._raw_config.get(attr, getattr(app.config, attr, default))
-
-
-def set_conf_val(app: Sphinx, attr: str, value: Any) -> None:
-    """Set the value of a ``conf.py`` config variable
-
-    :param attr: the config variable to set
-    :param value: the variable value
-    """
-    app.config._raw_config[attr] = value
-    setattr(app.config, attr, value)
+from typing import List
 
 
 def escape_rst(rst: str) -> str:
@@ -127,7 +101,7 @@ def get_xref_variants(target: str) -> List[str]:
 
 
 def get_all_xref_variants(fully_qualified_name: str) -> List[str]:
-    """Generates a list of all possible ways to cross-reference an object
+    """Returns all possible cross-reference targets for an object
 
     **Example:**
 

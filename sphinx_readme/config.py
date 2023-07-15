@@ -6,8 +6,10 @@ from functools import cached_property
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 
-from sphinx_readme.utils import get_conf_val, set_conf_val, logger, replace_only_directives, remove_raw_directives
-from sphinx_readme.config import get_repo_dir, get_repo_host, get_blob_url, get_repo_url, get_linkcode_url, get_linkcode_resolve
+from sphinx_readme.utils.git import get_repo_url, get_blob_url, get_repo_host, get_repo_dir
+from sphinx_readme.utils.rst import replace_only_directives, remove_raw_directives
+from sphinx_readme.utils.linkcode import get_linkcode_url, get_linkcode_resolve
+from sphinx_readme.utils.sphinx import get_conf_val, set_conf_val, logger
 
 
 class READMEConfig:

@@ -5,7 +5,7 @@ from collections import defaultdict
 from typing import Dict, List, Tuple, Set, Union
 
 from docutils import nodes
-from docutils.nodes import Node, document
+from docutils.nodes import document
 
 from sphinx import addnodes
 from sphinx.application import Sphinx
@@ -14,7 +14,7 @@ from sphinx.transforms import SphinxTransformer
 from sphinx.environment import BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils import get_all_xref_variants, escape_rst, format_rst
+from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst
 
 
 class READMEParser:
