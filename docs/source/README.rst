@@ -91,8 +91,8 @@ as ``html`` builds, including :mod:`sphinx.ext.autodoc` cross-references!
    :width: 75%
 
 
-Features
-~~~~~~~~~~
+📋 Features
+~~~~~~~~~~~~
 
 ``sphinx_readme`` adds support for the following ``sphinx`` and ``docutils`` directives and features:
 
@@ -105,8 +105,8 @@ Features
 * Images
 
 
-Installation
-~~~~~~~~~~~~~
+⚙ Installation
+~~~~~~~~~~~~~~~~
 
 Install using pip::
 
@@ -123,8 +123,8 @@ Add the extension to your ``conf.py``:
 
 
 
-Configuration
-~~~~~~~~~~~~~~~
+🔧 Configuration
+~~~~~~~~~~~~~~~~~
 
 
 .. only:: html
@@ -210,7 +210,7 @@ Configuration
    .. include:: configuration/sample_conf.rst
 
 
-   Documentation
+   📚 Documentation
    ~~~~~~~~~~~~~~~~
 
    Full documentation can be found on |docs|_
