@@ -86,6 +86,29 @@ def remove_raw_directives(rst: str) -> str:
         repl='', string=rst, flags=re.M | re.DOTALL
     )
 
+def replace_attrs(rst: str) -> str:
+    """Replaces ``:attr:`` cross-references with ``inline literals``
+
+    .. hint::
+
+       Since source code links can't be generated for attributes,
+       this function is only called if both
+
+       1. :confval:`readme_docs_url_type` is ``"code"``
+       2. :confval:`readme_replace_attrs` is ``True``
+
+    :param rst: the rst to replace attribute xrefs in
+    """
+    # Ex. :attr:`~.Class.attr` => ``attr``
+    short_ref = r"(?:\s*?):attr:`~\.?(\w+)`(?=\s*?)"
+    # Ex. :attr:`.Class.attr` => ``Class.attr``
+    long_ref = r"(?:\s*?):attr:`\.?([\.\w]+)`(?=\s*?)"
+    repl = r" ``\1``"
+
+    rst = re.sub(short_ref, repl, rst)
+    rst = re.sub(long_ref, repl, rst)
+    return rst
+
 
 def get_xref_variants(target: str) -> List[str]:
     """Returns a list of ways to make a cross-reference to ``target``

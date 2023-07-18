@@ -2,7 +2,8 @@ import re
 import copy
 from pathlib import Path
 from collections import defaultdict
-from typing import Dict, List, Tuple, Set, Union, Callable, Optional
+from functools import cached_property
+from typing import Dict, List, Set, Union, Callable, Optional
 
 from docutils import nodes
 from sphinx import addnodes
@@ -13,7 +14,7 @@ from sphinx.application import Sphinx, BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils.sphinx import get_conf_val
-from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst
+from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs
 
 
 class READMEParser:
@@ -295,13 +296,13 @@ class READMEParser:
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_toctrees(src, rst)
             rst = self.replace_rst_rubrics(rst)
+            rst = self.replace_py_xrefs(rst)
 
             for role in self.roles:
                 rst = self.replace_std_xrefs(role, rst)
 
             # Use ref_map to generate autodoc substitution definitions
-            rst, autodoc_refs = self.replace_autodoc_refs(rst)
-            header_vals = self.get_header_vals(autodoc_refs)
+            header_vals = self.get_header_vals()
 
             # Write the final output
             rst_out = Path(self.config.out_dir, Path(src).name)
@@ -516,7 +517,7 @@ class READMEParser:
                 )
         return rst
 
-    def replace_autodoc_refs(self, rst: str) -> Tuple[str, Set]:
+    def replace_py_xrefs(self, rst: str) -> str:
         """Replace :mod:`~sphinx.ext.autodoc` cross-references with substitutions
 
         These substitutions will be hyperlinked to the corresponding source code
@@ -527,19 +528,7 @@ class READMEParser:
            if linking to HTML documentation
 
         :param rst: content of the source file
-        :returns: subbed rst and all autodoc xref targets found within it
         """
-        # :role:`{~.}{module|class}{.}target` where {} is optional
-        pattern = r":(?:mod|class|meth|func):`([~\.\w]+)`"
-
-        if self.config.replace_attrs:
-            if self.config.docs_url_type == 'html':
-                # If linking to HTML docs, we can generate cross-refs for attributes
-                pattern = r":(?:mod|class|meth|func|attr):`([~\.\w]+)`"
-            else:
-                # If linking to source code, just replace :attr:`~.attribute` with ``attribute``
-                rst = self.replace_autodoc_attrs(rst)
-
         # To render on GitHub/PyPi/etc., we use Sphinx substitutions instead of cross-refs
         # Syntax is |.{ref}|_ or |.`{ref}`|_
         if self.config.inline_markup:
@@ -547,43 +536,20 @@ class READMEParser:
         else:
             repl = r"|.\1|_"
 
-        # Get a set of all autodoc cross-refs
-        autodoc_refs = set(re.findall(pattern, rst))
-
         # Replace cross-refs with substitutions
-        rst = re.sub(pattern, repl, rst)
+        rst = re.sub(self.py_xref_regex, repl, rst)
 
-        # Use autodoc_refs and ref_map to generate substitution definitions
-        return rst, autodoc_refs
+        # If linking to source code, replace :attr:`~.attribute` with ``attribute``
+        if self.config.docs_url_type == "code" and self.config.replace_attrs:
+            rst = replace_attrs(rst)
 
-    def replace_autodoc_attrs(self, rst: str) -> str:
-        """Replaces ``:attr:`` cross-references with ``inline literals``
-
-        .. hint::
-
-           This method is only called if both
-
-           1. :confval:`readme_docs_url_type` is ``"code"``
-           2. :confval:`readme_replace_attrs` is ``True``
-        """
-        # Ex. ~.Class.meth => ``meth``
-        short_ref = r" :attr:`~\.?(\w+)`"
-        # Ex. .Class.meth => ``Class.meth``
-        long_ref = r" :attr:`\.?([\.\w]+)`"
-        repl = r" ``\1``"
-
-        rst = re.sub(short_ref, repl, rst)
-        rst = re.sub(long_ref, repl, rst)
         return rst
 
-    def get_header_vals(self, autodoc_refs: Set) -> List[str]:
-        """Returns a list of substitution definitions and hyperlink references to prepend to the file
-
-        :param autodoc_refs: :mod:`sphinx.ext.autodoc` targets to define substitutions for
-        """
+    def get_header_vals(self) -> List[str]:
+        """Returns a list of substitution definitions and hyperlink references to prepend to the file"""
         header = []
 
-        for ref in autodoc_refs:
+        for ref in self.py_xrefs:
             info = self.ref_map.get(ref)
 
             # Check for invalid ref
@@ -603,6 +569,26 @@ class READMEParser:
                 header.append(f'.. |{_type}| replace:: {icon}')
 
         return header
+
+    @cached_property
+    def py_xrefs(self) -> Set[str]:
+        """Python domain cross-reference targets found within source files"""
+        xrefs = set()
+        for src, rst in self.sources.items():
+            xrefs.update(
+                set(re.findall(self.py_xref_regex, rst)))
+        return xrefs
+
+    @cached_property
+    def py_xref_regex(self) -> str:
+        """The regular expression to match Python domain cross-references"""
+        roles = r"mod|class|meth|func"
+        # If linking to HTML docs, we can generate cross-refs for attributes
+        if self.config.docs_url_type == "html":
+            if self.config.replace_attrs:
+                roles += "|attr"
+
+        return rf":(?:{roles}):`(~?\.?[.\w]+)`"
 
     def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
         """Returns the regex to match a specific admonition directive
