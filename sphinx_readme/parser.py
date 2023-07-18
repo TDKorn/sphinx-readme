@@ -297,8 +297,7 @@ class READMEParser:
             rst = self.replace_rst_rubrics(rst)
 
             for role in self.roles:
-                pass
-                # rst = self.replace_cross_refs(role, rst)
+                rst = self.replace_std_xrefs(role, rst)
 
             # Use ref_map to generate autodoc substitution definitions
             rst, autodoc_refs = self.replace_autodoc_refs(rst)
@@ -483,27 +482,38 @@ class READMEParser:
             string=rst
         )
 
-    def replace_cross_refs(self, ref_role: str, rst: str) -> str:
-        """Replaces cross-references using the :rst:role:`doc` or :rst:role:`ref` role
+    def replace_std_xrefs(self, ref_role: str, rst: str) -> str:
+        """Replaces cross-references from the :external+sphinx:ref:`Standard Domain <domains-std>`
+
+        .. hint::
+
+           This includes cross-references using the :rst:role:`doc`
+           or :rst:role:`ref` role, as well as any custom objects added by
+           :meth:`Sphinx.add_object_type() <sphinx.application.Sphinx.add_object_type>`
 
         :param ref_role: the name of the cross-reference role
         :param rst: content of the source file
         """
-        # Find all :ref_role:`ref_id` cross-refs
-        cross_refs = re.findall(
-            pattern=fr"(?:\s*?):{ref_role}:`([^`]+)`(?=\s*?)",
+        # Find all :ref_role:`ref_id` or :ref_role:`title <ref_id>` cross-refs
+        xrefs = re.findall(
+            pattern=fr"(?:\s*?):{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=\s*?)",
             string=rst
         )
-        # Match these ids up with target data in the ref_map
-        cross_ref_map = dict(zip(cross_refs, self.ref_map[ref_role]))
+        for xref in xrefs:
+            if not(all(xref)):  # :ref_role:`ref_id` ->  ('ref_id', 'ref_id', '')
+                ref, ref_id, title = xref
 
-        # Replace cross-refs with `text <link>`_ format
-        for ref_id, target in cross_ref_map.items():
-            rst = re.sub(
-                pattern=rf":{ref_role}:`{ref_id}`",
-                repl=rf"`{target['text']} <{target['refuri']}>`_",
-                string=rst
-            )
+            else:  # :ref_role:`title <ref_id>` -> ('title <ref_id>', 'title', 'ref_id')
+                ref, title, ref_id = xref
+
+            # Match these ids up with target data in the ref_map
+            if info := self.ref_map.get(ref_role, {}).get(ref_id, {}):
+                # Replace cross-refs with `text <link>`_ format
+                rst = re.sub(
+                    pattern=rf":{ref_role}:`{escape_rst(ref)}`",
+                    repl=f"`{title or info['replace']} <{info['target']}>`_",
+                    string=rst
+                )
         return rst
 
     def replace_autodoc_refs(self, rst: str) -> Tuple[str, Set]:
