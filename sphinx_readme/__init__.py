@@ -19,8 +19,8 @@ def setup(app: Sphinx) -> Dict[str, Any]:
         return {}
 
     app.connect('env-check-consistency', parse_env)
-    app.connect('doctree-resolved', parse_references)
-    app.connect('build-finished', resolve_readme)
+    app.connect('doctree-resolved', parse_doctree)
+    app.connect('build-finished', resolve)
 
     app.add_config_value("readme_inline_markup", True, True)
     app.add_config_value("readme_raw_directive", True, True)
@@ -36,15 +36,15 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
 
 def parse_env(app: Sphinx, env: BuildEnvironment):
-    readme = get_conf_val(app, 'READMEParser')
-    readme.parse_env(env)
+    parser = get_conf_val(app, 'READMEParser')
+    parser.parse_env(env)
 
 
-def parse_references(app: Sphinx, doctree: document, docname: str):
-    readme = get_conf_val(app, 'READMEParser')
-    readme.parse_doctree(app, doctree, docname)
+def parse_doctree(app: Sphinx, doctree: document, docname: str):
+    parser = get_conf_val(app, 'READMEParser')
+    parser.parse_doctree(app, doctree, docname)
 
 
-def resolve_readme(app: Sphinx, exception):
-    readme = get_conf_val(app, 'READMEParser')
-    readme.resolve()
+def resolve(app: Sphinx, exception):
+    parser = get_conf_val(app, 'READMEParser')
+    parser.resolve()

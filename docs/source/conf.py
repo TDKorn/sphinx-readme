@@ -80,6 +80,8 @@ rst_prolog = """
 .. role:: rst(code)
    :class: highlight
 
+.. |env| replace:: :class:`~.sphinx.environment.BuildEnvironment`
+.. |std_domain| replace:: :external+sphinx:ref:`Standard Domain <domains-std>`
 """
 
 # Use default Pygments style if not html

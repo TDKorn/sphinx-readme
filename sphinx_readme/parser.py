@@ -35,13 +35,13 @@ class READMEParser:
         self.roles: Set[str] = {"doc", "ref"}
 
     def parse_env(self, env: BuildEnvironment) -> None:
-        """Parses domain data and document titles from the :class:`~.BuildEnvironment`"""
+        """Parses domain data and document titles from the |env|"""
         self.parse_titles(env)
         self.parse_py_domain(env)
         self.parse_std_domain(env)
 
     def parse_titles(self, env: BuildEnvironment) -> None:
-        """Parses document titles from the :class:`~.BuildEnvironment`"""
+        """Parses document titles from the |env|"""
         for docname, title_node in env.titles.items():
             parts = []
 
@@ -54,8 +54,11 @@ class READMEParser:
 
             self.titles[docname] = ' '.join(parts)
 
-    def parse_std_domain(self, env) -> None:
-        """Parses cross-reference data from the Standard domain"""
+    def parse_std_domain(self, env: BuildEnvironment) -> None:
+        """Parses cross-reference data from the |std_domain|
+
+        :param env: the |env|
+        """
         domain = env.get_domain("std")
         self.roles.update(set(domain.object_types))
 
@@ -74,8 +77,11 @@ class READMEParser:
                 "target": target
             }
 
-    def parse_py_domain(self, env) -> None:
-        """Parses cross-reference data for objects in the Python domain"""
+    def parse_py_domain(self, env: BuildEnvironment) -> None:
+        """Parses cross-reference data for :class:`~.sphinx.domains.python.PythonDomain` objects
+
+        :param env: the |env|
+        """
         py_objects = env.domaindata.get('py', {}).get("objects", {})
         linkcode_resolve = get_conf_val(env, "linkcode_resolve")
 
@@ -89,7 +95,7 @@ class READMEParser:
     def get_py_target(self, entry: ObjectEntry, linkcode_resolve: Optional[Callable] = None) -> Optional[str]:
         """Resolves the target for a cross-reference to an object in the Python domain
 
-        :param entry: the :class:`ObjectEntry` for the object
+        :param entry: the ``ObjectEntry`` for the object
         :param linkcode_resolve: function to resolve targets when linking to source code
         :return: the link to the object's corresponding documentation entry or highlighted source code
         """
@@ -120,7 +126,7 @@ class READMEParser:
 
         return linkcode_resolve("py", info)
 
-    def add_variants(self, qualified_name: str, target: str, is_callable: bool = False):
+    def add_variants(self, qualified_name: str, target: str, is_callable: bool = False) -> None:
         """Adds substitution information for an object to the :attr:`ref_map`
 
         This data is used to replace any :mod:`~sphinx.ext.autodoc` cross-reference to
@@ -162,6 +168,39 @@ class READMEParser:
             self.parse_admonitions(app, doctree, docname)
             self.parse_intersphinx_nodes(doctree)
             self.parse_toctrees(doctree)
+
+    def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
+        """Parses data from generic and specific admonitions
+
+        :param doctree: the doctree from one of the :attr:`~.src_files`
+        """
+        admonitions = {'generic': [], 'specific': []}
+        src = doctree.get('source')
+        rst = self.sources[src]
+
+        # Generate new doctree to account for only directives
+        doctree = get_doctree(app, rst, docname)
+
+        for admonition in list(doctree.findall(nodes.Admonition)):
+            info = {
+                'body': admonition.rawsource
+            }
+            if isinstance(admonition, nodes.admonition):
+                # Generic Admonition (using admonition directive)
+                info.update({
+                    'class': admonition.get('classes')[0],
+                    'title': admonition.children[0].rawsource
+                })
+                admonitions['generic'].append(info)
+            else:
+                # Specific Admonition (for example, .. note::)
+                info.update({
+                    'class': admonition.tagname,
+                    'title': admonition.tagname.title(),
+                })
+                admonitions['specific'].append(info)
+
+        self.admonitions[src] = admonitions
 
     def parse_intersphinx_nodes(self, doctree: nodes.document) -> None:
         """Parses :mod:`sphinx.ext.autodoc` cross-references that utilize :mod:`sphinx.ext.intersphinx`
@@ -208,39 +247,6 @@ class READMEParser:
                     'title': self.titles.get(entry),
                 })
             self.toctrees[source].append(toc)
-
-    def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
-        """Parses data from generic and specific admonitions
-
-        :param doctree: the doctree from one of the :attr:`~.src_files`
-        """
-        admonitions = {'generic': [], 'specific': []}
-        src = doctree.get('source')
-        rst = self.sources[src]
-
-        # Generate new doctree to account for only directives
-        doctree = get_doctree(app, rst, docname)
-
-        for admonition in list(doctree.findall(nodes.Admonition)):
-            info = {
-                'body': admonition.rawsource
-            }
-            if isinstance(admonition, nodes.admonition):
-                # Generic Admonition (using admonition directive)
-                info.update({
-                    'class': admonition.get('classes')[0],
-                    'title': admonition.children[0].rawsource
-                })
-                admonitions['generic'].append(info)
-            else:
-                # Specific Admonition (for example, .. note::)
-                info.update({
-                    'class': admonition.tagname,
-                    'title': admonition.tagname.title(),
-                })
-                admonitions['specific'].append(info)
-
-        self.admonitions[src] = admonitions
 
     def resolve(self) -> None:
         """Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`
@@ -441,7 +447,7 @@ class READMEParser:
         )
 
     def replace_std_xrefs(self, ref_role: str, rst: str) -> str:
-        """Replaces cross-references from the :external+sphinx:ref:`Standard Domain <domains-std>`
+        """Replaces cross-references from the |std_domain|
 
         .. hint::
 
@@ -584,7 +590,7 @@ class READMEParser:
         pattern += r"(?=[\n\S]+?)"
         return pattern
 
-    def get_admonition_icon(self, admonition: dict):
+    def get_admonition_icon(self, admonition: dict) -> str:
         """Returns the icon to use for an admonition
 
         :param admonition: a dict of admonition data
