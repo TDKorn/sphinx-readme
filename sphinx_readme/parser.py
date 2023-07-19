@@ -361,8 +361,8 @@ class READMEParser:
         :param rst_src: absolute path of the source file
         :param rst: content of the source file
         """
-        pattern = r".. toctree::\n+?(?:\s+:\w+:\s*?\w*?\n\s+)*?(?:\s+\w+\n)+?(?=\n+\S+?)"
-        toctrees = re.findall(pattern, rst)
+        pattern = r"\.\. toctree::\s*?\n+?(?:^[ ]+.+?$|^\s*$)+?(?=\n*\S+|\Z)"
+        toctrees = re.findall(pattern, rst, re.M | re.DOTALL)
 
         for toctree, info in zip(toctrees, self.toctrees[rst_src]):
             substitutions = []
@@ -389,7 +389,7 @@ class READMEParser:
                     repl += f"* `{entry['title']} <{target}>`_\n"
 
             if substitutions:
-                repl += '\n\n' + '\n'.join(substitutions) + '\n\n'
+                repl += '\n' + '\n'.join(substitutions) + '\n'
 
             # Replace toctree directive with links and substitution defs
             rst = rst.replace(toctree, repl)
