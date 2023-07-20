@@ -2,63 +2,173 @@ import re
 import copy
 from pathlib import Path
 from collections import defaultdict
-from typing import Dict, List, Tuple, Set, Union
+from typing import Dict, List, Tuple, Set, Union, Callable, Optional
 
 from docutils import nodes
-from docutils.nodes import document
-
 from sphinx import addnodes
-from sphinx.application import Sphinx
 from sphinx.testing import restructuredtext
+from sphinx.domains.python import ObjectEntry
 from sphinx.transforms import SphinxTransformer
-from sphinx.environment import BuildEnvironment
+from sphinx.application import Sphinx, BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
+from sphinx_readme.utils.sphinx import get_conf_val
 from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst
 
 
 class READMEParser:
-
-    REFERENCE_MAP = {
-        "ref": [],
-        "doc": []
-    }
 
     def __init__(self, app: Sphinx):
         #: The :class:`~.READMEConfig` for the parser
         self.config: READMEConfig = READMEConfig(app)
         self.logger = self.config.logger
         #: Mapping of info for standard and :mod:`sphinx.ext.autodoc` cross-references
-        self.ref_map: Dict[str, Union[List, Dict]] = copy.deepcopy(self.REFERENCE_MAP)
+        self.ref_map: Dict[str, Union[List, Dict]] = {}
         #: Mapping of source files to their content
         self.sources: Dict[str, str] = self.config.sources
         #: Mapping of source files to their toctree data
         self.toctrees: Dict[str, List[Dict]] = defaultdict(list)
-        # Mapping of source files to their admonition data
+        #: Mapping of source files to their admonition data
         self.admonitions: Dict[str, Dict[str, List[Dict]]] = {}
-        # Mapping of docnames to their parsed titles
+        #: Mapping of docnames to their parsed titles
         self.titles: Dict[str, str] = {}
+        #: Standard cross-reference roles
+        self.roles: Set[str] = {"doc", "ref"}
 
-    def parse(self, app: Sphinx, doctree: document, docname: str) -> None:
+    def parse_env(self, env: BuildEnvironment) -> None:
+        """Parses domain data and document titles from the :class:`~.BuildEnvironment`"""
+        self.parse_titles(env)
+        self.parse_py_domain(env)
+        self.parse_std_domain(env)
+
+    def parse_titles(self, env: BuildEnvironment) -> None:
+        """Parses document titles from the :class:`~.BuildEnvironment`"""
+        for docname, title_node in env.titles.items():
+            parts = []
+
+            for child in title_node.children:
+                text = child.astext()
+                if isinstance(child, nodes.literal):
+                    parts.append(f"``{text}``")
+                else:
+                    parts.append(text)
+
+            self.titles[docname] = ' '.join(parts)
+
+    def parse_std_domain(self, env) -> None:
+        """Parses cross-reference data from the Standard domain"""
+        domain = env.get_domain("std")
+        self.roles.update(set(domain.object_types))
+
+        for ref_id, text, role, docname, anchor, _ in domain.get_objects():
+            replace = self.titles.get(ref_id) or text
+            target = f"{self.config.html_baseurl}/{docname}.html"
+
+            if anchor:
+                target += f"#{anchor}"
+
+            if role == "label":
+                role = "ref"
+
+            self.ref_map.setdefault(role, {})[ref_id] = {
+                "replace": replace,
+                "target": target
+            }
+
+    def parse_py_domain(self, env) -> None:
+        """Parses cross-reference data for objects in the Python domain"""
+        py_objects = env.domaindata.get('py', {}).get("objects", {})
+        linkcode_resolve = get_conf_val(env, "linkcode_resolve")
+
+        for qualname, entry in py_objects.items():
+            if target := self.get_py_target(entry, linkcode_resolve):
+                self.add_variants(
+                    qualified_name=qualname,
+                    target=target,
+                    is_callable=entry.objtype in ("method", "function"))
+
+    def get_py_target(self, entry: ObjectEntry, linkcode_resolve: Optional[Callable] = None) -> Optional[str]:
+        """Resolves the target for a cross-reference to an object in the Python domain
+
+        :param entry: the :class:`ObjectEntry` for the object
+        :param linkcode_resolve: function to resolve targets when linking to source code
+        :return: the link to the object's corresponding documentation entry or highlighted source code
+        """
+        if self.config.docs_url_type == "html":
+            # All links to html documentation follow the same format
+            return f"{self.config.html_baseurl}/{entry.docname}.html#{entry.node_id}"
+
+        # Links to source code depend on the object type
+        if entry.objtype in ("property", "attribute", "data", "decorator"):
+            return None  # Cannot link to source code
+
+        if entry.objtype == "module":  # Link to the file in the repository
+            filepath = entry.node_id.removeprefix("module-").replace(".", "/")
+            return f"{self.config.blob_url}/{filepath}.py"
+
+        # For class/meth/func, use linkcode_resolve
+        info = dict.fromkeys(("module", "fullname"))
+        parts = entry.node_id.split('.')
+
+        # TODO: look into autoexception and autodecorator
+        if entry.objtype in ("class", "function"):
+            info["module"] = '.'.join(parts[:-1])
+            info['fullname'] = parts[-1]
+
+        elif entry.objtype == "method":
+            info["module"] = '.'.join(parts[:-2])
+            info['fullname'] = '.'.join(parts[-2:])
+
+        return linkcode_resolve("py", info)
+
+    def add_variants(self, qualified_name: str, target: str, is_callable: bool = False):
+        """Adds substitution information for an object to the :attr:`ref_map`
+
+        This data is used to replace any :mod:`~sphinx.ext.autodoc` cross-reference to
+        the object with a substitution, hyperlinked to the corresponding
+        source code or documentation entry
+
+        .. tip:: See :func:`~.get_all_xref_variants` and :meth:`replace_autodoc_refs`
+
+        :param qualified_name: the fully qualified name of an object (ex. ``"sphinx_readme.parser.add_variants"``)
+        :param target: the refuri of the object's corresponding source code or documentation entry
+        :param is_callable: specifies if the object is a method or function
+        """
+        short_ref = qualified_name.split('.')[-1]
+        variants = get_all_xref_variants(qualified_name)
+
+        for variant in variants:
+            if variant in self.ref_map:
+                continue
+
+            if variant.startswith("~"):
+                replace = short_ref
+            else:
+                replace = variant.lstrip('.')
+
+            if is_callable:
+                replace += "()"
+
+            if self.config.inline_markup:
+                replace = f"``{replace}``"
+
+            self.ref_map[variant] = {
+                'replace': replace,
+                'target': target
+            }
+
+    def parse_doctree(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses cross-reference, admonition, and toctree data from a resolved doctree"""
         # If a source has ``only`` directives, its doctree will have missing/extra content
         # Replace the ``only`` directives, then generate a new doctree to parse if needed
         doctree = self.get_doctree(app, doctree, docname)
 
-        inline_nodes = list(doctree.findall(nodes.inline))
-        literal_nodes = list(doctree.findall(nodes.literal))
-
-        self.parse_autodoc_nodes(literal_nodes, docname)
-
-        if self.config.docs_url_type == "code":
-            self.parse_linkcode_nodes(inline_nodes)
-
         if doctree.get('source') in self.sources:
-            self.parse_xref_nodes(inline_nodes)
+            self.parse_intersphinx_nodes(doctree)
             self.parse_admonitions(doctree)
             self.parse_toctrees(doctree)
 
-    def get_doctree(self, app: Sphinx, doctree: document, docname: str) -> document:
+    def get_doctree(self, app: Sphinx, doctree: nodes.document, docname: str) -> nodes.document:
         """Generates and resolves a new doctree for :attr:`~.src_files`
         that contain :rst:dir:`only` directives
         """
@@ -99,189 +209,33 @@ class READMEParser:
         doctree['source'] = src
         return doctree
 
-    def parse_xref_nodes(self, inline_nodes: List[nodes.inline]) -> None:
-        """Adds node data from :rst:role:`doc` or :rst:role:`ref` cross-references to the :attr:`~ref_map`
+    def parse_intersphinx_nodes(self, doctree: nodes.document) -> None:
+        """Parses :mod:`sphinx.ext.autodoc` cross-references that utilize :mod:`sphinx.ext.intersphinx`
 
-        :param inline_nodes: the inline nodes from the document being parsed
+        :param doctree: the doctree from one of the :attr:`~.src_files`
         """
-        for node in inline_nodes:
-            if 'doc' in node['classes']:
-                self.ref_map['doc'].append(self._parse_xref(node))
-
-            elif 'std-ref' in node['classes']:
-                self.ref_map['ref'].append(self._parse_xref(node))
-
-    def _parse_xref(self, node: nodes.inline) -> Dict[str, str]:
-        """Helper function to parse target info of a ``:ref:`` or ``:doc:`` xref"""
-        return {
-            'text': node.children[0].astext(),
-            "refuri": self.config.html_baseurl + "/" + node.parent.get('refuri', '')
-        }
-
-    def parse_autodoc_nodes(self, literal_nodes: List[nodes.literal], docname: str) -> None:
-        """Parses node data from :mod:`sphinx.ext.autodoc` cross-references
-
-        :param literal_nodes: the literal nodes from the document being parsed
-        """
-        for node in literal_nodes:
-            if 'py' not in node['classes']:
-                continue
-
+        for node in doctree.findall(nodes.literal):
             if not isinstance(node.parent, nodes.reference):
                 continue
 
-            if node.parent.get('internal') is False:
-                # External links are xrefs from intersphinx
-                self.parse_intersphinx_node(node)
-
-            elif 'py-mod' in node['classes']:
-                # Parse :mod: xrefs regardless of docs_url_type
-                self.parse_module_node(node, docname)
-
-            elif self.config.docs_url_type == "html":
-                # Only parse remaining py xrefs if linking to html
-                self.parse_autodoc_node(node, docname)
-
-    def parse_intersphinx_node(self, node: nodes.literal) -> None:
-        """Adds node data from a :mod:`sphinx.ext.intersphinx` cross-reference to the :attr:`~ref_map`
-
-        :param node: the literal node of an external :mod:`~sphinx.ext.autodoc` reference
-        """
-        pattern = r":(mod|class|meth|func|attr):`~?\.?[.\w]+`"
-        match = re.match(pattern, node.rawsource)
-        target = node.parent.get('refuri')
-
-        if not all((match, target)):
-            return
-
-        is_callable = match.group(1) in ("meth", "func")
-        qualified_name = target.split("#")[-1].split("-")[-1]
-        self.add_variants(qualified_name, target, is_callable)
-
-    def parse_module_node(self, node: nodes.literal, docname: str) -> None:
-        """Adds node data from a ``:mod:`` cross-reference to the :attr:`ref_map`
-
-        :param node: a literal node with the ``"py-mod"`` class
-        :param docname: the name of the document containing the node
-        """
-        qualified_name = node.parent.get("reftitle", "")
-
-        if self.config.docs_url_type == 'code':
-            # Ex. sphinx_readme.parser -> sphinx_readme/parser.py
-            refuri = qualified_name.replace('.', '/') + '.py'
-        else:
-            refuri = self._parse_refuri(node, docname)
-
-        if not all((qualified_name, refuri)):
-            return
-
-        target = f"{self.config.docs_url}/{refuri}"
-        self.add_variants(qualified_name, target)
-
-    def parse_autodoc_node(self, node: nodes.literal, docname: str) -> None:
-        """Adds node data from any :mod:`sphinx.ext.autodoc` cross-reference except ``:mod:`` to the :attr:`ref_map`
-
-        :param node: a literal node with the ``"py-{class|func|meth|attr}"`` class
-        :param docname: the name of the document containing the node
-        """
-        qualified_name = node.parent.get("reftitle")
-        refuri = self._parse_refuri(node, docname)
-
-        if not all((refuri, qualified_name)):
-            return
-
-        is_callable = bool(re.match(r":(meth|func):", node.rawsource))
-        target = f"{self.config.docs_url}/{refuri}"
-        self.add_variants(qualified_name, target, is_callable)
-
-    def _parse_refuri(self, node: nodes.literal, docname: str) -> str:
-        """Helper function to parse the target of a :mod:`sphinx.ext.autodoc` cross-reference"""
-        if 'refuri' in node.parent:
-            # Ex. ../parser.html#sphinx_readme.parser.READMEParser
-            return node.parent["refuri"].lstrip("./")
-
-        elif 'refid' in node.parent:
-            # Ex. sphinx_readme.parser.READMEParser
-            return f"{docname}.html#{node.parent['refid']}"
-
-    def parse_linkcode_nodes(self, inline_nodes: List[nodes.inline]) -> None:
-        """Parses data from nodes added by :mod:`sphinx.ext.linkcode`
-
-        :param inline_nodes: the inline nodes from the document being parsed
-        """
-        for node in inline_nodes:
-            if 'viewcode-link' in node['classes'] or 'linkcode-link' in node['classes']:
-                if node.parent.get('internal') is False:
-                    # Only parse links to external source code
-                    self.parse_linkcode_node(node)
-
-    def parse_linkcode_node(self, node: nodes.inline) -> None:
-        """Adds node data from a :mod:`~sphinx.ext.linkcode` node to the :attr:`ref_map`
-
-        :param node: an inline node added by :mod:`sphinx.ext.linkcode`
-        """
-        grandparent = node.parent.parent
-        is_callable = grandparent.get("_toc_name", "").endswith("()")
-
-        try:
-            qualified_name = grandparent.get("ids")[0]
-        except IndexError:
-            qualified_name = grandparent.get("module", "") + grandparent.get("fullname", "")
-
-        target = node.parent.get("refuri")
-        self.add_variants(qualified_name, target, is_callable)
-
-    def add_variants(self, qualified_name: str, target: str, is_callable: bool = False):
-        """Adds substitution information for an object to the :attr:`ref_map`
-
-        This data is used to replace any :mod:`~sphinx.ext.autodoc` cross-reference to
-        the object with a substitution, hyperlinked to the corresponding
-        source code or documentation entry
-
-        .. tip:: See :func:`~.get_all_xref_variants` and :meth:`replace_autodoc_refs`
-
-        :param qualified_name: the fully qualified name of an object (ex. ``"sphinx_readme.parser.add_variants"``)
-        :param target: the refuri of the object's corresponding source code or documentation entry
-        :param is_callable: specifies if the object is a method or function
-        """
-        short_ref = qualified_name.split('.')[-1]
-        variants = get_all_xref_variants(qualified_name)
-
-        for variant in variants:
-            if variant in self.ref_map:
+            if node.parent.get('internal') is True:
                 continue
 
-            if variant.startswith("~"):
-                replace = short_ref
-            else:
-                replace = variant.lstrip('.')
+            if 'py' not in node['classes']:
+                continue
 
-            if is_callable:
-                replace += "()"
+            pattern = r":(mod|class|meth|func|attr):`~?\.?[.\w]+`"
+            match = re.match(pattern, node.rawsource)
+            target = node.parent.get('refuri')
 
-            if self.config.inline_markup:
-                replace = f"``{replace}``"
+            if not all((match, target)):
+                continue
 
-            self.ref_map[variant] = {
-                'replace': replace,
-                'target': target
-            }
+            is_callable = match.group(1) in ("meth", "func")
+            qualified_name = target.split("#")[-1].split("-")[-1]
+            self.add_variants(qualified_name, target, is_callable)
 
-    def parse_titles(self, env: BuildEnvironment) -> None:
-        """Parses document titles from the :class:`~.BuildEnvironment`"""
-        for docname, title_node in env.titles.items():
-            parts = []
-
-            for child in title_node.children:
-                text = child.astext()
-                if isinstance(child, nodes.literal):
-                    parts.append(f"``{text}``")
-                else:
-                    parts.append(text)
-
-            self.titles[docname] = ' '.join(parts)
-
-    def parse_toctrees(self, doctree: addnodes.document) -> None:
+    def parse_toctrees(self, doctree: nodes.document) -> None:
         """Parses the caption and entry data from :class:`~.sphinx.addnodes.toctree` nodes
 
         .. caution:: Toctrees are currently parsed as if the directive has the ``:titlesonly:`` option
@@ -331,19 +285,20 @@ class READMEParser:
         self.admonitions[src] = admonitions
 
     def resolve(self) -> None:
-        """Uses the data from :meth:`parse` to replace cross-references and directives in the :attr:`~.src_files`
+        """Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`
 
         Once resolved, files are written to the :attr:`~.out_dir`.
         """
         for src, rst in self.sources.items():
-            # Replace everything using data from ``parse()``
+            # Replace everything using parsed data
             rst = self.replace_admonitions(src, rst)
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_toctrees(src, rst)
             rst = self.replace_rst_rubrics(rst)
 
-            for role in ('ref', 'doc'):
-                rst = self.replace_cross_refs(role, rst)
+            for role in self.roles:
+                pass
+                # rst = self.replace_cross_refs(role, rst)
 
             # Use ref_map to generate autodoc substitution definitions
             rst, autodoc_refs = self.replace_autodoc_refs(rst)

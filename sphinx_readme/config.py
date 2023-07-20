@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Callable
 from functools import cached_property
 
 from sphinx.application import Sphinx
@@ -83,12 +83,7 @@ class READMEConfig:
         return docs_url.rstrip("/")
 
     def setup_linkcode_resolve(self, app: Sphinx) -> None:
-        """Retrieves or defines a ``linkcode_resolve()`` function for your package
-        and enables the :mod:`sphinx.ext.linkcode` extension
-
-        .. tip:: The linkcode extension is only used if
-           :confval:`readme_docs_url_type` is ``"code"``
-        """
+        """Retrieves or defines a ``linkcode_resolve()`` function for your package"""
         linkcode_func = get_conf_val(app, "linkcode_resolve")
 
         if not callable(linkcode_func):
@@ -100,7 +95,6 @@ class READMEConfig:
             linkcode_func = get_linkcode_resolve(linkcode_url)
 
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
-        app.setup_extension("sphinx.ext.linkcode")
 
     def read_rst(self, rst_file: Union[str, Path], replace_only: bool = False) -> str:
         """Reads and partially parses an ``rst`` file

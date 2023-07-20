@@ -18,7 +18,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     if os.environ.get("READTHEDOCS") == "True":
         return {}
 
-    app.connect('env-check-consistency', parse_titles)
+    app.connect('env-check-consistency', parse_env)
     app.connect('doctree-resolved', parse_references)
     app.connect('build-finished', resolve_readme)
 
@@ -34,14 +34,15 @@ def setup(app: Sphinx) -> Dict[str, Any]:
 
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
 
-def parse_titles(app: Sphinx, env: BuildEnvironment):
+
+def parse_env(app: Sphinx, env: BuildEnvironment):
     readme = get_conf_val(app, 'READMEParser')
-    readme.parse_titles(env)
+    readme.parse_env(env)
 
 
 def parse_references(app: Sphinx, doctree: document, docname: str):
     readme = get_conf_val(app, 'READMEParser')
-    readme.parse(app, doctree, docname)
+    readme.parse_doctree(app, doctree, docname)
 
 
 def resolve_readme(app: Sphinx, exception):
