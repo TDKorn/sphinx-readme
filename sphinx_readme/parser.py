@@ -1,5 +1,4 @@
 import re
-import copy
 from pathlib import Path
 from collections import defaultdict
 from functools import cached_property
@@ -7,13 +6,12 @@ from typing import Dict, List, Set, Union, Callable, Optional
 
 from docutils import nodes
 from sphinx import addnodes
-from sphinx.testing import restructuredtext
 from sphinx.domains.python import ObjectEntry
-from sphinx.transforms import SphinxTransformer
 from sphinx.application import Sphinx, BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils.sphinx import get_conf_val
+from sphinx_readme.utils.docutils import get_doctree
 from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs
 
 
@@ -160,55 +158,10 @@ class READMEParser:
 
     def parse_doctree(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses cross-reference, admonition, and toctree data from a resolved doctree"""
-        # If a source has ``only`` directives, its doctree will have missing/extra content
-        # Replace the ``only`` directives, then generate a new doctree to parse if needed
-        doctree = self.get_doctree(app, doctree, docname)
-
         if doctree.get('source') in self.sources:
+            self.parse_admonitions(app, doctree, docname)
             self.parse_intersphinx_nodes(doctree)
-            self.parse_admonitions(doctree)
             self.parse_toctrees(doctree)
-
-    def get_doctree(self, app: Sphinx, doctree: nodes.document, docname: str) -> nodes.document:
-        """Generates and resolves a new doctree for :attr:`~.src_files`
-        that contain :rst:dir:`only` directives
-        """
-        # Return original doctree if file is not a readme source
-        if (src := doctree.get('source')) not in self.sources:
-            return doctree
-
-        # Parse ``only`` directives to get true source rst of README version
-        parsed_rst = self.config.read_rst(src, replace_only=True)
-        raw_rst = self.sources[src]
-
-        # Return original doctree if file had no ``only`` directives
-        if parsed_rst == raw_rst:
-            return doctree
-
-        self.sources[src] = parsed_rst
-
-        # Use temp docname to avoid duplicate warnings
-        docname = docname + "_readme"
-
-        # Generate new doctree from parsed rst using Sphinx application
-        doctree = restructuredtext.parse(app, parsed_rst, docname)
-
-        # Resolve references in the doctree
-        try:
-            backup = copy.deepcopy(app.env.temp_data)
-            app.env.temp_data['docname'] = docname
-
-            transformer = SphinxTransformer(doctree)
-            transformer.set_environment(app.env)
-            transformer.add_transforms(app.registry.get_post_transforms())
-            transformer.apply_transforms()
-
-        finally:
-            app.env.temp_data = backup
-
-        # Replace temp source with actual source
-        doctree['source'] = src
-        return doctree
 
     def parse_intersphinx_nodes(self, doctree: nodes.document) -> None:
         """Parses :mod:`sphinx.ext.autodoc` cross-references that utilize :mod:`sphinx.ext.intersphinx`
@@ -256,13 +209,17 @@ class READMEParser:
                 })
             self.toctrees[source].append(toc)
 
-    def parse_admonitions(self, doctree: nodes.document) -> None:
+    def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses data from generic and specific admonitions
 
         :param doctree: the doctree from one of the :attr:`~.src_files`
         """
         admonitions = {'generic': [], 'specific': []}
         src = doctree.get('source')
+        rst = self.sources[src]
+
+        # Generate new doctree to account for only directives
+        doctree = get_doctree(app, rst, docname)
 
         for admonition in list(doctree.findall(nodes.Admonition)):
             info = {

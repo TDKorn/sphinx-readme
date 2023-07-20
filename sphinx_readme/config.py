@@ -96,10 +96,10 @@ class READMEConfig:
 
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
 
-    def read_rst(self, rst_file: Union[str, Path], replace_only: bool = False) -> str:
+    def read_rst(self, rst_file: Union[str, Path], replace_only: bool = True) -> str:
         """Reads and partially parses an ``rst`` file
 
-        .. hint::
+        .. tip::
 
            Files are parsed as follows:
 
