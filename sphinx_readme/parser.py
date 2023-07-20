@@ -12,7 +12,7 @@ from sphinx.application import Sphinx, BuildEnvironment
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils.sphinx import get_conf_val
 from sphinx_readme.utils.docutils import get_doctree
-from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs
+from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs, format_hyperlink
 
 
 class READMEParser:
@@ -69,7 +69,10 @@ class READMEParser:
             if anchor:
                 target += f"#{anchor}"
 
-            if role == "label":
+            if role == "confval" and self.config.inline_markup:
+                replace = f"``{replace}``"
+
+            elif role == "label":
                 role = "ref"
 
             self.ref_map.setdefault(role, {})[ref_id] = {
@@ -337,21 +340,12 @@ class READMEParser:
             for entry in info['entries']:
                 # Replace each entry with a link to html docs
                 target = f"{self.config.html_baseurl}/{entry['entry']}.html"
-
-                if "`" in entry['title']:
-                    # Inline markup in links must be inserted with substitutions
-                    sub = entry['title'].replace('`', '')
-                    substitutions.extend([
-                        f".. |{sub}| replace:: {entry['title']}",
-                        f".. _{sub}: {target}"
-                    ])
-                    repl += f"* |{sub}|_\n"
-
-                else:
-                    # Replace with a normal link otherwise
-                    repl += f"* `{entry['title']} <{target}>`_\n"
+                link, subs = format_hyperlink(target, text=entry['title'])
+                substitutions.extend(subs)
+                repl += f"* {link}\n"
 
             if substitutions:
+                # Inline literals in links must use substitutions
                 repl += '\n' + '\n'.join(substitutions) + '\n'
 
             # Replace toctree directive with links and substitution defs
@@ -463,8 +457,10 @@ class READMEParser:
             pattern=fr"(?:\s*?):{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=\s*?)",
             string=rst
         )
+        substitutions = []
+
         for xref in xrefs:
-            if not(all(xref)):  # :ref_role:`ref_id` ->  ('ref_id', 'ref_id', '')
+            if not all(xref):  # :ref_role:`ref_id` ->  ('ref_id', 'ref_id', '')
                 ref, ref_id, title = xref
 
             else:  # :ref_role:`title <ref_id>` -> ('title <ref_id>', 'title', 'ref_id')
@@ -472,12 +468,21 @@ class READMEParser:
 
             # Match these ids up with target data in the ref_map
             if info := self.ref_map.get(ref_role, {}).get(ref_id, {}):
-                # Replace cross-refs with `text <link>`_ format
+                # Replace cross-refs with `text <link>`_ or substitutions
+                link, subs = format_hyperlink(
+                    target=info['target'],
+                    text=title or info['replace']
+                )
+                substitutions.extend(subs)
                 rst = re.sub(
                     pattern=rf":{ref_role}:`{escape_rst(ref)}`",
-                    repl=f"`{title or info['replace']} <{info['target']}>`_",
+                    repl=link,
                     string=rst
                 )
+        if substitutions:
+            # Substitutions are used for inline literals
+            rst = "\n".join(substitutions) + "\n\n" + rst
+
         return rst
 
     def replace_py_xrefs(self, rst: str) -> str:

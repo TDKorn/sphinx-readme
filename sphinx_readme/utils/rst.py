@@ -1,5 +1,5 @@
 import re
-from typing import List
+from typing import List, Optional, Tuple
 
 
 def escape_rst(rst: str) -> str:
@@ -7,6 +7,44 @@ def escape_rst(rst: str) -> str:
     for char in ".+?*|()<>{}^$[]":
         rst = rst.replace(char, rf"\{char}")
     return rst
+
+
+def format_hyperlink(target: str, text: str) -> Tuple[str, List[Optional[str]]]:
+    """Formats a hyperlink, preserving any ``inline literals`` within the text
+
+    Since nested inline markup isn't possible, substitutions are used
+    when link text contains inline literals
+
+    **Example:**
+
+    >>> target = "https://www.github.com/tdkorn/sphinx-readme"
+    >>> format_hyperlink(target, "The Sphinx README Repository")
+    ('`The Sphinx README Repository <https://www.github.com/tdkorn/sphinx-readme>`_', [])
+
+    >>> format_hyperlink(target, "The ``Sphinx README`` Repository") # doctest: +NORMALIZE_WHITESPACE
+    ('|The Sphinx README Repository|_',
+    ['.. |The Sphinx README Repository| replace:: The ``Sphinx README`` Repository',
+     '.. _The Sphinx README Repository: https://www.github.com/tdkorn/sphinx-readme'])
+
+    :param target: the link URL
+    :param text: the link text
+    :returns: a tuple containing the formatted hyperlink and a list of substitution definitions
+    """
+    substitutions = []
+
+    if "`" in text:
+        # Substitutions must be used for inline literals
+        sub = text.replace('`', '')
+        substitutions.extend([
+            f".. |{sub}| replace:: {text}",
+            f".. _{sub}: {target}"
+        ])
+        link = f"|{sub}|_"
+    else:
+        # Use a normal link otherwise
+        link = f"`{text} <{target}>`_"
+
+    return link, substitutions
 
 
 def format_rst(inline_markup: str, rst: str) -> str:
@@ -85,6 +123,7 @@ def remove_raw_directives(rst: str) -> str:
         pattern=r"(\.\. raw::\s+\S.*?\n+?(?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)",
         repl='', string=rst, flags=re.M | re.DOTALL
     )
+
 
 def replace_attrs(rst: str) -> str:
     """Replaces ``:attr:`` cross-references with ``inline literals``
