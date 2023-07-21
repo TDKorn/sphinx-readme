@@ -90,7 +90,7 @@ Mandatory ``conf.py`` values
 
 
 .. |parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
-.. _parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/606f57b723e9d08deba9fda352b571a8594d7052/sphinx_readme/parser.py#L205-L229
+.. _parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v0.1.0/sphinx_readme/parser.py#L205-L229
 
 
 .. _optional_vals:
