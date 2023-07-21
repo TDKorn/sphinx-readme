@@ -74,12 +74,12 @@ Mandatory ``conf.py`` values
    * ``"code"``: uses :mod:`sphinx.ext.linkcode` to replace references with links to highlighted source code
 
     :Example:
-       |parse_intersphinx_node|_
+       |parse_intersphinx_nodes|_
 
    * ``"html"``: replaces references with links to HTML documentation entries
 
     :Example:
-       :meth:`~.parse_intersphinx_node`
+       :meth:`~.parse_intersphinx_nodes`
 
    .. note::
 
@@ -89,9 +89,8 @@ Mandatory ``conf.py`` values
       * Please see :confval:`readme_replace_attrs` and :confval:`readme_inline_markup`
 
 
-.. |parse_intersphinx_node| replace:: ``parse_intersphinx_node()``
-.. _parse_intersphinx_node: https://github.com/TDKorn/sphinx-readme/blob/50c8f2b12d55c89caf68b525a757ed3e701576ff/sphinx_readme/parser.py#L78-L88
-
+.. |parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
+.. _parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/606f57b723e9d08deba9fda352b571a8594d7052/sphinx_readme/parser.py#L205-L229
 
 
 .. _optional_vals:

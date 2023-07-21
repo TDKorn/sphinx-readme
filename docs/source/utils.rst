@@ -16,5 +16,6 @@ The ``sphinx_readme.utils`` subpackage contains a variety of helper functions
    linkcode
    rst
    sphinx
+   docutils
 
 

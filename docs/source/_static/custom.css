@@ -9,6 +9,10 @@ body {
     line-height: 1.36;
 }
 
+dt:target {
+    background-color: #ffef57 !important;
+}
+
 ol li {
     margin-bottom: 12px;
 }
@@ -109,12 +113,17 @@ span#readme-title h1,
     background: #4f1abc ;
 }
 
-/* The rest of the admonitions */
-.rst-content .attention .admonition-title::before {
-    content: "🔔";
+/*Caution Admonitions*/
+.rst-content .caution .admonition-title {
+    background: #dd7921;
 }
 .rst-content .caution .admonition-title::before {
     content: "⚠️";
+}
+
+/* The rest of the admonitions */
+.rst-content .attention .admonition-title::before {
+    content: "🔔";
 }
 .rst-content .error .admonition-title::before {
     content: '⛔';

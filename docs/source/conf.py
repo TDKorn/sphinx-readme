@@ -81,6 +81,7 @@ rst_prolog = """
    :class: highlight
 
 .. |env| replace:: :class:`~.sphinx.environment.BuildEnvironment`
+.. |py_domain| replace:: :class:`~.sphinx.domains.python.PythonDomain`
 .. |std_domain| replace:: :external+sphinx:ref:`Standard Domain <domains-std>`
 """
 

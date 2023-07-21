@@ -126,8 +126,9 @@ Add the extension to your ``conf.py``:
 🔧 Configuration
 ~~~~~~~~~~~~~~~~~
 
+.. |linkcode| replace:: :mod:`sphinx.ext.linkcode`
 
-.. only:: html
+.. only:: html or latex
 
    Please see :doc:`configuration/configuring`
 
@@ -140,8 +141,8 @@ Add the extension to your ``conf.py``:
    Mandatory ``conf.py`` Values
    ==================================
 
-   |html_context|_
-    A dictionary containing info about your repository
+   :confval:`html_context`
+    A dictionary containing info about your repository (|sphinx_html_context|_)
 
      Type: ``dict``
 
@@ -149,62 +150,54 @@ Add the extension to your ``conf.py``:
     * Please see `HTML Context Settings <https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html>`_
       to determine the correct dictionary keys for your hosting platform
 
-   .. |html_context| replace:: ``html_context``
-   .. _html_context: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
+   .. |sphinx_html_context| replace:: ``html_context``
+   .. _sphinx_html_context: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
 
    |
 
-   |html_baseurl|_
-    The base URL which points to the root of the HTML documentation
+   :confval:`html_baseurl`
+    The base URL which points to the root of the HTML documentation (|sphinx_html_baseurl|_)
 
      Type: ``str``
 
-   .. |html_baseurl| replace:: ``html_baseurl``
-   .. _html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
+   .. |sphinx_html_baseurl| replace:: ``html_baseurl``
+   .. _sphinx_html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
 
    |
 
-   |readme_src_files|_
+   :confval:`readme_src_files`
     An individual or list of ``rst`` files to parse
 
      Type: ``Union[str, List]``
 
    .. important:: Filepaths should be specified relative to the source directory
 
-   .. |readme_src_files| replace:: ``readme_src_files``
-   .. _readme_src_files: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_src_files
-
    |
 
-   |readme_docs_url_type|_
+   :confval:`readme_docs_url_type`
     The documentation source to link to when resolving :mod:`~.sphinx.ext.autodoc` cross-references
 
      Type: ``str``
 
     Must be either ``"code"`` or ``"html"``
 
-    * ``"code"``: uses :mod:`sphinx.ext.linkcode` to replace references with links to highlighted source code
+    * ``"code"``: uses |linkcode| to replace references with links to highlighted source code
 
-      **Example**: :meth:`~.parse_intersphinx_node`
+      **Example**: :meth:`~.parse_intersphinx_nodes`
 
 
     * ``"html"``: replaces references with links to HTML documentation entries
 
-      **Example**: |parse_intersphinx_node_html|_
+      **Example**: |parse_intersphinx_nodes_html|_
 
    .. note:: If set to ``code``, then :code:`:attr:` cross-references will not be replaced with links
 
       * Instead, they'll be replaced with ``inline literals`` or left as is
-      * Please see |readme_replace_attrs|_ and |readme_inline_markup|_
+      * Please see :confval:`readme_replace_attrs` and :confval:`readme_inline_markup`
 
-   .. |readme_docs_url_type| replace:: ``readme_docs_url_type``
-   .. _readme_docs_url_type: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_docs_url_type
-   .. |parse_intersphinx_node_html| replace:: ``parse_intersphinx_node()``
-   .. _parse_intersphinx_node_html: http://sphinx-readme.readthedocs.io/en/latest/parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_node
-   .. |readme_replace_attrs| replace:: ``readme_replace_attrs``
-   .. _readme_replace_attrs: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_replace_attrs
-   .. |readme_inline_markup| replace:: ``readme_inline_markup``
-   .. _readme_inline_markup: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_inline_markup
+
+   .. |parse_intersphinx_nodes_html| replace:: ``parse_intersphinx_nodes()``
+   .. _parse_intersphinx_nodes_html: http://sphinx-readme.readthedocs.io/en/latest/parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes
 
 
    .. include:: configuration/sample_conf.rst

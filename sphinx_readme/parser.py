@@ -81,7 +81,7 @@ class READMEParser:
             }
 
     def parse_py_domain(self, env: BuildEnvironment) -> None:
-        """Parses cross-reference data for :class:`~.sphinx.domains.python.PythonDomain` objects
+        """Parses cross-reference data for |py_domain| objects
 
         :param env: the |env|
         """
@@ -96,7 +96,7 @@ class READMEParser:
                     is_callable=entry.objtype in ("method", "function"))
 
     def get_py_target(self, entry: ObjectEntry, linkcode_resolve: Optional[Callable] = None) -> Optional[str]:
-        """Resolves the target for a cross-reference to an object in the Python domain
+        """Resolves the target for a cross-reference to an object in the |py_domain|
 
         :param entry: the ``ObjectEntry`` for the object
         :param linkcode_resolve: function to resolve targets when linking to source code
