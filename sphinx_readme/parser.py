@@ -31,6 +31,8 @@ class READMEParser:
         self.admonitions: Dict[str, Dict[str, List[Dict]]] = {}
         #: Mapping of docnames to their parsed titles
         self.titles: Dict[str, str] = {}
+        #: Mapping of cross-reference targets to their substitution definitions
+        self.substitutions: Dict[str, List[str]] = {}
         #: Standard cross-reference roles
         self.roles: Set[str] = {"doc", "ref"}
 
@@ -267,9 +269,11 @@ class READMEParser:
             for role in self.roles:
                 rst = self.replace_std_xrefs(role, rst)
 
-            # Use ref_map to generate autodoc substitution definitions
-            header_vals = self.get_header_vals()
-
+            # Prepend substitution definitions for cross-reference
+            header_vals = [
+                '\n'.join(self.substitutions[target])
+                for target in sorted(self.substitutions, key=lambda t: (t.lstrip("`~."), t))
+            ]
             # Write the final output
             rst_out = Path(self.config.out_dir, Path(src).name)
 
@@ -457,8 +461,6 @@ class READMEParser:
             pattern=fr"(?:\s*?):{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=\s*?)",
             string=rst
         )
-        substitutions = []
-
         for xref in xrefs:
             if not all(xref):  # :ref_role:`ref_id` ->  ('ref_id', 'ref_id', '')
                 ref, ref_id, title = xref
@@ -473,20 +475,18 @@ class READMEParser:
                     target=info['target'],
                     text=title or info['replace']
                 )
-                substitutions.extend(subs)
+                if subs:
+                    self.substitutions[ref_id] = subs
+
                 rst = re.sub(
                     pattern=rf":{ref_role}:`{escape_rst(ref)}`",
                     repl=link,
                     string=rst
                 )
-        if substitutions:
-            # Substitutions are used for inline literals
-            rst = "\n".join(substitutions) + "\n\n" + rst
-
         return rst
 
     def replace_py_xrefs(self, rst: str) -> str:
-        """Replace :mod:`~sphinx.ext.autodoc` cross-references with substitutions
+        """Replace |py_domain| cross-references with substitutions
 
         These substitutions will be hyperlinked to the corresponding source code
         or HTML documentation entry, depending on the value of
@@ -497,15 +497,31 @@ class READMEParser:
 
         :param rst: content of the source file
         """
-        # To render on GitHub/PyPi/etc., we use Sphinx substitutions instead of cross-refs
+        valid_xrefs = []
+        # To render on GitHub/PyPi/etc., substitutions are used instead of cross-refs
         # Syntax is |.{ref}|_ or |.`{ref}`|_
         if self.config.inline_markup:
             repl = r"|.`\1`|_"
         else:
             repl = r"|.\1|_"
 
+        for ref in self.py_xrefs:
+            # Check for invalid ref
+            if info := self.ref_map.get(ref):
+                valid_xrefs.append(ref)
+            else:
+                continue
+
+            if self.config.inline_markup:
+                ref = f"`{ref}`"
+
+            self.substitutions[ref] = [
+                f".. |.{ref}| replace:: {info['replace']}",
+                f".. _.{ref}: {info['target']}"
+            ]
         # Replace cross-refs with substitutions
-        rst = re.sub(self.py_xref_regex, repl, rst)
+        pattern = self.get_py_xref_regex(valid_xrefs)
+        rst = re.sub(pattern, repl, rst)
 
         # If linking to source code, replace :attr:`~.attribute` with ``attribute``
         if self.config.docs_url_type == "code" and self.config.replace_attrs:
@@ -513,50 +529,38 @@ class READMEParser:
 
         return rst
 
-    def get_header_vals(self) -> List[str]:
-        """Returns a list of substitution definitions and hyperlink references to prepend to the file"""
-        header = []
-
-        for ref in self.py_xrefs:
-            info = self.ref_map.get(ref)
-
-            # Check for invalid ref
-            if info is None:
-                continue
-
-            if self.config.inline_markup:
-                ref = f"`{ref}`"
-
-            header.extend([
-                f".. |.{ref}| replace:: {info['replace']}",
-                f".. _.{ref}: {info['target']}"
-            ])
-
-        if not self.config.raw_directive:
-            for _type, icon in self.config.icon_map.items():
-                header.append(f'.. |{_type}| replace:: {icon}')
-
-        return header
-
     @cached_property
     def py_xrefs(self) -> Set[str]:
-        """Python domain cross-reference targets found within source files"""
+        """|py_domain| cross-reference targets found within source files"""
         xrefs = set()
         for src, rst in self.sources.items():
             xrefs.update(
-                set(re.findall(self.py_xref_regex, rst)))
+                set(re.findall(self.get_py_xref_regex(), rst)))
         return xrefs
 
     @cached_property
-    def py_xref_regex(self) -> str:
-        """The regular expression to match Python domain cross-references"""
+    def py_xref_roles(self) -> str:
+        """The |py_domain| cross-reference roles that can be replaced with substitutions"""
         roles = r"mod|class|meth|func"
         # If linking to HTML docs, we can generate cross-refs for attributes
         if self.config.docs_url_type == "html":
             if self.config.replace_attrs:
                 roles += "|attr"
+        return roles
 
-        return rf":(?:{roles}):`(~?\.?[.\w]+)`"
+    def get_py_xref_regex(self, target: Optional[Union[str, List[str]]] = None) -> str:
+        """Returns the regex to match |py_domain| cross-reference targets
+
+        :param target: an individual or list of targets to match
+        """
+        if target is None:
+            # Match every cross-reference
+            target = r"(~?\.?[.\w]+)"
+
+        elif isinstance(target, list):
+            target = f"({'|'.join(target)})"
+
+        return rf":(?:{self.py_xref_roles}):`{target}`"
 
     def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
         """Returns the regex to match a specific admonition directive
@@ -600,14 +604,7 @@ class READMEParser:
 
         :param admonition: a dict of admonition data
         """
-        icon = self.config.icon_map.get(admonition['class'])
-
-        # Raw directive allows for using icon directly
-        if self.config.raw_directive:
-            return icon if icon else self.config.default_admonition_icon
-
-        if icon:  # Without raw directive, must use substitution
-            return f"|{admonition['class']}|"
-
-        # Use default icon if admonition class isn't in icon map
-        return "|default|"
+        if icon := self.config.icon_map.get(admonition['class']):
+            return icon
+        else:
+            return self.config.default_admonition_icon

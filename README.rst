@@ -1,26 +1,25 @@
-.. |.`sphinx.ext.linkcode`| replace:: ``sphinx.ext.linkcode``
-.. _.`sphinx.ext.linkcode`: https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode
-.. |.`sphinx.ext.autodoc`| replace:: ``sphinx.ext.autodoc``
-.. _.`sphinx.ext.autodoc`: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
-.. |.`~.sphinx.ext.autodoc`| replace:: ``autodoc``
-.. _.`~.sphinx.ext.autodoc`: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
-.. |.`~.parse_intersphinx_nodes`| replace:: ``parse_intersphinx_nodes()``
-.. _.`~.parse_intersphinx_nodes`: https://github.com/TDKorn/sphinx-readme/blob/v0.1.0/sphinx_readme/parser.py#L208-L232
-
-.. |html_context| replace:: ``html_context``
-.. _html_context: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_context
 .. |html_baseurl| replace:: ``html_baseurl``
 .. _html_baseurl: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_baseurl
-.. |readme_src_files| replace:: ``readme_src_files``
-.. _readme_src_files: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_src_files
+.. |html_context| replace:: ``html_context``
+.. _html_context: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_context
+.. |.`~.parse_intersphinx_nodes`| replace:: ``parse_intersphinx_nodes()``
+.. _.`~.parse_intersphinx_nodes`: https://github.com/TDKorn/sphinx-readme/blob/v0.1.0/sphinx_readme/parser.py#L210-L234
 .. |readme_docs_url_type| replace:: ``readme_docs_url_type``
 .. _readme_docs_url_type: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_docs_url_type
-.. |readme_replace_attrs| replace:: ``readme_replace_attrs``
-.. _readme_replace_attrs: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_replace_attrs
 .. |readme_inline_markup| replace:: ``readme_inline_markup``
 .. _readme_inline_markup: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_inline_markup
 .. |readme_raw_directive| replace:: ``readme_raw_directive``
 .. _readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_raw_directive
+.. |readme_replace_attrs| replace:: ``readme_replace_attrs``
+.. _readme_replace_attrs: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_replace_attrs
+.. |readme_src_files| replace:: ``readme_src_files``
+.. _readme_src_files: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_src_files
+.. |.`sphinx.ext.autodoc`| replace:: ``sphinx.ext.autodoc``
+.. _.`sphinx.ext.autodoc`: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
+.. |.`~.sphinx.ext.autodoc`| replace:: ``autodoc``
+.. _.`~.sphinx.ext.autodoc`: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
+.. |.`sphinx.ext.linkcode`| replace:: ``sphinx.ext.linkcode``
+.. _.`sphinx.ext.linkcode`: https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode
 
 .. meta::
    :author: Adam Korn
