@@ -43,18 +43,21 @@ class READMEParser:
         self.parse_std_domain(env)
 
     def parse_titles(self, env: BuildEnvironment) -> None:
-        """Parses document titles from the |env|"""
-        for docname, title_node in env.titles.items():
-            parts = []
+        """Parses document and section titles from the |env|"""
+        for docname in env.found_docs:
+            doctree = env.get_doctree(docname)
+            sections = list(doctree.findall(nodes.section))
 
-            for child in title_node.children:
-                text = child.astext()
-                if isinstance(child, nodes.literal):
-                    parts.append(f"``{text}``")
-                else:
-                    parts.append(text)
+            for section in sections:
+                # Parse titles of sections referenced with :ref:
+                if getattr(section, "expect_referenced_by_name", None):
+                    ref_id = list(section.expect_referenced_by_name)[0]
+                    title = section.next_node(nodes.title)
+                    self.titles[ref_id] = title.rawsource
 
-            self.titles[docname] = ' '.join(parts)
+            # Parse title of document for :doc: refs
+            h1 = sections[0].next_node(nodes.title)
+            self.titles[docname] = h1.rawsource
 
     def parse_std_domain(self, env: BuildEnvironment) -> None:
         """Parses cross-reference data from the |std_domain|
