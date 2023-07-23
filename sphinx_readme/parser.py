@@ -471,6 +471,9 @@ class READMEParser:
             else:  # :ref_role:`title <ref_id>` -> ('title <ref_id>', 'title', 'ref_id')
                 ref, title, ref_id = xref
 
+            # Normalize ref_id to ensure match in ref_map
+            ref_id = nodes.fully_normalize_name(ref_id)
+
             # Match these ids up with target data in the ref_map
             if info := self.ref_map.get(ref_role, {}).get(ref_id, {}):
                 # Replace cross-refs with `text <link>`_ or substitutions
