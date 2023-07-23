@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Union, List, Dict
 from functools import cached_property
 
+from sphinx.util.tags import Tags
 from sphinx.application import Sphinx
 from sphinx.errors import ExtensionError
 
@@ -20,6 +21,7 @@ class READMEConfig:
         self.repo_dir = get_repo_dir()
         self.out_dir = get_conf_val(app, 'readme_out_dir')
         self.src_files = get_conf_val(app, 'readme_src_files', [])
+        self.tags = Tags(get_conf_val(app, "readme_tags"))
         self.html_context = get_conf_val(app, "html_context")
         self.html_baseurl = get_conf_val(app, "html_baseurl", "").rstrip("/")
         self.docs_url_type = get_conf_val(app, 'readme_docs_url_type')
@@ -119,7 +121,7 @@ class READMEConfig:
             rst = f.read()
 
         if replace_only:
-            rst = replace_only_directives(rst)
+            rst = replace_only_directives(rst, self.tags)
 
         rst = self.parse_include_directives(rst, rst_file, replace_only)
 

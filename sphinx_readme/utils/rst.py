@@ -1,5 +1,6 @@
 import re
 from typing import List, Optional, Tuple
+import sphinx.util.tags
 
 
 def escape_rst(rst: str) -> str:
@@ -82,15 +83,59 @@ def format_rst(inline_markup: str, rst: str) -> str:
     return " ".join(parts)
 
 
-def replace_only_directives(rst: str) -> str:
+def replace_only_directives(rst: str, tags: sphinx.util.tags.Tags) -> str:
     """Replaces and removes :rst:dir:`only` directives.
 
-    If ``"readme"`` is in the ``<expression>`` part of the
-    directive, the content of the directive will be used.
+    The :confval:`readme_tags` are temporarily added as :external+sphinx:ref:`tags <conf-tags>`,
+    then the ``<expression>`` argument of the directive is evaluated.
 
-    Otherwise, the directive will be removed.
+    * If ``True``, the content will be used
+    * If ``False``, the directive is removed
+
+    .. tip:: The default value of :confval:`readme_tags` is ``["readme"]``
+
+
+    **Expression Examples:**
+
+    Using default value of :rst:`readme_tags = ["readme"]`:
+
+    .. code-block:: rst
+
+       .. only:: readme
+
+          This will be included in the generated file
+
+       .. only:: html
+
+          This will be excluded from the generated file
+
+       .. only:: readme or html
+
+          This will be included in the generated file
+
+       .. only:: readme and html
+
+          This will be excluded from the generated file.
+
+    Setting :rst:`readme_tags = ["pypi"]` in ``conf.py``:
+
+    .. code-block:: rst
+
+       .. only:: pypi
+
+          This will be included in the generated file
+
+       .. only:: readme
+
+          This will be excluded from the generated file
+
+       .. only:: readme or pypi
+
+          This will be included in the generated file
+
 
     :param rst: the content of an ``rst`` file
+    :param tags: the :class:`sphinx.util.tags.Tags` object
     """
     # Match all ``only`` directives
     pattern = r"\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)"
@@ -100,7 +145,7 @@ def replace_only_directives(rst: str) -> str:
         # Pattern to match each block exactly
         pattern = rf"\.\. only:: {expression}\n+?{escape_rst(content)}\n*?"
 
-        if 'readme' in expression:
+        if tags.eval_condition(expression):
             # For replacement, remove preceding indent (3 spaces) from each line
             content = '\n'.join(line[3:] for line in content.split('\n'))
 

@@ -187,6 +187,19 @@ Optional ``conf.py`` values
    :type: *bool*
    :default: ``True``
 
+``readme_tags``
+=============================
+
+.. confval:: readme_tags
+
+   Specifies :external+sphinx:ref:`tags <conf-tags>` to use when evaluating
+   the ``<expression>`` argument of :rst:dir:`only` directives
+
+   .. tip:: See :func:`~.replace_only_directives` for more detail
+
+   :type: *List[str]*
+   :default: ``["readme"]``
+
 ``readme_include_directive``
 =============================
 

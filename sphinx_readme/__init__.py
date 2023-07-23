@@ -27,8 +27,9 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("readme_include_directive", True, True)
     app.add_config_value("readme_replace_attrs", True, True)
     app.add_config_value("readme_out_dir", get_repo_dir(), True)
-    app.add_config_value("readme_blob", 'head', True)
     app.add_config_value("readme_default_admonition_icon", "📄", True)
+    app.add_config_value("readme_tags", ["readme"], True, list)
+    app.add_config_value("readme_blob", 'head', True)
 
     set_conf_val(app, 'READMEParser', READMEParser(app))
 
