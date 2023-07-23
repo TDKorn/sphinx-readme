@@ -186,7 +186,12 @@ readme_admonition_icons = {
     'about': '📚',
 }
 
-readme_raw_directive = True
+# Settings to uncomment when generating PyPi README
+#
+# readme_raw_directive = False
+#
+# readme_tags = ["pypi"]
+
 
 # ---- Skip and Setup Method -------------------------------------------------
 
