@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Union, List, Dict, Callable
+from typing import Union, List, Dict
 from functools import cached_property
 
 from sphinx.application import Sphinx
@@ -121,47 +121,56 @@ class READMEConfig:
         if replace_only:
             rst = replace_only_directives(rst)
 
-        include_pattern = r"\.\. include:: ([./]*?[\w/-]+\.\w+?)\s*?$"
-
-        if self.include_directive:
-            # Find all included files
-            included = re.findall(
-                pattern=include_pattern,
-                string=rst,
-                flags=re.M
-            )
-            for include in included:
-                # Determine abs path of included file
-                if include.startswith("/"):
-                    # These paths are relative to source dir
-                    file = Path(f"{self.src_dir}{include}").resolve()
-                else:
-                    # These paths are relative to rst_file dir
-                    file = (Path(rst_file).parent / Path(include)).resolve()
-
-                if file.exists():
-                    # Replace directive with the file content
-                    repl = self.read_rst(file, replace_only).replace(r'\n', r'\\n')
-                else:
-                    # Remove the directive
-                    repl = ''
-                    self.logger.error(
-                        f"``sphinx_readme``: included file {file} does not exist"
-                    )
-                rst = re.sub(
-                    pattern=rf"\.\. include:: {include}\s*?$",
-                    repl=repl,
-                    string=rst,
-                    flags=re.M
-                )
-        else:
-            # Remove all include directives from the text
-            rst = re.sub(include_pattern, '', rst, flags=re.M)
+        rst = self.parse_include_directives(rst, rst_file, replace_only)
 
         if self.raw_directive is False:
             rst = remove_raw_directives(rst)
 
         return rst
+
+    def parse_include_directives(self, rst: str, rst_file: Union[str, Path], replace_only: bool = True):
+        return re.sub(
+            pattern=r"\.\. include::\s+([./]*?[\w/-]+\.\w+)\s*?((?:^[ ]+:\S+:.*?$)*?)(?=\n*\S+|\Z)",
+            repl=lambda m: self._parse_include(m, rst_file, replace_only),
+            string=rst, flags=re.M | re.DOTALL
+        )
+
+    def _parse_include(self, match: re.Match, rst_file: Union[str, Path], replace_only: bool):
+        if self.include_directive is False:
+            return ''
+
+        file, args = match.groups()
+
+        if start := re.match(r".*:start-line:\s+(\d+).*", args, re.DOTALL):
+            start = int(start.group(1))
+
+        if end := re.match(r".*:end-line:\s+(\d+).*", args, re.DOTALL):
+            end = int(end.group(1))
+
+        # Determine abs path of included file
+        if file.startswith("/"):
+            # These paths are relative to source dir
+            file = Path(f"{self.src_dir}{file}").resolve()
+        else:
+            # These paths are relative to rst_file dir
+            file = (Path(rst_file).parent / Path(file)).resolve()
+
+        if file.exists():
+            # Write corresponding lines of unparsed file to a temp file
+            lines = file.read_text(encoding='utf-8').split('\n')[start:end]
+            temp = Path(self.src_dir / (Path(rst_file).stem + "_temp.rst"))
+            temp.write_text('\n'.join(lines), "utf-8")
+
+            # Replace directive with parsed file content
+            repl = self.read_rst(temp, replace_only).replace(r'\n', r'\\n')
+            temp.unlink()
+
+        else:
+            repl = ''  # Remove the directive
+            self.logger.error(
+                f"``sphinx_readme``: included file {file} does not exist"
+            )
+        return repl
 
     @property
     def src_files(self) -> List[str]:
