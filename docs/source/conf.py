@@ -210,6 +210,7 @@ def skip(app, what, name, obj, would_skip, options):
 
 
 def setup(app):
+    from sphinx_readme.utils.sphinx import get_conf_val, set_conf_val
     from sphinx.domains.python import PyField
     from sphinx.util.docfields import Field
     from sphinx.locale import _
@@ -239,3 +240,15 @@ def setup(app):
             ),
         ]
     )
+    # Keep target updated for ``readme_docs_url_type`` source code example
+    resolve = get_conf_val(app, "linkcode_resolve")
+    target = resolve(
+        domain="py",
+        info={"module": "sphinx_readme.parser", "fullname": "READMEParser.parse_intersphinx_nodes"}
+    )
+    rst_epilog = f"""
+.. |parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
+.. _parse_intersphinx_nodes: {target}
+"""
+    set_conf_val(app, "rst_epilog", rst_epilog)
+

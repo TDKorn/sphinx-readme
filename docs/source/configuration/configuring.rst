@@ -89,9 +89,6 @@ Mandatory ``conf.py`` values
       * Please see :confval:`readme_replace_attrs` and :confval:`readme_inline_markup`
 
 
-.. |parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
-.. _parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v0.1.0/sphinx_readme/parser.py#L205-L229
-
 
 .. _optional_vals:
 
