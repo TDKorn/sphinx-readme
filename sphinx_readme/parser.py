@@ -309,9 +309,11 @@ class READMEParser:
                     if not self.config.raw_directive:
                         rst = re.sub(
                             pattern=pattern,
-                            repl=self.config.admonition_template.format(
+                            repl=lambda body: self._replace_admonition(
                                 title=admonition['title'],
-                                icon=icon),
+                                text=body.group(1),
+                                icon=icon
+                            ),
                             string=rst
                         )
                     else:
@@ -324,6 +326,13 @@ class READMEParser:
                             string=rst
                         )
         return rst
+
+    def _replace_admonition(self, title: str, text: str, icon: str) -> str:
+        return self.config.admonition_template.format(
+            title=title,
+            text=text.replace('\n', '\n    '),
+            icon=icon
+        )
 
     def replace_toctrees(self, rst_src: str, rst: str) -> str:
         """Replaces :rst:dir:`toctree` directives with hyperlinked bullet lists

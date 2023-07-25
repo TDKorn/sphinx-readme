@@ -317,8 +317,9 @@ class READMEConfig:
 '''
         else:
             return r'''
-.. csv-table::
-   :header: {icon} {title}
-
-   "\1"
+.. list-table::
+   :header-rows: 1
+   
+   * - {icon} {title}
+   * - {text}
 '''
