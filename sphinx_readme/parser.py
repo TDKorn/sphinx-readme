@@ -309,12 +309,9 @@ class READMEParser:
                     if not self.config.raw_directive:
                         rst = re.sub(
                             pattern=pattern,
-                            repl=lambda body: self._replace_admonition(
-                                title=admonition['title'],
-                                text=body.group(1),
-                                icon=icon
-                            ),
-                            string=rst
+                            repl=lambda match: self._replace_admonition(
+                                match, admonition, icon),
+                            string=rst,
                         )
                     else:
                         rst = re.sub(
@@ -327,12 +324,17 @@ class READMEParser:
                         )
         return rst
 
-    def _replace_admonition(self, title: str, text: str, icon: str) -> str:
-        return self.config.admonition_template.format(
-            title=title,
-            text=text.replace('\n', '\n    '),
+    def _replace_admonition(self, match, admonition: dict, icon: str) -> str:
+        """Helper function for formatting ``list-table`` admonitions"""
+        template = self.config.admonition_template.format(
+            title=admonition['title'],
             icon=icon
+        ).replace(
+            r'\2', match.group(2).replace('\n', '\n    ')
+        ).replace(
+            r'\1', match.group(1)
         )
+        return template
 
     def replace_toctrees(self, rst_src: str, rst: str) -> str:
         """Replaces :rst:dir:`toctree` directives with hyperlinked bullet lists
@@ -606,7 +608,7 @@ class READMEParser:
 
         if not self.config.raw_directive:
             # csv-table template body uses match group
-            pattern += rf"({body})"
+            pattern = rf"([ ]*){pattern}({body})"
         else:
             # raw html template body uses string formatting
             pattern += rf"{body}"

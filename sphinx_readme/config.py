@@ -317,9 +317,9 @@ class READMEConfig:
 '''
         else:
             return r'''
-.. list-table::
-   :header-rows: 1
+\1.. list-table::
+\1   :header-rows: 1
    
-   * - {icon} {title}
-   * - {text}
+\1   * - {icon} {title}
+\1   * - \2
 '''
