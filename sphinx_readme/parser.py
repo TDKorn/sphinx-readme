@@ -29,6 +29,8 @@ class READMEParser:
         self.toctrees: Dict[str, List[Dict]] = defaultdict(list)
         #: Mapping of source files to their admonition data
         self.admonitions: Dict[str, Dict[str, List[Dict]]] = {}
+        #: Mapping of source files to their rubric data
+        self.rubrics: Dict[str, List[str]] = {}
         #: Mapping of docnames to their parsed titles
         self.titles: Dict[str, str] = {}
         #: Mapping of cross-reference targets to their substitution definitions
@@ -176,6 +178,7 @@ class READMEParser:
             self.parse_admonitions(app, doctree, docname)
             self.parse_intersphinx_nodes(doctree)
             self.parse_toctrees(doctree)
+            self.parse_rubrics(doctree)
 
     def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses data from generic and specific admonitions
@@ -256,6 +259,16 @@ class READMEParser:
                 })
             self.toctrees[source].append(toc)
 
+    def parse_rubrics(self, doctree: nodes.document) -> None:
+        """Parses the content from :rst:dir:`rubric` directives"""
+        source = doctree.get('source')
+        rubrics = []
+
+        for rubric in doctree.findall(nodes.rubric):
+            rubrics.append(rubric.rawsource)
+
+        self.rubrics[source] = rubrics
+
     def resolve(self) -> None:
         """Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`
 
@@ -266,7 +279,7 @@ class READMEParser:
             rst = self.replace_admonitions(src, rst)
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_toctrees(src, rst)
-            rst = self.replace_rst_rubrics(rst)
+            rst = self.replace_rubrics(src, rst)
             rst = self.replace_py_xrefs(rst)
 
             for role in self.roles:
@@ -417,7 +430,7 @@ class READMEParser:
             )
         return rst
 
-    def replace_rst_rubrics(self, rst: str) -> str:
+    def replace_rubrics(self, rst_src: str, rst: str) -> str:
         """Replaces :rst:dir:`rubric` directives with the section heading
         character specified by :confval:`readme_rubric_heading`
 
@@ -440,23 +453,28 @@ class READMEParser:
               This is a ``rubric`` directive
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+        :param rst_src: absolute path of the source file
         :param rst: content of the source file
         """
+        rubric_pattern = r'\.\. rubric:: ({body})(?=\n?$(?:\n+?^\s*$|\Z))'
         heading_chars = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-        rubric_pattern = r'\.\. rubric:: (.+?)(?=\n)'
 
         if heading := self.config.rubric_heading:
-            if heading in heading_chars:
-                return re.sub(
-                    pattern=rubric_pattern,
-                    repl=lambda m: f"{m.group(1)}\n{heading * len(m.group(1))}",
-                    string=rst
-                )
-        return re.sub(
-            pattern=rubric_pattern,
-            repl=lambda m: format_rst("bold", m.group(1)),
-            string=rst
-        )
+            if heading not in heading_chars:
+                heading = None
+
+        for rubric in self.rubrics[rst_src]:
+            pattern = rubric_pattern.format(body=rubric.replace("\n", r"\n[ ]+"))
+            text = ' '.join(line.strip() for line in rubric.split('\n'))
+
+            if heading:
+                repl = text + "\n" + (len(text) * heading)
+            else:
+                repl = format_rst("bold", text)
+
+            rst = re.sub(pattern, repl, rst, flags=re.M)
+
+        return rst
 
     def replace_std_xrefs(self, ref_role: str, rst: str) -> str:
         """Replaces cross-references from the |std_domain|
