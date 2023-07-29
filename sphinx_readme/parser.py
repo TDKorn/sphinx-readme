@@ -585,12 +585,8 @@ class READMEParser:
         :param admonition: a dict containing admonition data
         :param admonition_type: ``"generic"`` or ``"specific"``
         """
-        body = escape_rst(admonition['body'])
+        body = escape_rst(admonition['body']).replace('\n', r'\n\s*')
         title = escape_rst(admonition['title'])
-
-        # Account for arbitrary whitespace before each line of directive content
-        lines = (line.replace('\n', '\n\s+') for line in body.split('\n\n'))
-        body = '\n\n\s+'.join(lines)
 
         if admonition_type == 'specific':
             # For example, .. note:: This is a note
@@ -613,7 +609,7 @@ class READMEParser:
             # raw html template body uses string formatting
             pattern += rf"{body}"
 
-        pattern += r"(?=[\n\S]+?)"
+        pattern += r"(?=\n*(?:\S+|\Z))"
         return pattern
 
     def get_admonition_icon(self, admonition: dict) -> str:
