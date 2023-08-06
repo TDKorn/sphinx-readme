@@ -48,10 +48,11 @@ def format_hyperlink(target: str, text: str) -> Tuple[str, List[Optional[str]]]:
     return link, substitutions
 
 
-def format_rst(inline_markup: str, rst: str) -> str:
+def format_rst(inline_markup: str, rst: str, replace_attributes: bool = False) -> str:
     """Formats text with the specified type of inline markup
 
-    Preserves any ``inline literals`` within the text
+    Preserves any ``inline literals``, ``|substitutions|``, and
+    :rst:`\`Custom Link Text <https://website.com>\`_` within the text
 
     **Example:**
 
@@ -71,14 +72,19 @@ def format_rst(inline_markup: str, rst: str) -> str:
     else:
         raise ValueError("``inline_markup`` must be either 'bold' or 'italic'")
 
-    split = re.split(r"(?<=\S)(\s*?``.+?``\s*?)(?=\S)", rst)
+    if replace_attributes:
+        rst = replace_attrs(rst)
+
+    split = re.split(r"\s*?(``.+?``|\|.+?\|_?|`.+? <.+?>`_)\s*?", rst)
     parts = []
 
     for part in split:
-        if "`" in part:
-            parts.append(part.strip())
+        if not part:
+            continue
+        if part.startswith("`") or part.startswith("|"):
+            parts.append(part)
         else:
-            parts.append(f"{markup}{part}{markup}")
+            parts.append(f"{markup}{part.strip()}{markup}")
 
     return " ".join(parts)
 
