@@ -479,6 +479,9 @@ class READMEParser:
             if heading:
                 repl = text + "\n" + (len(text) * heading)
             else:
+                for role in self.roles:
+                    text = self.replace_std_xrefs(role, rst_src, text)
+                text = self.replace_py_xrefs(rst_src, text)
                 repl = format_rst("bold", text)
 
             rst = re.sub(pattern, repl, rst, flags=re.M)
