@@ -31,10 +31,10 @@ class READMEParser:
         self.admonitions: Dict[str, Dict[str, List[Dict]]] = {}
         #: Mapping of source files to their rubric data
         self.rubrics: Dict[str, List[str]] = {}
+        #: Mapping of source files to cross-reference substitution definitions
+        self.substitutions: Dict[str, Dict[str, List[str]]] = defaultdict(dict)
         #: Mapping of docnames to their parsed titles
         self.titles: Dict[str, str] = {}
-        #: Mapping of cross-reference targets to their substitution definitions
-        self.substitutions: Dict[str, List[str]] = {}
         #: Standard cross-reference roles
         self.roles: Set[str] = {"doc", "ref"}
 
@@ -284,15 +284,16 @@ class READMEParser:
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_toctrees(src, rst)
             rst = self.replace_rubrics(src, rst)
-            rst = self.replace_py_xrefs(rst)
+            rst = self.replace_py_xrefs(src, rst)
 
             for role in self.roles:
-                rst = self.replace_std_xrefs(role, rst)
+                rst = self.replace_std_xrefs(role, src, rst)
 
             # Prepend substitution definitions for cross-reference
+            substitutions = self.substitutions[src]
             header_vals = [
-                '\n'.join(self.substitutions[target])
-                for target in sorted(self.substitutions, key=lambda t: (t.lstrip("`~."), t))
+                '\n'.join(substitutions[target])
+                for target in sorted(substitutions, key=lambda t: (t.lstrip("`~."), t))
             ]
             # Write the final output
             rst_out = Path(self.config.out_dir, Path(src).name)
@@ -480,7 +481,7 @@ class READMEParser:
 
         return rst
 
-    def replace_std_xrefs(self, ref_role: str, rst: str) -> str:
+    def replace_std_xrefs(self, ref_role: str, rst_src: str, rst: str) -> str:
         """Replaces cross-references from the |std_domain|
 
         .. hint::
@@ -515,7 +516,7 @@ class READMEParser:
                     text=title or info['replace']
                 )
                 if subs:
-                    self.substitutions[ref_id] = subs
+                    self.substitutions[rst_src][ref_id] = subs
 
                 rst = re.sub(
                     pattern=rf":{ref_role}:`{escape_rst(ref)}`",
@@ -524,7 +525,7 @@ class READMEParser:
                 )
         return rst
 
-    def replace_py_xrefs(self, rst: str) -> str:
+    def replace_py_xrefs(self, rst_src: str, rst: str) -> str:
         """Replace |py_domain| cross-references with substitutions
 
         These substitutions will be hyperlinked to the corresponding source code
@@ -534,6 +535,7 @@ class READMEParser:
         .. note: Attributes will only be hyperlinked
            if linking to HTML documentation
 
+        :param rst_src: absolute path of the source file
         :param rst: content of the source file
         """
         valid_xrefs = []
@@ -544,7 +546,7 @@ class READMEParser:
         else:
             repl = r"|.\1|_"
 
-        for ref in self.py_xrefs:
+        for ref in self.py_xrefs[rst_src]:
             # Check for invalid ref
             if info := self.ref_map.get(ref):
                 valid_xrefs.append(ref)
@@ -554,7 +556,7 @@ class READMEParser:
             if self.config.inline_markup:
                 ref = f"`{ref}`"
 
-            self.substitutions[ref] = [
+            self.substitutions[rst_src][ref] = [
                 f".. |.{ref}| replace:: {info['replace']}",
                 f".. _.{ref}: {info['target']}"
             ]
@@ -569,11 +571,11 @@ class READMEParser:
         return rst
 
     @cached_property
-    def py_xrefs(self) -> Set[str]:
+    def py_xrefs(self) -> Dict[str, Set[str]]:
         """|py_domain| cross-reference targets found within source files"""
-        xrefs = set()
+        xrefs = defaultdict(set)
         for src, rst in self.sources.items():
-            xrefs.update(
+            xrefs[src].update(
                 set(re.findall(self.get_py_xref_regex(), rst)))
         return xrefs
 
