@@ -184,9 +184,9 @@ def replace_attrs(rst: str) -> str:
     :param rst: the rst to replace attribute xrefs in
     """
     # Ex. :attr:`~.Class.attr` => ``attr``
-    short_ref = r"(?:\s*?):attr:`~\.?(\w+)`(?=\s*?)"
+    short_ref = r"(?:\s*?):attr:`~\.?([.\w]+)`(?=\s*?)"
     # Ex. :attr:`.Class.attr` => ``Class.attr``
-    long_ref = r"(?:\s*?):attr:`\.?([\.\w]+)`(?=\s*?)"
+    long_ref = r"(?:\s*?):attr:`\.?([.\w]+)`(?=\s*?)"
     repl = r" ``\1``"
 
     rst = re.sub(short_ref, repl, rst)
