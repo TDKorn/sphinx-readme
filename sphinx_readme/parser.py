@@ -57,9 +57,13 @@ class READMEParser:
                     title = section.next_node(nodes.title)
                     self.titles[ref_id] = title.rawsource
 
-            # Parse title of document for :doc: refs
-            h1 = sections[0].next_node(nodes.title)
-            self.titles[docname] = h1.rawsource
+            try:
+                # Parse title of document for :doc: refs
+                h1 = sections[0].next_node(nodes.title)
+                self.titles[docname] = h1.rawsource
+
+            except IndexError:
+                continue  # Document without title
 
     def parse_std_domain(self, env: BuildEnvironment) -> None:
         """Parses cross-reference data from the |std_domain|
