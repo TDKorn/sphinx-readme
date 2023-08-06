@@ -177,12 +177,12 @@ class READMEParser:
             }
 
     def parse_doctree(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
-        """Parses cross-reference, admonition, and toctree data from a resolved doctree"""
+        """Parses cross-reference, admonition, rubric, and toctree data from a resolved doctree"""
         if doctree.get('source') in self.sources:
             self.parse_admonitions(app, doctree, docname)
+            self.parse_rubrics(app, doctree, docname)
             self.parse_intersphinx_nodes(doctree)
             self.parse_toctrees(doctree)
-            self.parse_rubrics(doctree)
 
     def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses data from generic and specific admonitions
@@ -263,10 +263,14 @@ class READMEParser:
                 })
             self.toctrees[source].append(toc)
 
-    def parse_rubrics(self, doctree: nodes.document) -> None:
+    def parse_rubrics(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses the content from :rst:dir:`rubric` directives"""
         source = doctree.get('source')
+        rst = self.sources[source]
         rubrics = []
+
+        # Generate new doctree to account for only directives
+        doctree = get_doctree(app, rst, docname)
 
         for rubric in doctree.findall(nodes.rubric):
             rubrics.append(rubric.rawsource)
