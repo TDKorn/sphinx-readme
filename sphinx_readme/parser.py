@@ -512,6 +512,12 @@ class READMEParser:
             # Normalize ref_id to ensure match in ref_map
             ref_id = nodes.fully_normalize_name(ref_id)
 
+            if ref_role == "doc" and ref_id.startswith("."):
+                # Relative path to document -> Ex: ../README
+                abs_doc_path = (Path(rst_src).parent/Path(ref_id)).resolve()
+                # ref_map has document names relative to source directory
+                ref_id = abs_doc_path.relative_to(self.config.src_dir).as_posix()
+
             # Match these ids up with target data in the ref_map
             if info := self.ref_map.get(ref_role, {}).get(ref_id, {}):
                 # Replace cross-refs with `text <link>`_ or substitutions
