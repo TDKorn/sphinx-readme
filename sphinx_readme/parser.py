@@ -473,7 +473,7 @@ class READMEParser:
                 heading = None
 
         for rubric in self.rubrics[rst_src]:
-            pattern = rubric_pattern.format(body=rubric.replace("\n", r"\n[ ]+"))
+            pattern = rubric_pattern.format(body=escape_rst(rubric).replace("\n", r"\n[ ]+"))
             text = ' '.join(line.strip() for line in rubric.split('\n'))
 
             if heading:
