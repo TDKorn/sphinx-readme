@@ -1,6 +1,6 @@
 .. meta::
    :author: Adam Korn
-   :title: Sphinx README - Generate ``README.rst`` That Renders Beautifully on GitHub, PyPi, GitLab, BitBucket
+   :title: Sphinx README - Generate README.rst That Renders Beautifully on GitHub, PyPi, GitLab, BitBucket
    :description: Sphinx extension to generate reStructuredText README.rst files that render beautifully on GitHub, PyPi, GitLab, BitBucket
 
 .. raw:: html
