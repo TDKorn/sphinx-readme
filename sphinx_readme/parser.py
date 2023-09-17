@@ -181,8 +181,8 @@ class READMEParser:
         if doctree.get('source') in self.sources:
             self.parse_admonitions(app, doctree, docname)
             self.parse_rubrics(app, doctree, docname)
+            self.parse_toctrees(doctree, docname)
             self.parse_intersphinx_nodes(doctree)
-            self.parse_toctrees(doctree)
 
     def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses data from generic and specific admonitions
@@ -243,7 +243,7 @@ class READMEParser:
             qualified_name = target.split("#")[-1].split("-")[-1]
             self.add_variants(qualified_name, target, is_callable)
 
-    def parse_toctrees(self, doctree: nodes.document) -> None:
+    def parse_toctrees(self, doctree: nodes.document, docname: str) -> None:
         """Parses the caption and entry data from :class:`~.sphinx.addnodes.toctree` nodes
 
         .. caution:: Toctrees are currently parsed as if the directive has the ``:titlesonly:`` option
@@ -257,6 +257,7 @@ class READMEParser:
                 'entries': []
             }
             for text, entry in toctree.get('entries', []):
+                entry = entry if entry != 'self' else docname
                 title = text if text else self.titles.get(entry)
                 toc['entries'].append({
                     'entry': entry,
