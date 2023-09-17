@@ -256,10 +256,11 @@ class READMEParser:
                 'caption': toctree.get('caption'),
                 'entries': []
             }
-            for _, entry in toctree.get('entries', []):
+            for text, entry in toctree.get('entries', []):
+                title = text if text else self.titles.get(entry)
                 toc['entries'].append({
                     'entry': entry,
-                    'title': self.titles.get(entry),
+                    'title': title,
                 })
             self.toctrees[source].append(toc)
 
