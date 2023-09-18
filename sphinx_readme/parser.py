@@ -504,7 +504,7 @@ class READMEParser:
         """
         # Find all :ref_role:`ref_id` or :ref_role:`title <ref_id>` cross-refs
         xrefs = re.findall(
-            pattern=fr"(?:\s*?):{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=\s*?)",
+            pattern=fr"(?<!\S):{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=[\s:]|\Z)",
             string=rst
         )
         for xref in xrefs:
@@ -534,7 +534,7 @@ class READMEParser:
                     self.substitutions[rst_src][ref_id] = subs
 
                 rst = re.sub(
-                    pattern=rf":{ref_role}:`{escape_rst(ref)}`",
+                    pattern=rf"(?<!\S):{ref_role}:`{escape_rst(ref)}`(?=[\s:]|\Z)",
                     repl=link,
                     string=rst
                 )
@@ -616,7 +616,7 @@ class READMEParser:
         elif isinstance(target, list):
             target = f"({'|'.join(target)})"
 
-        return rf":(?:{self.py_xref_roles}):`{target}`"
+        return rf"(?<!\S):(?:{self.py_xref_roles}):`{target}`(?=[\s:]|\Z)"
 
     def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
         """Returns the regex to match a specific admonition directive
