@@ -25,7 +25,7 @@ setup(
     author="Adam Korn",
     author_email='hello@dailykitten.net',
     license="MIT License",
-    packages=find_packages(),
+    packages=find_packages(exclude=("tests", "tests.*")),
     keywords=[
         "sphinx", "docutils", "sphinx-extension", "sphinx-contrib", "reStructuredText", "rst",
         "reST", "parser", "rst-parser", "README.rst", "README", "autodoc", "linkcode"
