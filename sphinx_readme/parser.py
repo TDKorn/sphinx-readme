@@ -12,7 +12,7 @@ from sphinx.application import Sphinx, BuildEnvironment
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils.sphinx import get_conf_val
 from sphinx_readme.utils.docutils import get_doctree
-from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs, format_hyperlink
+from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs, format_hyperlink, BEFORE_XREF, AFTER_XREF
 
 
 class READMEParser:
@@ -504,7 +504,7 @@ class READMEParser:
         """
         # Find all :ref_role:`ref_id` or :ref_role:`title <ref_id>` cross-refs
         xrefs = re.findall(
-            pattern=fr"(?<!\S)(?::std)?:{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=[\s:]|\Z)",
+            pattern=fr"(?<![^\s{BEFORE_XREF}])(?::std)?:{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=[\s{AFTER_XREF}]|\Z)",
             string=rst
         )
         for xref in xrefs:
@@ -538,7 +538,7 @@ class READMEParser:
                     self.substitutions[rst_src][ref_id] = subs
 
                 rst = re.sub(
-                    pattern=rf"(?<!\S)(?::std)?:{ref_role}:`{escape_rst(ref)}`(?=[\s:]|\Z)",
+                    pattern=rf"(?<![^\s{BEFORE_XREF}])(?::std)?:{ref_role}:`{escape_rst(ref)}`(?=[\s{AFTER_XREF}]|\Z)",
                     repl=link,
                     string=rst
                 )
@@ -620,7 +620,7 @@ class READMEParser:
         elif isinstance(target, list):
             target = f"({'|'.join(target)})"
 
-        return rf"(?<!\S)(?::py)?:(?:{self.py_xref_roles}):`{target}`(?=[\s:]|\Z)"
+        return rf"(?<![^\s{BEFORE_XREF}])(?::py)?:(?:{self.py_xref_roles}):`{target}`(?=[\s{AFTER_XREF}]|\Z)"
 
     def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
         """Returns the regex to match a specific admonition directive
