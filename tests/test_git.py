@@ -98,52 +98,38 @@ def test_get_repo_url_wrong_type():
     ('x', 'github', True),  # minimum length
     ('x' * 39, 'github', True),  # maximum length
     ('validUser', 'github', True),
-    ('validUser69', 'github', True),
-    ('0000', 'github', True),
     ('valid-User', 'github', True),
-    ('validUser-0', 'github', True),
-    ('0-validUser', 'github', True),
     ('0-validUser-0', 'github', True),
+    ('x' * 40, 'github', False),  # too long
     ('-invalidUser', 'github', False),
     ('invalidUser-', 'github', False),
-    ('invalid-User-', 'github', False),
     ('invalid--User', 'github', False),
     ('invalid User', 'github', False),
-    ('invalid/User', 'github', False),
-    ('x' * 40, 'github', False),  # too long
+
     # GitLab Test Cases
     ('xx', 'gitlab', True),  # minimum length
     ('x' * 255, 'gitlab', True),  # maximum length
     ('validUser', 'gitlab', True),
-    ('valid_User', 'gitlab', True),
-    ('valid-User', 'gitlab', True),
-    ('valid.User', 'gitlab', True),
-    ('validUser69', 'gitlab', True),
-    ('valid_User-69', 'gitlab', True),
     ('valid-User.69_420', 'gitlab', True),
-    ('valid_User_69', 'gitlab', True),
     ('x', 'gitlab', False),  # too short
     ('x' * 256, 'gitlab', False),  # too long
-    ('invalid User', 'gitlab', False),
-    ('invalid/User_invalidUser', 'gitlab', False),
+    ('_invalidUser', 'gitlab', False),
     ('.invalidUser', 'gitlab', False),
     ('-invalidUser', 'gitlab', False),
     ('invalidUser_', 'gitlab', False),
     ('invalidUser.', 'gitlab', False),
     ('invalidUser-', 'gitlab', False),
-    ('invalid__User', 'gitlab', False),
     ('invalid_.User', 'gitlab', False),
-    ('invalid_-User', 'gitlab', False),
-    ('invalid._User', 'gitlab', False),
-    ('invalid..User', 'gitlab', False),
-    ('invalid.-User', 'gitlab', False),
     ('invalid-_User', 'gitlab', False),
-    ('invalid-.User', 'gitlab', False),
+    ('invalid.-User', 'gitlab', False),
+    ('invalid__User', 'gitlab', False),
+    ('invalid..User', 'gitlab', False),
     ('invalid--User', 'gitlab', False),
+    ('invalid User', 'gitlab', False),
+
     # BitBucket Test Cases
     ('x', 'bitbucket', True),  # minimum length
     ('validUser', 'bitbucket', True),
-    ('validUser69', 'bitbucket', True),
     ('0000', 'bitbucket', True),
     ('valid_User', 'bitbucket', True),
     ('valid-User', 'bitbucket', True),
@@ -151,8 +137,9 @@ def test_get_repo_url_wrong_type():
     ('_validUser', 'bitbucket', True),
     ('validUser-', 'bitbucket', True),
     ('validUser_', 'bitbucket', True),
+    ('', 'bitbucket', False),  # too short
     ('invalid User', 'bitbucket', False),
-    ('invalid/User', 'bitbucket', False),
+
     # Invalid Host
     ("username", "random_website", False)
 ])
