@@ -1,6 +1,7 @@
 import re
 import subprocess
 from pathlib import Path
+from subprocess import DEVNULL
 from typing import Dict, Optional
 from sphinx.errors import ExtensionError
 
@@ -12,6 +13,9 @@ def get_repo_url(context: Dict) -> str:
     :return: the base URL of the project's repository
     :raises ExtensionError: if the repository URL cannot be parsed from ``html_context``
     """
+    if not isinstance(context, dict):
+        raise TypeError("``context`` must be a dictionary")
+
     for host in ('github', 'gitlab', 'bitbucket'):
         user = context.get(f"{host}_user")
         repo = context.get(f"{host}_repo")
@@ -37,7 +41,7 @@ def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Di
     :param blob: the blob of the repository to generate the link for
     :param context: the Sphinx :external+sphinx:confval:`html_context` dict
     """
-    if context:
+    if isinstance(context, dict):
         host = get_repo_host(repo_url)
         blob = context.get(f"{host}_version")
 
@@ -99,7 +103,7 @@ def get_head() -> str:
         # if head is a tag, use tag as reference
         cmd = "git describe --exact-match --tags " + head
         try:
-            tag = subprocess.check_output(cmd.split(" ")).strip().decode('utf-8')
+            tag = subprocess.check_output(cmd.split(" "), stderr=DEVNULL).strip().decode('utf-8')
             return tag
 
         except subprocess.CalledProcessError:
