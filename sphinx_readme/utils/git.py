@@ -23,6 +23,14 @@ def get_repo_url(context: Dict) -> str:
         if not all((user, repo)):
             continue
 
+        if not is_valid_username(user, host):
+            raise ExtensionError(
+                f"``sphinx_readme``: {host} username is invalid.")
+
+        if not is_valid_repo(repo, host):
+            raise ExtensionError(
+                f"``sphinx_readme``: {host} repo is invalid.")
+
         if host == "bitbucket":
             tld = "org"
         else:
@@ -32,6 +40,67 @@ def get_repo_url(context: Dict) -> str:
 
     raise ExtensionError(
         "``sphinx_readme``: unable to determine repo url")
+
+
+def is_valid_username(username: str, host: str) -> bool:
+    """Validates a username on the given hosting platform.
+
+    .. admonition:: **Username Constraints**
+       :class: tip
+
+       :GitHub:
+          Usernames can only contain alphanumeric characters and hyphens; can't start or end with a hyphen or
+          have consecutive hyphens; must be between 1 and 39 characters long.
+       :GitLab:
+          Usernames can only contain alphanumeric characters, underscores, hyphens, and periods;
+          can't start or end with special characters or contain consecutive special characters;
+          must be between 2 and 255 characters long.
+       :BitBucket:
+          Usernames can only contain alphanumeric characters, hyphens, and underscores.
+
+    :param username: the username to validate.
+    :param host: the platform where the repository is hosted.
+    :return: True if the username is valid for the given platform, otherwise False.
+    """
+    if host == 'github':
+        return bool(re.match(r"^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$", username))
+    elif host == 'gitlab':
+        return bool(re.match(r"^[a-zA-Z0-9](?:[a-zA-Z0-9]|[_.-](?=[a-zA-Z0-9])){1,254}$", username))
+    elif host == 'bitbucket':
+        return bool(re.match(r'^[\w-]+$', username))
+    else:
+        return False
+
+
+def is_valid_repo(repo: str, host: str) -> bool:
+    """Validates the name of a git repository on the given hosting platform.
+
+    .. admonition:: **Repository Name Constraints**
+       :class: tip
+
+       :GitHub:
+          Repository names can only contain alphanumeric characters, hyphens, underscores, and periods;
+          must be between 1 and 100 characters long.
+       :GitLab:
+          Repository name can only contain alphanumeric characters, hyphens, underscores, periods, "+", or spaces.
+          It must start with a letter, digit, or '_' and be at least 1 character long.
+       :BitBucket:
+          Repository name can only contain alphanumeric characters, hyphens, underscores, and periods.
+          It must start with an alphanumeric character, underscore or period and can't have consecutive
+          hyphens or end with a hyphen. Must be between 1 and 62 characters long.
+
+    :param repo: the name of the repository.
+    :param host: the platform where the repository is hosted.
+    :return: True if the repository name is valid, otherwise False.
+    """
+    if host == "github":
+        return bool(re.match(r"^[\w.-]{1,100}$", repo))
+    elif host == "gitlab":
+        return bool(re.match(r"^\w[\w.+ -]*$", repo))
+    elif host == "bitbucket":
+        return bool(re.match(r"^[\w.](?:[\w.]|-(?=[\w.])){0,61}$", repo))
+    else:
+        return False
 
 
 def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Dict] = None) -> str:
