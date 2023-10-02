@@ -112,7 +112,7 @@ def get_blob_url(repo_url: str, blob: Optional[str] = None, context: Optional[Di
     """
     if isinstance(context, dict):
         host = get_repo_host(repo_url)
-        blob = context.get(f"{host}_version")
+        blob = context.get(f"{host}_version", blob)
 
     if blob is not None:
         # Use blob from kwarg/html_context

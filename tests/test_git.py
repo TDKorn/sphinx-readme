@@ -1,12 +1,13 @@
 import pytest
+from unittest.mock import patch
 from sphinx.errors import ExtensionError
-from sphinx_readme.utils.git import get_repo_url, is_valid_username, is_valid_repo
+from sphinx_readme.utils.git import get_repo_url, get_blob_url, is_valid_username, is_valid_repo
 
 # GitHub Repo
 github_html_context = {
     "github_user": "TDKorn",
     "github_repo": "sphinx-readme",
-    "github_version": "main"
+    "github_version": "master"
 }
 github_repo_url = "https://github.com/TDKorn/sphinx-readme"
 
@@ -201,3 +202,91 @@ def test_is_valid_username(username, host, expected):
 ])
 def test_is_valid_repo(repo, host, expected):
     assert is_valid_repo(repo, host) == expected
+
+
+blob_url_roots = [
+    github_repo_url + "/blob/",
+    bitbucket_repo_url + "/src/",
+    gitlab_repo_url + "/blob/"
+]
+HEAD = "a5dea27ffabf340995348073d3a8ee14c0f6d693"
+LAST_TAG = "v1.0.0"
+
+
+@pytest.mark.parametrize('repo_url,blob_url_root', zip(repo_urls, blob_url_roots))
+def test_get_blob_url_with_specific_blob(repo_url, blob_url_root):
+    """If the blob name isn't ``head`` or ``last_tag``, the blob is used as is."""
+    assert get_blob_url(repo_url, blob="tests") == blob_url_root + "tests"
+
+
+@patch('sphinx_readme.utils.git.get_blob')
+@pytest.mark.parametrize('repo_url,blob_url_root', zip(repo_urls, blob_url_roots))
+def test_get_blob_url_with_head_blob(mocked_get_blob, repo_url, blob_url_root):
+    """If the blob is ``"head"``, uses the name of the last tagged commit on the branch."""
+    mocked_get_blob.return_value = HEAD
+
+    assert get_blob_url(repo_url, blob="head") == blob_url_root + HEAD
+
+
+@patch('sphinx_readme.utils.git.get_blob')
+@pytest.mark.parametrize('repo_url,blob_url_root', zip(repo_urls, blob_url_roots))
+def test_get_blob_url_with_last_tag_blob(mocked_get_blob, repo_url, blob_url_root):
+    """If the blob is ``"last_tag"``, uses the name of the last tagged commit on the branch."""
+    mocked_get_blob.return_value = LAST_TAG
+
+    assert get_blob_url(repo_url, blob="last_tag") == blob_url_root + LAST_TAG
+
+
+@pytest.mark.parametrize('repo_url,html_context,host,blob_url_root', zip(repo_urls, context_dicts, hosts, blob_url_roots))
+def test_get_blob_url_with_valid_html_context(repo_url, html_context, host, blob_url_root):
+    """If the ``html_context`` dict contains a version key, it should always be used as the blob."""
+    expected = blob_url_root + html_context[f"{host}_version"]
+
+    assert get_blob_url(repo_url, context=html_context) == expected
+    assert get_blob_url(repo_url, context=html_context, blob="irrelevant") == expected
+
+
+@patch('sphinx_readme.utils.git.get_blob')
+@pytest.mark.parametrize('repo_url,blob_url_root', zip(repo_urls, blob_url_roots))
+def test_get_blob_url_with_invalid_html_context(mocked_get_blob, repo_url, blob_url_root):
+    """If ``html_context`` contains no valid version key or is the wrong type, ``"head"`` is used as the blob"""
+    mocked_get_blob.return_value = HEAD
+    expected = blob_url_root + HEAD
+
+    assert get_blob_url(repo_url, context={}) == expected
+    assert get_blob_url(repo_url, context="wrong_type") == expected
+    assert get_blob_url(repo_url, context={"website_version": "master"}) == expected  # unsupported host
+
+
+@pytest.mark.parametrize('repo_url,blob_url_root', zip(repo_urls, blob_url_roots))
+def test_get_blob_url_with_invalid_html_context_and_blob(repo_url, blob_url_root):
+    """If blob is provided and ``html_context`` contains no valid version key or is the wrong type, the blob is used"""
+    blob = "some_blob"
+
+    assert get_blob_url(repo_url, context={}, blob=blob) == blob_url_root + blob
+    assert get_blob_url(repo_url, context="wrong_type", blob=blob) == blob_url_root + blob
+
+
+@patch('sphinx_readme.utils.git.get_blob')
+@pytest.mark.parametrize('repo_url,blob_url_root', zip(repo_urls, blob_url_roots))
+def test_get_blob_url_with_no_html_context_or_blob(mocked_get_blob, repo_url, blob_url_root):
+    """If no blob or html_context is provided, ``"head"`` is should be used as the blob"""
+    mocked_get_blob.return_value = HEAD
+
+    assert get_blob_url(repo_url) == blob_url_root + HEAD
+
+
+@patch('sphinx_readme.utils.git.get_head')
+def test_get_blob_url_runtime_error_from_get_head(mocked_get_head):
+    mocked_get_head.side_effect = RuntimeError("Failed to get head")
+
+    with pytest.raises(RuntimeError, match="Failed to get head"):
+        get_blob_url(github_repo_url, blob="head")
+
+
+@patch('sphinx_readme.utils.git.get_last_tag')
+def test_get_blob_url_runtime_error_from_get_last_tag(mocked_get_last_tag):
+    mocked_get_last_tag.side_effect = RuntimeError("No tags exist for the repo")
+
+    with pytest.raises(RuntimeError, match="No tags exist for the repo"):
+        get_blob_url(github_repo_url, blob="last_tag")
