@@ -1,7 +1,8 @@
 import pytest
+import subprocess
 from unittest.mock import patch
 from sphinx.errors import ExtensionError
-from sphinx_readme.utils.git import get_repo_url, get_blob_url, is_valid_username, is_valid_repo
+from sphinx_readme.utils.git import get_repo_url, get_blob_url, is_valid_username, is_valid_repo, get_blob, get_head, get_last_tag
 
 # GitHub Repo
 github_html_context = {
@@ -290,3 +291,80 @@ def test_get_blob_url_runtime_error_from_get_last_tag(mocked_get_last_tag):
 
     with pytest.raises(RuntimeError, match="No tags exist for the repo"):
         get_blob_url(github_repo_url, blob="last_tag")
+
+
+@patch('sphinx_readme.utils.git.get_head')
+def test_get_blob_head(mocked_get_head):
+    mocked_get_head.return_value = HEAD
+
+    assert get_blob("head") == HEAD
+
+
+@patch('sphinx_readme.utils.git.get_last_tag')
+def test_get_blob_last_tag(mocked_get_last_tag):
+    mocked_get_last_tag.return_value = LAST_TAG
+
+    assert get_blob("last_tag") == LAST_TAG
+
+
+def test_get_blob_specific_blob():
+    assert get_blob("some_blob") == "some_blob"
+
+
+@patch('sphinx_readme.utils.git.get_head')
+def test_get_blob_runtime_error_from_get_head(mocked_get_head):
+    mocked_get_head.side_effect = RuntimeError("Failed to get head")
+
+    with pytest.raises(RuntimeError, match="Failed to get head"):
+        get_blob("head")
+
+
+@patch('sphinx_readme.utils.git.get_last_tag')
+def test_get_blob_runtime_error_from_get_last_tag(mocked_get_last_tag):
+    mocked_get_last_tag.side_effect = RuntimeError("No tags exist for the repo")
+
+    with pytest.raises(RuntimeError, match="No tags exist for the repo"):
+        get_blob("last_tag")
+
+
+@patch('subprocess.check_output')
+def test_get_head_not_tagged(mock_check_output):
+    """If the most recent commit is not tagged, the SHA should be returned"""
+    mock_check_output.side_effect = [f"{HEAD}\n".encode('utf-8'), subprocess.CalledProcessError(1, 'cmd')]
+
+    assert get_head() == HEAD
+
+
+@patch('subprocess.check_output')
+def test_get_head_tagged(mock_check_output):
+    """If the most recent commit *is* tagged, the tag name should be returned"""
+    mock_check_output.side_effect = [f"{HEAD}\n".encode('utf-8'), f"{LAST_TAG}\n".encode('utf-8')]
+
+    assert get_head() == LAST_TAG
+
+
+@patch('subprocess.check_output')
+def test_get_head_fails(mock_check_output):
+    """Test when git command execution fails"""
+    mock_check_output.side_effect = subprocess.CalledProcessError(1, 'cmd')
+
+    with pytest.raises(RuntimeError, match="Failed to get head"):
+        get_head()
+
+
+@patch('subprocess.check_output')
+def test_get_last_tag(mock_check_output):
+    mock_check_output.return_value = f"{LAST_TAG}\n".encode('utf-8')
+
+    assert get_last_tag() == LAST_TAG
+
+
+@patch('subprocess.check_output')
+def test_get_last_tag_fails(mock_check_output):
+    """Test when git command execution fails/the current branch of the repo has no tags"""
+    mock_check_output.side_effect = subprocess.CalledProcessError(1, 'cmd')
+
+    with pytest.raises(RuntimeError, match="No tags exist for the repo"):
+        get_last_tag()
+
+
