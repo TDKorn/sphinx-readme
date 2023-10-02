@@ -135,7 +135,7 @@ def get_repo_host(repo_url: str) -> Optional[str]:
 
     :param repo_url: the URL of the repository
     """
-    if match := re.match(r"https?://(\w+)\.(?:com|org)", repo_url):
+    if match := re.match(r"(?:https?://)?(?:www\.)?(\w+)\.(?:com|org)", repo_url):
         return match.group(1)
     return None
 

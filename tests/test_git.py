@@ -1,8 +1,9 @@
 import pytest
 import subprocess
+from pathlib import Path
 from unittest.mock import patch
 from sphinx.errors import ExtensionError
-from sphinx_readme.utils.git import get_repo_url, get_blob_url, is_valid_username, is_valid_repo, get_blob, get_head, get_last_tag
+from sphinx_readme.utils.git import get_repo_url, get_blob_url, is_valid_username, is_valid_repo, get_blob, get_head, get_last_tag, get_repo_host, get_repo_dir
 
 # GitHub Repo
 github_html_context = {
@@ -31,6 +32,7 @@ gitlab_repo_url = "https://gitlab.com/sphinx_readme/readme"
 # Test Case Lists
 context_dicts = [github_html_context, bitbucket_html_context, gitlab_html_context]
 repo_urls = [github_repo_url, bitbucket_repo_url, gitlab_repo_url]
+domains = ["github.com", "bitbucket.org", "gitlab.com"]
 hosts = ['github', 'bitbucket', 'gitlab']
 
 
@@ -368,3 +370,61 @@ def test_get_last_tag_fails(mock_check_output):
         get_last_tag()
 
 
+repo_host_test_cases = []
+
+for host, domain in zip(hosts, domains):
+    repo_urls = [
+        f"https://www.{domain}/TDKorn/sphinx-readme",
+        f"http://www.{domain}/TDKorn/sphinx-readme",
+        f"https://{domain}/TDKorn/sphinx-readme",
+        f"http://{domain}/TDKorn/sphinx-readme",
+        f"www.{domain}/TDKorn/sphinx-readme",
+        f"{domain}/TDKorn/sphinx-readme",
+        f"{domain}"
+    ]
+    repo_host_test_cases.extend((url, host) for url in repo_urls)
+
+
+@pytest.mark.parametrize('repo_url,host', repo_host_test_cases)
+def test_get_repo_host_valid_url(repo_url, host):
+    assert get_repo_host(repo_url) == host
+
+
+@pytest.mark.parametrize(
+    'repo_url',
+    [
+        'https:///TDKorn/sphinx-readme',  # no domain
+        'https://github.net/TDKorn/sphinx-readme',  # invalid TLD
+        'https:/github.com//TDKorn/sphinx-readme'  # invalid scheme
+    ]
+)
+def test_get_repo_host_invalid_url(repo_url):
+    """URLs that would never be returned from ``get_repo_url`` but should still be tested"""
+    assert get_repo_host(repo_url) is None
+
+
+REPO_DIR = Path('../').resolve().as_posix()
+RTD_CLONE_DIR = Path(f"{REPO_DIR}/checkouts/version/").resolve().as_posix()
+
+
+@patch('subprocess.check_output')
+def test_get_repo_dir(mock_check_output):
+    mock_check_output.return_value = f"{REPO_DIR}\n".encode('utf-8')
+
+    assert get_repo_dir() == Path(REPO_DIR)
+
+
+@patch('subprocess.check_output')
+def test_get_repo_dir_on_rtd(mock_check_output):
+    """For ReadTheDocs, repo is cloned to /path/to/<repo_dir>/checkouts/<version>/"""
+    mock_check_output.return_value = f"{RTD_CLONE_DIR}\n".encode('utf-8')
+
+    assert get_repo_dir() == Path(REPO_DIR)
+
+
+@patch('subprocess.check_output')
+def test_get_repo_dir_fails(mock_check_output):
+    mock_check_output.side_effect = subprocess.CalledProcessError(1, 'cmd')
+
+    with pytest.raises(RuntimeError, match="Unable to determine the repository directory"):
+        get_repo_dir()
