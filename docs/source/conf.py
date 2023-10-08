@@ -82,7 +82,7 @@ rst_prolog = """
 
 .. |env| replace:: :class:`~.sphinx.environment.BuildEnvironment`
 .. |py_domain| replace:: :class:`~.sphinx.domains.python.PythonDomain`
-.. |std_domain| replace:: :external+sphinx:ref:`Standard Domain <domains-std>`
+.. |std_domain| replace:: :external+sphinx:doc:`Standard Domain <usage/domains/standard>`
 """
 
 # Use default Pygments style if not html
@@ -140,6 +140,7 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'requests': ('https://requests.readthedocs.io/en/latest/', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+    'rtd': ('https://docs.readthedocs.io/en/stable/', None),
 }
 
 # ~~~~ AutoSectionLabel ~~~~

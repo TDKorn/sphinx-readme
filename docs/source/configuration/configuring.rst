@@ -37,7 +37,7 @@ Mandatory ``conf.py`` values
    A dictionary containing info about your repository (:external+sphinx:confval:`html_context`)
 
    * At minimum, the username and repository name must be specified
-   * Please see `HTML Context Settings <https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html>`_
+   * Please see :ref:`HTML Context Settings <rtd:guides/edit-source-links-sphinx:github>`
      to determine the correct dictionary keys for your hosting platform
 
    :type: ``Dict``
@@ -97,16 +97,9 @@ Optional ``conf.py`` values
 
 .. |rst_icon_map| replace:: :rst:`:attr:\`icon_map\``
 .. |.`icon_map`| replace:: ``icon_map``
-.. _.`icon_map`: https://sphinx-readme.readthedocs.io/en/latest/readme_config.html#sphinx_readme.config.main.READMEConfig.icon_map
+.. _.`icon_map`: ../readme_config.html#sphinx_readme.config.READMEConfig.icon_map
 .. |.icon_map| replace:: icon_map
-.. _.icon_map: https://sphinx-readme.readthedocs.io/en/latest/readme_config.html#sphinx_readme.config.main.READMEConfig.icon_map
-
-.. |rst_parse_autodoc_nodes| replace:: :rst:`:meth:\`parse_autodoc_nodes\``
-.. |.`parse_autodoc_nodes`| replace:: ``parse_autodoc_nodes()``
-.. _.`parse_autodoc_nodes`: https://sphinx-readme.readthedocs.io/en/latest/parser.html#sphinx_readme.parser.READMEParser.parse_autodoc_nodes
-.. |.parse_autodoc_nodes| replace:: parse_autodoc_nodes()
-.. _.parse_autodoc_nodes: https://sphinx-readme.readthedocs.io/en/latest/parser.html#sphinx_readme.parser.READMEParser.parse_autodoc_nodes
-
+.. _.icon_map: ../readme_config.html#sphinx_readme.config.READMEConfig.icon_map
 
 
 ``readme_out_dir``
@@ -157,8 +150,8 @@ Optional ``conf.py`` values
 
    Specifies if replacements for autodoc cross-references should use inline markup
 
-   * If ``True``, the substitution for |rst_parse_autodoc_nodes| would be |.`parse_autodoc_nodes`|_
-   * If ``False``, the substitution for |rst_parse_autodoc_nodes| would be |.parse_autodoc_nodes|_
+   * If ``True``, the substitution for |rst_icon_map| would be |.`icon_map`|_
+   * If ``False``, the substitution for |rst_icon_map| would be |.icon_map|_
 
    :type: *bool*
    :default: ``True``
@@ -178,7 +171,7 @@ Optional ``conf.py`` values
 
    If set to ``False``,
 
-   * Admonitions will be replaced with the ``csv-table`` directive instead of HTML tables
+   * Admonitions will be replaced with the ``list-table`` directive instead of HTML tables
    * All ``raw`` directives in the file will be removed
 
    :type: *bool*

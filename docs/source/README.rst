@@ -5,7 +5,7 @@
 
 .. only:: pypi
 
-   Sphinx README - Generate Beautiful ``README.rst`` for GitHub, PyPi, GitLab, BitBucket
+   Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket
    --------------------------------------------------------------------------------------
 
    .. image:: _static/logo_transparent.png

@@ -7,7 +7,7 @@
 
    <span id="readme-title">
 
-Sphinx README - Generate Beautiful ``README.rst`` for GitHub, PyPi, GitLab, BitBucket
+Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket
 --------------------------------------------------------------------------------------
 
 .. raw:: html

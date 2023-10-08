@@ -311,7 +311,7 @@ class READMEParser:
                 f'``sphinx_readme``: saved generated .rst file to {rst_out}')
 
     def replace_admonitions(self, rst_src: str, rst: str) -> str:
-        """Replaces generic and specific admonition directives with HTML tables or :rst:dir:`csv-table`
+        """Replaces generic and specific admonition directives with HTML tables or ``list-table``
         directives, depending on the value of :confval:`readme_raw_directive`
 
         .. admonition:: Customizing Admonitions
@@ -646,7 +646,7 @@ class READMEParser:
             pattern += r"\n*?\s+"
 
         if not self.config.raw_directive:
-            # csv-table template body uses match group
+            # list-table template body uses match group
             pattern = rf"([ ]*){pattern}({body})"
         else:
             # raw html template body uses string formatting
