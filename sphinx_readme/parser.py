@@ -681,6 +681,11 @@ class READMEParser:
                 ref_id = self.get_external_id(external, role, ref_id)
 
             if info := ref_map.get(ref_id):
+                # Add inline markup to explicit title if replacement had it
+                if title and info['replace'].startswith("`"):
+                    ref_id = f"{ref_id}+{title}"
+                    title = f"``{title}``"
+
                 # Replace cross-refs with `text <link>`_ or substitutions
                 link, subs = format_hyperlink(
                     target=info['target'],
