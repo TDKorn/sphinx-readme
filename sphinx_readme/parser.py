@@ -354,8 +354,7 @@ class READMEParser:
             external, role, ref_id = match.groups()
             objtypes = self.objtypes[role]
 
-            for objtype in objtypes:
-                # Check intersphinx inventory for all applicable objtypes
+            for objtype in objtypes:  # Check intersphinx inventory for applicable objtypes
                 if xref := self.get_external_ref(external, objtype, ref_id):
                     break
 
@@ -386,8 +385,7 @@ class READMEParser:
         :param ref_id: the target of the cross-reference
         :return: an :class:`~.ExternalRef` object if the lookup was successful, otherwise ``None``
         """
-        # First, attempt to constrain lookup to specific package
-        pkg = None
+        pkg = None  # First, attempt to constrain lookup to specific package
 
         # Check for :external+pkg:role:`ref_id` syntax
         if external and "+" in external:
@@ -413,6 +411,16 @@ class READMEParser:
         if xref := inventory.get(objtype, {}).get(ref_id):
             return ExternalRef(objtype, *xref, ref_id)
 
+    def get_external_id(self, external: str, role: str, ref_id: str) -> Optional[str]:
+        """Helper function to get the ``ref_id`` when replacing external xrefs"""
+        for objtype in self.objtypes[role]:
+            if xref := self.get_external_ref(external, objtype, ref_id):
+                return xref.id
+
+    def is_external_xref(self, external: str, role: str, ref_id: str) -> bool:
+        """Helper function to check if a cross-reference is explicitly external"""
+        return any((external, ":" in ref_id, role in self.roles['rst']))
+
     def resolve(self) -> None:
         """Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`
 
@@ -424,10 +432,8 @@ class READMEParser:
             rst = self.replace_rst_images(src, rst)
             rst = self.replace_toctrees(src, rst)
             rst = self.replace_rubrics(src, rst)
+            rst = self.replace_xrefs(src, rst)
             rst = self.replace_py_xrefs(src, rst)
-
-            for role in self.roles:
-                rst = self.replace_std_xrefs(role, src, rst)
 
             # Prepend substitution definitions for cross-reference
             substitutions = self.substitutions[src]
@@ -615,8 +621,7 @@ class READMEParser:
             if heading:
                 repl = text + "\n" + (len(text) * heading)
             else:
-                for role in self.roles:
-                    text = self.replace_std_xrefs(role, rst_src, text)
+                text = self.replace_xrefs(rst_src, text)
                 text = self.replace_py_xrefs(rst_src, text)
                 repl = format_rst("bold", text)
 
@@ -624,36 +629,41 @@ class READMEParser:
 
         return rst
 
-    def replace_std_xrefs(self, ref_role: str, rst_src: str, rst: str) -> str:
-        """Replaces cross-references from the |std_domain|
+    def replace_xrefs(self, rst_src: str, rst: str) -> str:
+        """Replaces cross-references from the |std_domain| and |rst_domain| with substitutions or inline links
 
-        .. hint::
-
-           This includes cross-references using the :rst:role:`doc`
-           or :rst:role:`ref` role, as well as any custom objects added by
+        .. tip:: This includes cross-references for any custom objects added by
            :meth:`Sphinx.add_object_type() <sphinx.application.Sphinx.add_object_type>`
 
-        :param ref_role: the name of the cross-reference role
+        :param rst_src: absolute path of the source file
         :param rst: content of the source file
+        :return: the ``rst`` with all applicable cross-references replaced by links/substitutions
         """
+        roles = "|".join(self.roles['std'] + self.roles['rst'])
+        xref_pattern = fr"(?<![^\s{BEFORE_XREF}])(:(?:(external(?:\+\w+)?):)?(?:std:|rst:)?({roles}):`([\w./:-]+)`)(?=[\s{AFTER_XREF}]|\Z)"
+        xref_title_pattern = fr"(?<![^\s{BEFORE_XREF}])(:(?:(external(?:\+\w+)?):)?(?:std:|rst:)?({roles}):`([^`]+?)\s<([\w./:-]+?)>`)(?=[\s{AFTER_XREF}]|\Z)"
+
+        xrefs = []
         # Find all :ref_role:`ref_id` or :ref_role:`title <ref_id>` cross-refs
-        xrefs = re.findall(
-            pattern=fr"(?<![^\s{BEFORE_XREF}])(?::std)?:{ref_role}:`(([^`]+?)(?:\s<([\w./]+?)>)?)`(?=[\s{AFTER_XREF}]|\Z)",
-            string=rst
-        )
+        for pattern in (xref_pattern, xref_title_pattern):
+            xrefs.extend(re.findall(
+                pattern=pattern,
+                string=rst))
+
         for xref in xrefs:
-            if not all(xref):  # :ref_role:`ref_id` ->  ('ref_id', 'ref_id', '')
-                ref, ref_id, title = xref
+            if len(xref) == 5:  # From title pattern
+                full_xref, external, role, title, ref_id = xref
+            else:
+                full_xref, external, role, ref_id, title = *xref, None
 
-            else:  # :ref_role:`title <ref_id>` -> ('title <ref_id>', 'title', 'ref_id')
-                ref, title, ref_id = xref
+            # If xref is explicitly external, force resolve with external lookup
+            if is_explicitly_external := self.is_external_xref(external, role, ref_id):
+                ref_id = self.get_external_id(external, role, ref_id)
 
-            if ref_role == "ref":
-                # Normalize ref_id to ensure match in ref_map
+            elif role == "ref":  # Normalize ref_id to ensure match in ref_map
                 ref_id = nodes.fully_normalize_name(ref_id)
 
-            elif ref_role == "doc":
-                # ref_map has document names relative to source dir
+            elif role == "doc":
                 if ref_id.startswith("/"):
                     # These document paths are relative to source dir
                     ref_id = ref_id.lstrip('/')
@@ -662,18 +672,26 @@ class READMEParser:
                     abs_doc_path = (Path(rst_src).parent/Path(ref_id)).resolve()
                     ref_id = abs_doc_path.relative_to(self.config.src_dir).as_posix()
 
-            # Match these ids up with target data in the ref_map
-            if info := self.ref_map.get(ref_role, {}).get(ref_id, {}):
+            # Match the xref with target data in the ref_map
+            ref_map = self.ref_map.get(role, {})
+
+            if ref_id not in ref_map and not is_explicitly_external:
+                # If data is missing and the xref isn't explicitly external, check
+                # intersphinx since it's also used as a fallback resolution
+                ref_id = self.get_external_id(external, role, ref_id)
+
+            if info := ref_map.get(ref_id):
                 # Replace cross-refs with `text <link>`_ or substitutions
                 link, subs = format_hyperlink(
                     target=info['target'],
-                    text=title or info['replace']
+                    text=title or info['replace'],
+                    sub_override=ref_id
                 )
                 if subs:
                     self.substitutions[rst_src][ref_id] = subs
 
                 rst = re.sub(
-                    pattern=rf"(?<![^\s{BEFORE_XREF}])(?::std)?:{ref_role}:`{escape_rst(ref)}`(?=[\s{AFTER_XREF}]|\Z)",
+                    pattern = rf"(?<![^\s{BEFORE_XREF}]){escape_rst(full_xref)}(?=[\s{AFTER_XREF}]|\Z)",
                     repl=link,
                     string=rst
                 )

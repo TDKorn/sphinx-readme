@@ -16,7 +16,7 @@ BEFORE_XREF = re.escape(":[{(/\"'-")
 AFTER_XREF = re.escape(":;!?,\"'/\\])}-")
 
 
-def format_hyperlink(target: str, text: str) -> Tuple[str, List[Optional[str]]]:
+def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None) -> Tuple[str, List[Optional[str]]]:
     """Formats a hyperlink, preserving any ``inline literals`` within the text
 
     Since nested inline markup isn't possible, substitutions are used
@@ -33,15 +33,21 @@ def format_hyperlink(target: str, text: str) -> Tuple[str, List[Optional[str]]]:
     ['.. |The Sphinx README Repository| replace:: The ``Sphinx README`` Repository',
      '.. _The Sphinx README Repository: https://www.github.com/tdkorn/sphinx-readme'])
 
+    >>> format_hyperlink(target, "The ``Sphinx README`` Repository", sub_override="repo") # doctest: +NORMALIZE_WHITESPACE
+    ('|repo|_',
+    ['.. |repo| replace:: The ``Sphinx README`` Repository',
+     '.. _repo: https://www.github.com/tdkorn/sphinx-readme'])
+
     :param target: the link URL
     :param text: the link text
+    :param sub_override: overrides the name for the label/substitution, if applicable
     :returns: a tuple containing the formatted hyperlink and a list of substitution definitions
     """
     substitutions = []
 
     if "`" in text:
         # Substitutions must be used for inline literals
-        sub = text.replace('`', '')
+        sub = sub_override or text.replace('`', '')
         substitutions.extend([
             f".. |{sub}| replace:: {text}",
             f".. _{sub}: {target}"
