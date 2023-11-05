@@ -514,10 +514,11 @@ class READMEParser:
             else:  # :ref_role:`title <ref_id>` -> ('title <ref_id>', 'title', 'ref_id')
                 ref, title, ref_id = xref
 
-            # Normalize ref_id to ensure match in ref_map
-            ref_id = nodes.fully_normalize_name(ref_id)
+            if ref_role == "ref":
+                # Normalize ref_id to ensure match in ref_map
+                ref_id = nodes.fully_normalize_name(ref_id)
 
-            if ref_role == "doc":
+            elif ref_role == "doc":
                 # ref_map has document names relative to source dir
                 if ref_id.startswith("/"):
                     # These document paths are relative to source dir
