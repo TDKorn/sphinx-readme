@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from collections import defaultdict
 from functools import cached_property
-from typing import Dict, List, Set, Union, Callable, Optional, Tuple
+from typing import Dict, List, Set, Union, Callable, Optional, Tuple, Iterable
 
 from docutils import nodes
 from sphinx import addnodes
@@ -715,70 +715,118 @@ class READMEParser:
         :param rst_src: absolute path of the source file
         :param rst: content of the source file
         """
-        valid_xrefs = []
-        # To render on GitHub/PyPi/etc., substitutions are used instead of cross-refs
-        # Syntax is |.{ref}|_ or |.`{ref}`|_
-        if self.config.inline_markup:
-            repl = r"|.`\1`|_"
-        else:
-            repl = r"|.\1|_"
+        xrefs = set()
+        targets = {
+            'regular': {
+                'xrefs': [],
+                'repl': r"|.\4|_"  # Replace with |.{ref_id}|_
+            },
+            'title': {
+                'xrefs': [],
+                'repl': r"|.\5+\4|_"  # Replace with |.{ref_id}+{title}|_
+            }
+        }
+        # Find all :ref_role:`ref_id` or :ref_role:`title <ref_id>` cross-refs
+        for pattern in self.get_xref_regex("py"):
+            xrefs.update(re.findall(
+                pattern=pattern,
+                string=rst))
 
-        for ref in self.py_xrefs[rst_src]:
-            # Check for invalid ref
-            if info := self.ref_map.get(ref):
-                valid_xrefs.append(ref)
+        for xref in xrefs:
+            if len(xref) == 5:  # From title pattern
+                full_xref, external, role, title, ref_id = xref
             else:
+                full_xref, external, role, ref_id, title = *xref, None
+
+            if not (info := self.ref_map.get(ref_id)):
                 continue
 
-            if self.config.inline_markup:
-                ref = f"`{ref}`"
+            if title:  # Include explicit title in substitution name
+                targets['title']['xrefs'].append(ref_id)
+                ref_id = f"{ref_id}+{title}"
 
-            self.substitutions[rst_src][ref] = [
-                f".. |.{ref}| replace:: {info['replace']}",
-                f".. _.{ref}: {info['target']}"
-            ]
+                if self.config.inline_markup:
+                    title = f"``{title}``"
+
+            else:
+                targets['regular']['xrefs'].append(ref_id)
+
+            link, subs = format_hyperlink(
+                target=info['target'],
+                text=title or info['replace'],
+                sub_override=f".{ref_id}",
+                force_subs=True
+            )
+            self.substitutions[rst_src][ref_id] = subs
+
         # Replace cross-refs with substitutions
-        pattern = self.get_py_xref_regex(valid_xrefs)
-        rst = re.sub(pattern, repl, rst)
-
+        for xref_type, xref_data in targets.items():
+            if xrefs := xref_data['xrefs']:
+                rst = re.sub(
+                    pattern=self.get_xref_regex("py", targets=xrefs, xref_type=xref_type),
+                    repl=xref_data['repl'],
+                    string=rst
+                )
         # If linking to source code, replace :attr:`~.attribute` with ``attribute``
         if self.config.docs_url_type == "code" and self.config.replace_attrs:
             rst = replace_attrs(rst)
 
         return rst
 
-    @cached_property
-    def py_xrefs(self) -> Dict[str, Set[str]]:
-        """|py_domain| cross-reference targets found within source files"""
-        xrefs = defaultdict(set)
-        for src, rst in self.sources.items():
-            xrefs[src].update(
-                set(re.findall(self.get_py_xref_regex(), rst)))
-        return xrefs
+    def get_xref_regex(self, domains: str | Iterable[str], targets: Optional[str | Iterable[str]] = None, xref_type: Optional[str] = None) -> str | Tuple[str, str]:
+        """Returns the regex to match cross-references
 
-    @cached_property
-    def py_xref_roles(self) -> str:
-        """The |py_domain| cross-reference roles that can be replaced with substitutions"""
-        roles = r"mod|class|meth|func"
-        # If linking to HTML docs, we can generate cross-refs for attributes
-        if self.config.docs_url_type == "html":
-            if self.config.replace_attrs:
-                roles += "|attr"
-        return roles
+        .. note:: The patterns have the following match groups:
 
-    def get_py_xref_regex(self, target: Optional[Union[str, List[str]]] = None) -> str:
-        """Returns the regex to match |py_domain| cross-reference targets
+           :Regular Cross-References:
 
-        :param target: an individual or list of targets to match
+              1. The full cross-reference
+              2. The external role, if present
+              3. The cross-reference role
+              4. The cross-reference target
+
+           :Explicit Title Cross-References:
+
+              1. The full cross-reference
+              2. The external role, if present
+              3. The cross-reference role
+              4. The explicit title
+              5. The cross-reference target
+
+        :param domains: an individual or list of Sphinx object domains to match
+        :param targets: an individual or list of targets to match; matches all xrefs if not provided
+        :param xref_type: the xref type to match (``"regular"`` or ``"title"``); returns both if not specified
+        :return: the regex pattern to match regular xrefs, xrefs with explicit titles, or a tuple containing both
         """
-        if target is None:
-            # Match every cross-reference
-            target = r"(~?\.?[.\w]+)"
+        if targets is None:  # Match every cross-reference
+            targets = r"~?\.?[\w./:-]+"
 
-        elif isinstance(target, list):
-            target = f"({'|'.join(target)})"
+        if isinstance(targets, str):
+            targets = [targets]
 
-        return rf"(?<![^\s{BEFORE_XREF}])(?::py)?:(?:{self.py_xref_roles}):`{target}`(?=[\s{AFTER_XREF}]|\Z)"
+        targets = f"({'|'.join(targets)})"
+
+        if isinstance(domains, str):
+            domains = [domains]
+
+        roles = [role for domain in domains for role in self.roles[domain]]
+
+        if "py" in domains:
+            if self.config.docs_url_type == "code" or not self.config.replace_attrs:
+                roles.remove("attr")
+
+        roles = "|".join(roles)
+        domains = "|".join(domains)
+
+        xref_pattern = fr"(?<![^\s{BEFORE_XREF}])(:(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`{targets}`)(?=[\s{AFTER_XREF}]|\Z)"
+        xref_title_pattern = fr"(?<![^\s{BEFORE_XREF}])(:(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`([^`]+?)\s<{targets}>`)(?=[\s{AFTER_XREF}]|\Z)"
+
+        if xref_type == "regular":
+            return xref_pattern
+        elif xref_type == "title":
+            return xref_title_pattern
+        else:
+            return xref_pattern, xref_title_pattern
 
     def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
         """Returns the regex to match a specific admonition directive

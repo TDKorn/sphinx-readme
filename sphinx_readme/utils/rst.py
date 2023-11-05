@@ -16,7 +16,7 @@ BEFORE_XREF = re.escape(":[{(/\"'-")
 AFTER_XREF = re.escape(":;!?,\"'/\\])}-")
 
 
-def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None) -> Tuple[str, List[Optional[str]]]:
+def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None, force_subs: bool = False) -> Tuple[str, List[Optional[str]]]:
     """Formats a hyperlink, preserving any ``inline literals`` within the text
 
     Since nested inline markup isn't possible, substitutions are used
@@ -41,11 +41,12 @@ def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None)
     :param target: the link URL
     :param text: the link text
     :param sub_override: overrides the name for the label/substitution, if applicable
+    :param force_subs: boolean indicating if substitutions should be used regardless of inline markup being present
     :returns: a tuple containing the formatted hyperlink and a list of substitution definitions
     """
     substitutions = []
 
-    if "`" in text:
+    if "`" in text or force_subs:
         # Substitutions must be used for inline literals
         sub = sub_override or text.replace('`', '')
         substitutions.extend([
