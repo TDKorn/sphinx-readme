@@ -83,7 +83,7 @@ Mandatory ``conf.py`` values
 
    .. note::
 
-      If set to ``code``, then :code:`:attr:` cross-references will not be replaced with links
+      If set to ``code``, non-external :code:`:attr:` cross-references will not be replaced with links
 
       * Instead, they'll be replaced with ``inline literals`` or left as is
       * Please see :confval:`readme_replace_attrs` and :confval:`readme_inline_markup`
@@ -122,7 +122,7 @@ Optional ``conf.py`` values
 
 .. confval:: readme_replace_attrs
 
-   Specifies if cross-references for attributes (``:attr:``) should be replaced
+   Specifies if non-external attribute (``:attr:``) cross-references should be replaced
 
    ...
 
@@ -139,6 +139,7 @@ Optional ``conf.py`` values
     :Example:
        |rst_icon_map| would be replaced with ``icon_map``
 
+   .. note:: External attribute cross-references are always replaced with links to documentation
 
    :type: *bool*
    :default: ``True``
@@ -148,7 +149,7 @@ Optional ``conf.py`` values
 
 .. confval:: readme_inline_markup
 
-   Specifies if replacements for autodoc cross-references should use inline markup
+   Specifies if replacements for cross-references should use inline markup
 
    * If ``True``, the substitution for |rst_icon_map| would be |.`icon_map`|_
    * If ``False``, the substitution for |rst_icon_map| would be |.icon_map|_
@@ -246,7 +247,7 @@ Optional ``conf.py`` values
 
 .. confval:: readme_rubric_heading
 
-   The character to use when replacing rubrics with section headers
+   The character to use when replacing :rst:dir:`rubric` directives with section headers
 
    Must be one of the following valid section title adornment characters::
 

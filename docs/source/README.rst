@@ -148,8 +148,6 @@ Add the extension to your ``conf.py``:
 🔧 Configuration
 ~~~~~~~~~~~~~~~~~
 
-.. |linkcode| replace:: :mod:`sphinx.ext.linkcode`
-
 .. only:: html or latex
 
    Please see :doc:`configuration/configuring`
@@ -164,26 +162,22 @@ Add the extension to your ``conf.py``:
    ==================================
 
    :confval:`html_context`
-    A dictionary containing info about your repository (|sphinx_html_context|_)
+    A dictionary containing info about your repository (:external+sphinx:confval:`html_context`)
 
      Type: ``dict``
 
     * At minimum, the username and repository name must be specified
-    * Please see `HTML Context Settings <https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html>`_
+    * Please see :ref:`HTML Context Settings <rtd:guides/edit-source-links-sphinx:github>`
       to determine the correct dictionary keys for your hosting platform
 
-   .. |sphinx_html_context| replace:: ``html_context``
-   .. _sphinx_html_context: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
 
    |
 
    :confval:`html_baseurl`
-    The base URL which points to the root of the HTML documentation (|sphinx_html_baseurl|_)
+    The base URL which points to the root of the HTML documentation (:confval:`sphinx:html_baseurl`)
 
      Type: ``str``
 
-   .. |sphinx_html_baseurl| replace:: ``html_baseurl``
-   .. _sphinx_html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
 
    |
 
@@ -203,7 +197,7 @@ Add the extension to your ``conf.py``:
 
     Must be either ``"code"`` or ``"html"``
 
-    * ``"code"``: uses |linkcode| to replace references with links to highlighted source code
+    * ``"code"``: uses :mod:`sphinx.ext.linkcode` to replace references with links to highlighted source code
 
       **Example**: :meth:`~.parse_intersphinx_nodes`
 
@@ -212,7 +206,7 @@ Add the extension to your ``conf.py``:
 
       **Example**: |parse_intersphinx_nodes_html|_
 
-   .. note:: If set to ``code``, then :code:`:attr:` cross-references will not be replaced with links
+   .. note:: If set to ``code``, non-external :code:`:attr:` cross-references will not be replaced with links
 
       * Instead, they'll be replaced with ``inline literals`` or left as is
       * Please see :confval:`readme_replace_attrs` and :confval:`readme_inline_markup`
