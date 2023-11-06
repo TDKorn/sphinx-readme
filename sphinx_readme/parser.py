@@ -343,8 +343,8 @@ class READMEParser:
 
         domains = "|".join(self.domains)
         roles = "|".join(self.objtypes.keys())
-        xref_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`~?\.?([\w./:-]+)`"
-        xref_title_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`[^`]+?\s<([\w./:-]+?)>`"
+        xref_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`~?\.?([\w./: -]+)`"
+        xref_title_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`[^`]+?\s<([\w./: -]+?)>`"
 
         for node in doctree.findall(nodes.problematic):
             if "<" in node.rawsource:
@@ -401,11 +401,8 @@ class READMEParser:
         elif ":" in ref_id:
             tokens = ref_id.split(":", maxsplit=1)
 
-            if objtype != "rst:directive:option":
-                pkg, ref_id = tokens
-
-            # Check if it's `pkg:directive:option` or `directive:option`
-            elif tokens[0] in self.intersphinx_pkgs:
+            # Ensure it's not `directive:option` or `doc:section`
+            if tokens[0] in self.intersphinx_pkgs:
                 pkg, ref_id = tokens
 
         if objtype == "std:label":
@@ -425,7 +422,11 @@ class READMEParser:
 
     def is_external_xref(self, external: str, role: str, ref_id: str) -> bool:
         """Helper function to check if a cross-reference is explicitly external"""
-        return any((external, ":" in ref_id, role in self.roles['rst']))
+        return any((
+            external,
+            role in self.roles['rst'],
+            ":" in ref_id and ref_id.split(":", maxsplit=1)[0] in self.intersphinx_pkgs
+        ))
 
     def resolve(self) -> None:
         """Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`
@@ -801,7 +802,7 @@ class READMEParser:
         :return: the regex pattern to match regular xrefs, xrefs with explicit titles, or a tuple containing both
         """
         if targets is None:  # Match every cross-reference
-            targets = r"~?\.?[\w./:-]+"
+            targets = r"~?\.?[\w./: -]+"
 
         if isinstance(targets, str):
             targets = [targets]
