@@ -258,6 +258,8 @@ class READMEParser:
 
         :param doctree: the doctree from one of the :attr:`~.src_files`
         """
+        xref_pattern, xref_title_pattern = self.get_xref_regex('py')
+
         for node in doctree.findall(nodes.literal):
             if not isinstance(node.parent, nodes.reference):
                 continue
@@ -268,14 +270,18 @@ class READMEParser:
             if 'py' not in node['classes']:
                 continue
 
-            pattern = r":(mod|class|meth|func|attr):`~?\.?[.\w]+`"
+            if '<' in node.rawsource:
+                pattern = xref_title_pattern
+            else:
+                pattern = xref_pattern
+
             match = re.match(pattern, node.rawsource)
             target = node.parent.get('refuri')
 
             if not all((match, target)):
                 continue
 
-            is_callable = match.group(1) in ("meth", "func")
+            is_callable = match.group(3) in ("meth", "func")
             qualified_name = target.split("#")[-1].split("-")[-1]
             self.add_variants(qualified_name, target, is_callable)
 
@@ -639,14 +645,10 @@ class READMEParser:
         :param rst: content of the source file
         :return: the ``rst`` with all applicable cross-references replaced by links/substitutions
         """
-        roles = "|".join(self.roles['std'] + self.roles['rst'])
-        xref_pattern = fr"(?<![^\s{BEFORE_XREF}])(:(?:(external(?:\+\w+)?):)?(?:std:|rst:)?({roles}):`([\w./:-]+)`)(?=[\s{AFTER_XREF}]|\Z)"
-        xref_title_pattern = fr"(?<![^\s{BEFORE_XREF}])(:(?:(external(?:\+\w+)?):)?(?:std:|rst:)?({roles}):`([^`]+?)\s<([\w./:-]+?)>`)(?=[\s{AFTER_XREF}]|\Z)"
+        xrefs = set()
 
-        xrefs = []
-        # Find all :ref_role:`ref_id` or :ref_role:`title <ref_id>` cross-refs
-        for pattern in (xref_pattern, xref_title_pattern):
-            xrefs.extend(re.findall(
+        for pattern in self.get_xref_regex(domains=["rst", "std"]):
+            xrefs.update(re.findall(
                 pattern=pattern,
                 string=rst))
 
