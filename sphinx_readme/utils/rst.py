@@ -192,24 +192,35 @@ def remove_raw_directives(rst: str) -> str:
 def replace_attrs(rst: str) -> str:
     """Replaces ``:attr:`` cross-references with ``inline literals``
 
-    .. hint::
+    .. tip::
 
-       Since source code links can't be generated for attributes,
-       this function is only called if both
+       When :confval:`readme_replace_attrs` is ``True``, this function will be called to replace
 
-       1. :confval:`readme_docs_url_type` is ``"code"``
-       2. :confval:`readme_replace_attrs` is ``True``
+       1. Non-external and unresolved ``:attr:`` xrefs when :confval:`readme_docs_url_type` is ``"code"``
+       2. Unresolved ``:attr:`` xrefs when :confval:`readme_docs_url_type` is ``"html"``
 
     :param rst: the rst to replace attribute xrefs in
     """
-    # Ex. :attr:`~.Class.attr` => ``attr``
-    short_ref = rf"(?<![^\s{BEFORE_XREF}])(?::py)?:attr:`~[.\w]*?([\w]+)`(?=[\s{AFTER_XREF}]|\Z)"
-    # Ex. :attr:`.Class.attr` => ``Class.attr``
-    long_ref = rf"(?<![^\s{BEFORE_XREF}])(?::py)?:attr:`\.?([.\w]+)`(?=[\s{AFTER_XREF}]|\Z)"
+    xref_pattern = fr"(?<![^\s{BEFORE_XREF}]):(?:external(?:\+\w+)?:)?(?:py:)?attr:`(?:\w+:)?%s`(?=[\s{AFTER_XREF}]|\Z)"
+    xref_title_pattern = fr"(?<![^\s{BEFORE_XREF}]):(?:external(?:\+\w+)?:)?(?:py:)?attr:`([^`]+?)\s<(?:\w+:)?%s>`(?=[\s{AFTER_XREF}]|\Z)"
+
+    short_ref = r"~[.\w]*?(\w+)"  # Ex. :attr:`~.Class.attr`
+    long_ref = r"\.?([.\w]+)"  # Ex. :attr:`.Class.attr`
     repl = r"``\1``"
 
-    rst = re.sub(short_ref, repl, rst)
-    rst = re.sub(long_ref, repl, rst)
+    for ref in (short_ref, long_ref):
+        # Replace :attr:`~.Class.attr` => ``attr`` || :attr:`.Class.attr` => ``Class.attr``
+        rst = re.sub(
+            pattern=xref_pattern % ref,
+            repl=repl,
+            string=rst
+        )
+        # Replace :attr:`title <pkg.module.Class.attr>` => ``title``
+        rst = re.sub(
+            pattern=xref_title_pattern % ref,
+            repl=repl,
+            string=rst
+        )
     return rst
 
 

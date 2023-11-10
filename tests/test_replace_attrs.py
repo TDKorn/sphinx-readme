@@ -15,6 +15,26 @@ for variant in variants:
 
     test_cases.append((f":attr:`{variant}`", expected_output))
     test_cases.append((f":py:attr:`{variant}`", expected_output))
+    test_cases.append((f":attr:`pkg:{variant}`", expected_output))
+    test_cases.append((f":py:attr:`pkg:{variant}`", expected_output))
+    test_cases.append((f":external:attr:`{variant}`", expected_output))
+    test_cases.append((f":external:py:attr:`{variant}`", expected_output))
+    test_cases.append((f":external+pkg:attr:`{variant}`", expected_output))
+    test_cases.append((f":external+pkg:py:attr:`{variant}`", expected_output))
+
+title = 'My Attribute'
+expected_title_output = f"``My Attribute``"
+
+for variant in variants:
+    test_cases.append((f":attr:`{title} <{variant}>`", expected_title_output))
+    test_cases.append((f":py:attr:`{title} <{variant}>`", expected_title_output))
+    test_cases.append((f":attr:`{title} <pkg:{variant}>`", expected_title_output))
+    test_cases.append((f":py:attr:`{title} <pkg:{variant}>`", expected_title_output))
+    test_cases.append((f":external:attr:`{title} <{variant}>`", expected_title_output))
+    test_cases.append((f":external:py:attr:`{title} <{variant}>`", expected_title_output))
+    test_cases.append((f":external+pkg:attr:`{title} <{variant}>`", expected_title_output))
+    test_cases.append((f":external+pkg:py:attr:`{title} <{variant}>`", expected_title_output))
+
 
 xrefs = list(dict(test_cases))  # The cross-reference from each tuple
 
