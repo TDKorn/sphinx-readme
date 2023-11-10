@@ -712,8 +712,8 @@ class READMEParser:
         or HTML documentation entry, depending on the value of
         :confval:`readme_docs_url_type`
 
-        .. note: Attributes will only be hyperlinked
-           if linking to HTML documentation
+        .. note: External attributes are always hyperlinked, but attributes for your
+           own package will only be hyperlinked if linking to HTML documentation
 
         :param rst_src: absolute path of the source file
         :param rst: content of the source file
@@ -770,8 +770,8 @@ class READMEParser:
                     repl=xref_data['repl'],
                     string=rst
                 )
-        # If linking to source code, replace :attr:`~.attribute` with ``attribute``
-        if self.config.docs_url_type == "code" and self.config.replace_attrs:
+        # Replace unresolved :attr:`attribute` xrefs with ``attribute``
+        if self.config.replace_attrs:
             rst = replace_attrs(rst)
 
         return rst
@@ -814,9 +814,8 @@ class READMEParser:
 
         roles = [role for domain in domains for role in self.roles[domain]]
 
-        if "py" in domains:
-            if self.config.docs_url_type == "code" or not self.config.replace_attrs:
-                roles.remove("attr")
+        if "py" in domains and self.config.replace_attrs is False:
+            roles.remove("attr")
 
         roles = "|".join(roles)
         domains = "|".join(domains)
