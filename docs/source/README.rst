@@ -74,9 +74,9 @@ A Sphinx extension to generate ``README.rst`` files that render beautifully on G
    :target: https://sphinx-readme.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation for Sphinx README: Generate Beautiful reStructuredText README.rst for GitHub, PyPi, GitLab, BitBucket
 
-.. image:: https://app.travis-ci.com/TDKorn/sphinx-readme.svg?branch=main
-   :target: https://app.travis-ci.com/TDKorn/sphinx-readme
-   :alt: TravisCI Build
+.. image:: https://img.shields.io/github/actions/workflow/status/TDKorn/sphinx-readme/tests.yml?label=build&color=33ce57
+   :target: https://github.com/TDKorn/sphinx-readme/actions/workflows/tests.yml
+   :alt: Build Status
 
 .. image:: https://codecov.io/gh/TDKorn/sphinx-readme/graph/badge.svg?token=RZCUCGIU0Q
    :target: https://codecov.io/gh/TDKorn/sphinx-readme
