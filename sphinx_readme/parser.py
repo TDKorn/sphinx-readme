@@ -12,7 +12,7 @@ from sphinx.application import Sphinx, BuildEnvironment
 from sphinx_readme.config import READMEConfig
 from sphinx_readme.utils.docutils import get_doctree, parse_node_text
 from sphinx_readme.utils.sphinx import get_conf_val, ExternalRef
-from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs, format_hyperlink, BEFORE_XREF, AFTER_XREF
+from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_xrefs, format_hyperlink, BEFORE_XREF, AFTER_XREF
 
 
 class READMEParser:
@@ -71,13 +71,13 @@ class READMEParser:
                 # Parse titles of sections referenced with :ref:
                 if getattr(section, "expect_referenced_by_name", None):
                     ref_id = list(section.expect_referenced_by_name)[0]
-                    title = section.next_node(nodes.title)
-                    self.titles[ref_id] = title.rawsource
+                    title = section.next_node(nodes.title).rawsource
+                    self.titles[ref_id] = replace_xrefs(title)
 
             try:
                 # Parse title of document for :doc: refs
-                h1 = sections[0].next_node(nodes.title)
-                self.titles[docname] = h1.rawsource
+                h1 = sections[0].next_node(nodes.title).rawsource
+                self.titles[docname] = replace_xrefs(h1)
 
             except IndexError:
                 continue  # Document without title
@@ -851,10 +851,13 @@ class READMEParser:
                     repl=xref_data['repl'],
                     string=rst
                 )
-        # Replace unresolved :attr:`attribute` xrefs with ``attribute``
-        if self.config.replace_attrs:
-            rst = replace_attrs(rst)
+        # Replace unresolved cross-refs with inline literals
+        roles = self.roles['py'].copy()
 
+        if not self.config.replace_attrs:
+            roles.remove('attr')
+
+        rst = replace_xrefs(rst, roles)
         return rst
 
     def get_xref_regex(self, domains: str | Iterable[str], targets: Optional[str | Iterable[str]] = None, xref_type: Optional[str] = None) -> str | Tuple[str, str]:

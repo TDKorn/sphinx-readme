@@ -62,6 +62,8 @@ def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None,
     return link, substitutions
 
 
+# TODO: The replace_attributes kwarg isn't actually used
+#   --> Either change it to ``replace_cross_refs`` for versatility or scrap the kwarg entirely
 def format_rst(inline_markup: str, rst: str, replace_attributes: bool = False) -> str:
     """Formats text with the specified type of inline markup
 
@@ -190,6 +192,7 @@ def remove_raw_directives(rst: str) -> str:
     )
 
 
+# TODO: Is this needed anymore?
 def replace_attrs(rst: str) -> str:
     """Replaces ``:attr:`` cross-references with ``inline literals``
 
@@ -202,8 +205,24 @@ def replace_attrs(rst: str) -> str:
 
     :param rst: the rst to replace attribute xrefs in
     """
-    xref_pattern = fr"(?<![^\s{BEFORE_XREF}]):(?:external(?:\+\w+)?:)?(?:py:)?attr:`(?:\w+:)?%s`(?=[\s{AFTER_XREF}]|\Z)"
-    xref_title_pattern = fr"(?<![^\s{BEFORE_XREF}]):(?:external(?:\+\w+)?:)?(?:py:)?attr:`([^`]+?)\s<(?:\w+:)?%s>`(?=[\s{AFTER_XREF}]|\Z)"
+    return replace_xrefs(rst, roles='attr')
+
+
+def replace_xrefs(rst: str, roles: Optional[str | List[str]] = None) -> str:
+    """Replaces cross-references in the |py_domain| with ``inline literals``
+
+    :param roles: an individual or list of cross-reference roles to match; replaces all roles if not specified
+    :param rst: the rst to replace cross-references in
+    """
+    if roles is None:  # Replace all cross-reference roles
+        roles = ['data', 'exc', 'func', 'class', 'const', 'attr', 'meth', 'mod', 'obj']
+
+    elif isinstance(roles, str):
+        roles = [roles]
+
+    roles = "|".join(roles)
+    xref_pattern = fr"(?<![^\s{BEFORE_XREF}]):(?:external(?:\+\w+)?:)?(?:py:)?(?:{roles}):`(?:\w+:)?%s`(?=[\s{AFTER_XREF}]|\Z)"
+    xref_title_pattern = fr"(?<![^\s{BEFORE_XREF}]):(?:external(?:\+\w+)?:)?(?:py:)?(?:{roles}):`([^`]+?)\s<(?:\w+:)?%s>`(?=[\s{AFTER_XREF}]|\Z)"
 
     short_ref = r"~[.\w]*?(\w+)"  # Ex. :attr:`~.Class.attr`
     long_ref = r"\.?([.\w]+)"  # Ex. :attr:`.Class.attr`
