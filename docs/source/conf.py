@@ -130,6 +130,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx_readme',
     'sphinx_sitemap',
+    'sphinx_inlinecode',
     'sphinx_github_style',
 ]
 

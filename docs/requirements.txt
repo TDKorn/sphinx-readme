@@ -4,3 +4,4 @@ docutils<0.17
 sphinx-github-style
 sphinx-sitemap
 sphinx-readme
+sphinx-inlinecode
