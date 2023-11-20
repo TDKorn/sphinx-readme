@@ -83,6 +83,7 @@ rst_prolog = """
 .. |env| replace:: :class:`~.sphinx.environment.BuildEnvironment`
 .. |py_domain| replace:: :class:`~.sphinx.domains.python.PythonDomain`
 .. |std_domain| replace:: :external+sphinx:doc:`Standard Domain <usage/domains/standard>`
+.. |rst_domain| replace:: :doc:`reStructuredText Domain <sphinx:usage/domains/restructuredtext>`
 """
 
 # Use default Pygments style if not html

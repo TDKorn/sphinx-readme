@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from collections import defaultdict
 from functools import cached_property
-from typing import Dict, List, Set, Union, Callable, Optional
+from typing import Dict, List, Set, Union, Callable, Optional, Tuple
 
 from docutils import nodes
 from sphinx import addnodes
@@ -10,8 +10,8 @@ from sphinx.domains.python import ObjectEntry
 from sphinx.application import Sphinx, BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils.sphinx import get_conf_val
 from sphinx_readme.utils.docutils import get_doctree
+from sphinx_readme.utils.sphinx import get_conf_val, ExternalRef
 from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs, format_hyperlink, BEFORE_XREF, AFTER_XREF
 
 
@@ -35,14 +35,31 @@ class READMEParser:
         self.substitutions: Dict[str, Dict[str, List[str]]] = defaultdict(dict)
         #: Mapping of docnames to their parsed titles
         self.titles: Dict[str, str] = {}
-        #: Standard cross-reference roles
-        self.roles: Set[str] = {"doc", "ref"}
+        #: Tuple of currently supported Sphinx domains
+        self.domains: Tuple = ("py", "std", "rst")
+        #: Mapping of domain names to their cross-reference roles
+        self.roles: Dict[str, List[str]] = {}
+        #: Mapping of role names to the object types they can cross-reference
+        self.objtypes: Dict[str, List[str]] = {}
+        #: Packages in the intersphinx cache
+        self.intersphinx_pkgs: List[str] = []
+        #: Easy access to intersphinx inventory
+        self.inventory: Dict[str, Dict] = {}
+        #: Easy access to intersphinx named inventory
+        self.named_inventory: Dict[str, Dict] = {}
 
     def parse_env(self, env: BuildEnvironment) -> None:
         """Parses domain data and document titles from the |env|"""
         self.parse_titles(env)
+        self.parse_roles(env)
+        self.parse_objtypes(env)
         self.parse_py_domain(env)
         self.parse_std_domain(env)
+
+        # Add access to data from intersphinx, if applicable
+        self.inventory = getattr(env, 'intersphinx_inventory', {})
+        self.named_inventory = getattr(env, 'intersphinx_named_inventory', {})
+        self.intersphinx_pkgs = list(getattr(env, 'intersphinx_named_inventory', {}))
 
     def parse_titles(self, env: BuildEnvironment) -> None:
         """Parses document and section titles from the |env|"""
@@ -65,15 +82,34 @@ class READMEParser:
             except IndexError:
                 continue  # Document without title
 
+    def parse_roles(self, env: BuildEnvironment) -> None:
+        """Parses the available roles for cross-referencing objects in the
+        |py_domain|, |std_domain|, and |rst_domain|
+
+        :param env: the |env|
+        """
+        for domain in self.domains:
+            self.roles[domain] = list(env.get_domain(domain).roles)
+
+    def parse_objtypes(self, env: BuildEnvironment) -> None:
+        """Maps cross-reference roles to their corresponding object types in the
+        |py_domain|, |std_domain|, and |rst_domain|
+
+        :param env: the |env|
+        """
+        for domain in self.domains:
+            for role in self.roles[domain]:
+                self.objtypes[role] = [
+                    f"{domain}:{objtype}"  # Prefix with domain to match intersphinx inventory
+                    for objtype in env.get_domain(domain).objtypes_for_role(role, [])
+                ]
+
     def parse_std_domain(self, env: BuildEnvironment) -> None:
         """Parses cross-reference data from the |std_domain|
 
         :param env: the |env|
         """
-        domain = env.get_domain("std")
-        self.roles.update(set(domain.object_types))
-
-        for ref_id, text, role, docname, anchor, _ in domain.get_objects():
+        for ref_id, text, role, docname, anchor, _ in env.get_domain("std").get_objects():
             replace = self.titles.get(ref_id) or text
             target = f"{self.config.html_baseurl}/{docname}.html"
 
@@ -278,6 +314,104 @@ class READMEParser:
             rubrics.append(rubric.rawsource)
 
         self.rubrics[source] = rubrics
+
+    def parse_problematic_nodes(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
+        """Parses unresolved :mod:`sphinx.ext.intersphinx` cross-references using the intersphinx cache
+
+        Unresolved problematic nodes will exist for
+
+        * All cross-references in the |rst_domain|
+        * Cross-references using the ``:external:`` role or ``:role:`pkg:target``` syntax
+        * External cross-references that are exclusively in :rst:dir:`only` directives that
+          have been excluded by the HTML builder.
+
+        :param doctree: the doctree from one of the :attr:`~.src_files`
+        """
+        if (src := doctree.get('source')) not in self.sources:
+            return
+
+        rst = self.sources[src]
+
+        # Generate new doctree to account for only directives
+        doctree = get_doctree(app, rst, docname)
+
+        domains = "|".join(self.domains)
+        roles = "|".join(self.objtypes.keys())
+        xref_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`~?\.?([\w./:-]+)`"
+        xref_title_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`[^`]+?\s<([\w./:-]+?)>`"
+
+        for node in doctree.findall(nodes.problematic):
+            if "<" in node.rawsource:
+                # Ex. :ref:`title <target>`
+                pattern = xref_title_pattern
+            else:
+                # Ex. :ref:`target`
+                pattern = xref_pattern
+
+            if not (match := re.match(pattern, node.rawsource)):
+                continue
+
+            external, role, ref_id = match.groups()
+            objtypes = self.objtypes[role]
+
+            for objtype in objtypes:
+                # Check intersphinx inventory for all applicable objtypes
+                if xref := self.get_external_ref(external, objtype, ref_id):
+                    break
+
+            if xref is None:
+                continue
+
+            if xref.objtype.startswith("py"):
+                if xref.id in self.ref_map:
+                    continue  # Already added by parse_intersphinx_nodes()
+
+                is_callable = xref.objtype in ("py:method", "py:function")
+                self.add_variants(xref.id, xref.target, is_callable)
+
+            else:
+                if self.config.inline_markup and xref.objtype not in ('std:label', 'std:doc'):
+                    xref.label = f"``{xref.label}``"
+
+                self.ref_map.setdefault(role, {}).setdefault(xref.id, {
+                    "replace": xref.label,
+                    "target": xref.target
+                })
+
+    def get_external_ref(self, external: str, objtype: str, ref_id: str) -> Optional[ExternalRef]:
+        """Retrieves external cross-reference data from the :mod:`sphinx.ext.intersphinx` inventory
+
+        :param external: the ``:external:`` or ``:external+pkg:`` portion of the xref, if present
+        :param objtype: the name of the object type being referenced
+        :param ref_id: the target of the cross-reference
+        :return: an :class:`~.ExternalRef` object if the lookup was successful, otherwise ``None``
+        """
+        # First, attempt to constrain lookup to specific package
+        pkg = None
+
+        # Check for :external+pkg:role:`ref_id` syntax
+        if external and "+" in external:
+            pkg = external.split('+')[-1]
+
+        # Check for :role:`pkg:ref_id` syntax
+        elif ":" in ref_id:
+            tokens = ref_id.split(":", maxsplit=1)
+
+            if objtype != "rst:directive:option":
+                pkg, ref_id = tokens
+
+            # Check if it's `pkg:directive:option` or `directive:option`
+            elif tokens[0] in self.intersphinx_pkgs:
+                pkg, ref_id = tokens
+
+        if objtype == "std:label":
+            ref_id = nodes.fully_normalize_name(ref_id)
+
+        # Lookup reference in intersphinx named or regular inventory
+        inventory = self.named_inventory.get(pkg, self.inventory)
+
+        if xref := inventory.get(objtype, {}).get(ref_id):
+            return ExternalRef(objtype, *xref, ref_id)
 
     def resolve(self) -> None:
         """Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`
