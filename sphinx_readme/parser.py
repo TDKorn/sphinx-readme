@@ -10,7 +10,7 @@ from sphinx.domains.python import ObjectEntry
 from sphinx.application import Sphinx, BuildEnvironment
 
 from sphinx_readme.config import READMEConfig
-from sphinx_readme.utils.docutils import get_doctree
+from sphinx_readme.utils.docutils import get_doctree, parse_node_text
 from sphinx_readme.utils.sphinx import get_conf_val, ExternalRef
 from sphinx_readme.utils.rst import get_all_xref_variants, escape_rst, format_rst, replace_attrs, format_hyperlink, BEFORE_XREF, AFTER_XREF
 
@@ -217,7 +217,7 @@ class READMEParser:
         if doctree.get('source') in self.sources:
             self.parse_admonitions(app, doctree, docname)
             self.parse_rubrics(app, doctree, docname)
-            self.parse_toctrees(doctree, docname)
+            self.parse_toctrees(app, doctree, docname)
             self.parse_intersphinx_nodes(doctree)
 
     def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
@@ -285,7 +285,7 @@ class READMEParser:
             qualified_name = target.split("#")[-1].split("-")[-1]
             self.add_variants(qualified_name, target, is_callable)
 
-    def parse_toctrees(self, doctree: nodes.document, docname: str) -> None:
+    def parse_toctrees(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses the caption and entry data from :class:`~.sphinx.addnodes.toctree` nodes
 
         .. caution:: Toctrees are currently parsed as if the directive has the ``:titlesonly:`` option
@@ -293,19 +293,56 @@ class READMEParser:
         :param doctree: the doctree from one of the :attr:`~.src_files`
         """
         source = doctree.get('source')
+        tocs = app.env.tocs
+
         for toctree in list(doctree.findall(addnodes.toctree)):
             toc = {
                 'caption': toctree.get('caption'),
                 'entries': []
             }
+            if toctree.get('maxdepth') != 1 and not toctree.get('titlesonly'):
+                toc['maxdepth'] = toctree.get('maxdepth')
+
             for text, entry in toctree.get('entries', []):
                 entry = entry if entry != 'self' else docname
                 title = text if text else self.titles.get(entry)
+                subtree = tocs[entry].next_node(nodes.bullet_list)
+
+                if 'maxdepth' in toc and subtree:
+                    subtree = self._parse_subtree(subtree)
+
                 toc['entries'].append({
                     'entry': entry,
                     'title': title,
+                    'subtree': subtree
                 })
             self.toctrees[source].append(toc)
+
+    def _parse_subtree(self, tree: nodes.bullet_list) -> List[Dict]:
+        sub_trees = []
+
+        for child in tree.children:  # For each bullet
+            if not isinstance(child, nodes.list_item):  # Unnecessary check?
+                continue
+
+            sub_tree = {
+                'entry': None,
+                'anchor': None,
+                'title': None,
+                'subtree': []
+            }
+            for item in child.children:
+                if isinstance(item, addnodes.compact_paragraph):
+                    ref_node = child.next_node(nodes.reference)
+                    sub_tree['title'] = parse_node_text(ref_node)
+                    sub_tree['anchor'] = ref_node.get('anchorname')
+                    sub_tree['entry'] = ref_node.get('refuri')
+
+                elif isinstance(item, nodes.bullet_list):
+                    sub_tree['entries'].extend(self._parse_subtree(item, tocs))
+
+            sub_trees.append(sub_tree)
+        return sub_trees
 
     def parse_rubrics(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses the content from :rst:dir:`rubric` directives"""
@@ -520,27 +557,44 @@ class READMEParser:
         toctrees = re.findall(pattern, rst, re.M | re.DOTALL)
 
         for toctree, info in zip(toctrees, self.toctrees[rst_src]):
-            substitutions = []
+            maxdepth = info.get('maxdepth', 1)
             repl = ""
 
             if info['caption']:
                 repl += f"**{info['caption']}**\n\n"
 
             for entry in info['entries']:
-                # Replace each entry with a link to html docs
-                target = f"{self.config.html_baseurl}/{entry['entry']}.html"
-                link, subs = format_hyperlink(target, text=entry['title'])
-                substitutions.extend(subs)
-                repl += f"* {link}\n"
+                repl = self._replace_toctree_entry(rst_src, entry, repl, maxdepth)
 
-            if substitutions:
-                # Inline literals in links must use substitutions
-                repl += '\n' + '\n'.join(substitutions) + '\n'
-
-            # Replace toctree directive with links and substitution defs
+            # Replace toctree directive with substitutions
             rst = rst.replace(toctree, repl)
 
         return rst
+
+    def _replace_toctree_entry(self, rst_src, entry, repl, maxdepth, indentation = "", depth = 0):
+        if depth == maxdepth:
+            return repl
+
+        # Replace each entry with a link to html docs
+        target = f"{self.config.html_baseurl}/{entry['entry']}.html{entry.get('anchor', '')}"
+        link, subs = format_hyperlink(target, text=entry['title'])
+        repl += f"{indentation}* {link}\n"
+
+        if subs:
+            ref_id = entry['title'].replace("`", "")
+            self.substitutions[rst_src][ref_id] = subs
+
+        if entry['subtree']:
+            repl += "\n"  # Add new line for new level
+            for sub_entry in entry["subtree"]:
+                repl = self._replace_toctree_entry(
+                    rst_src, sub_entry, repl, maxdepth,
+                    indentation=f"{indentation}  ",
+                    depth=depth + 1
+                )
+            repl += "\n"
+        return repl
+
 
     def replace_rst_images(self, rst_src: str, rst: str) -> str:
         """Replaces filepaths in ``image`` directives with repository links

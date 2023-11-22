@@ -15,3 +15,15 @@ def get_doctree(app: Sphinx, rst: str, docname: str = 'index') -> nodes.document
         })
     finally:
         app.env.temp_data.pop('docname', None)
+
+
+def parse_node_text(node: nodes.Node) -> str:
+    """Parses the text from a node, preserving inline literals"""
+    parts = []
+    for child in node.children:
+        text = child.astext()
+        if isinstance(child, nodes.literal):
+            parts.append(f"``{text}``")
+        else:
+            parts.append(text)
+    return ' '.join(parts)
