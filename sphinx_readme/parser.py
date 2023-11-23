@@ -296,40 +296,54 @@ class READMEParser:
         tocs = app.env.tocs
 
         for toctree in list(doctree.findall(addnodes.toctree)):
-            toc = {
-                'caption': toctree.get('caption'),
-                'entries': []
-            }
-            if toctree.get('maxdepth') != 1 and not toctree.get('titlesonly'):
-                toc['maxdepth'] = toctree.get('maxdepth')
-
-            for text, entry in toctree.get('entries', []):
-                entry = entry if entry != 'self' else docname
-                title = text if text else self.titles.get(entry)
-                subtree = tocs[entry].next_node(nodes.bullet_list)
-
-                if 'maxdepth' in toc and subtree:
-                    subtree = self._parse_subtree(subtree)
-
-                toc['entries'].append({
-                    'entry': entry,
-                    'title': title,
-                    'subtree': subtree
-                })
+            toc = self._parse_toctree(toctree, docname, tocs)
             self.toctrees[source].append(toc)
 
-    def _parse_subtree(self, tree: nodes.bullet_list) -> List[Dict]:
+    def _parse_toctree(self, toctree, docname, tocs, is_subtoc=False):
+        toc = {
+            'caption': toctree.get('caption'),
+            'entries': []
+        }
+        if toctree.get('maxdepth') != 1 and not toctree.get('titlesonly'):
+            toc['maxdepth'] = toctree.get('maxdepth')
+
+        for text, entry in toctree.get('entries', []):
+            entry = entry if entry != 'self' else docname
+            title = text if text else self.titles.get(entry)
+            subtree = tocs[entry].next_node(nodes.bullet_list)
+
+            if subtree:
+                if is_subtoc or 'maxdepth' in toc:
+                    subtree = self._parse_subtree(subtree, tocs)
+
+            toc['entries'].append({
+                'entry': entry,
+                'title': title,
+                'entries': subtree
+            })
+        return toc
+
+    def _parse_subtree(self, tree: nodes.bullet_list, tocs: Dict[str, nodes.bullet_list]) -> List[Dict]:
         sub_trees = []
 
-        for child in tree.children:  # For each bullet
-            if not isinstance(child, nodes.list_item):  # Unnecessary check?
+        for child in tree.children:
+            if isinstance(child, addnodes.toctree):
+                sub_toc = self._parse_toctree(
+                    docname=Path(child.source).stem,
+                    is_subtoc=True, tocs=tocs,
+                    toctree=child,
+                )
+                sub_trees.extend(sub_toc['entries'])
+                continue
+
+            if not isinstance(child, nodes.list_item):
                 continue
 
             sub_tree = {
                 'entry': None,
                 'anchor': None,
                 'title': None,
-                'subtree': []
+                'entries': []
             }
             for item in child.children:
                 if isinstance(item, addnodes.compact_paragraph):
@@ -584,9 +598,9 @@ class READMEParser:
             ref_id = entry['title'].replace("`", "")
             self.substitutions[rst_src][ref_id] = subs
 
-        if entry['subtree']:
+        if entry['entries']:
             repl += "\n"  # Add new line for new level
-            for sub_entry in entry["subtree"]:
+            for sub_entry in entry["entries"]:
                 repl = self._replace_toctree_entry(
                     rst_src, sub_entry, repl, maxdepth,
                     indentation=f"{indentation}  ",
