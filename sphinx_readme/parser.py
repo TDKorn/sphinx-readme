@@ -580,6 +580,10 @@ class READMEParser:
             for entry in info['entries']:
                 repl = self._replace_toctree_entry(rst_src, entry, repl, maxdepth)
 
+            last_line = repl.strip().split('\n')[-1]
+            last_indent = len(last_line) - len(last_line.lstrip())
+            repl += f"\n{(last_indent + 2) * ' '}|\n\n"  # Add line break at next indent to improve spacing
+
             # Replace toctree directive with substitutions
             rst = rst.replace(toctree, repl)
 
