@@ -302,9 +302,10 @@ class READMEParser:
     def _parse_toctree(self, toctree, docname, tocs, is_subtoc=False):
         toc = {
             'caption': toctree.get('caption'),
+            'titles_only': toctree.get('titlesonly'),
             'entries': []
         }
-        if toctree.get('maxdepth') != 1 and not toctree.get('titlesonly'):
+        if toctree.get('maxdepth') != 1:
             toc['maxdepth'] = toctree.get('maxdepth')
 
         for text, entry in toctree.get('entries', []):
@@ -333,6 +334,9 @@ class READMEParser:
                     is_subtoc=True, tocs=tocs,
                     toctree=child,
                 )
+                for entry in sub_toc['entries']:
+                    entry['is_subtoc'] = True
+
                 sub_trees.extend(sub_toc['entries'])
                 continue
 
@@ -571,6 +575,7 @@ class READMEParser:
         toctrees = re.findall(pattern, rst, re.M | re.DOTALL)
 
         for toctree, info in zip(toctrees, self.toctrees[rst_src]):
+            titles_only = info.get('titles_only')
             maxdepth = info.get('maxdepth', 1)
             repl = ""
 
@@ -578,7 +583,7 @@ class READMEParser:
                 repl += f"**{info['caption']}**\n\n"
 
             for entry in info['entries']:
-                repl = self._replace_toctree_entry(rst_src, entry, repl, maxdepth)
+                repl = self._replace_toctree_entry(rst_src, entry, repl, maxdepth, titles_only)
 
             last_line = repl.strip().split('\n')[-1]
             last_indent = len(last_line) - len(last_line.lstrip())
@@ -589,9 +594,13 @@ class READMEParser:
 
         return rst
 
-    def _replace_toctree_entry(self, rst_src, entry, repl, maxdepth, indentation = "", depth = 0):
+    def _replace_toctree_entry(self, rst_src, entry, repl, maxdepth, titles_only, indentation = "", depth = 0):
         if depth == maxdepth:
             return repl
+
+        if depth == 1 and titles_only:
+            if not entry.get('is_subtoc'):
+                return repl
 
         # Replace each entry with a link to html docs
         target = f"{self.config.html_baseurl}/{entry['entry']}.html{entry.get('anchor', '')}"
@@ -606,13 +615,12 @@ class READMEParser:
             repl += "\n"  # Add new line for new level
             for sub_entry in entry["entries"]:
                 repl = self._replace_toctree_entry(
-                    rst_src, sub_entry, repl, maxdepth,
+                    rst_src, sub_entry, repl, maxdepth, titles_only,
                     indentation=f"{indentation}  ",
                     depth=depth + 1
                 )
             repl += "\n"
         return repl
-
 
     def replace_rst_images(self, rst_src: str, rst: str) -> str:
         """Replaces filepaths in ``image`` directives with repository links
