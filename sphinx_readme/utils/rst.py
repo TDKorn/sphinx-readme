@@ -13,7 +13,7 @@ def escape_rst(rst: str) -> str:
 #: Characters that are allowed directly before a cross-reference
 BEFORE_XREF = re.escape(":[{(/\"'-")
 #: Characters that are allowed directly after a cross-reference
-AFTER_XREF = re.escape(":;!?,\"'/\\])}-")
+AFTER_XREF = re.escape(".:;!?,\"'/\\])}-")
 
 
 def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None, force_subs: bool = False) -> Tuple[str, List[Optional[str]]]:
