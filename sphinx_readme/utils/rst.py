@@ -49,6 +49,7 @@ def format_hyperlink(target: str, text: str, sub_override: Optional[str] = None,
     if "`" in text or force_subs:
         # Substitutions must be used for inline literals
         sub = sub_override or text.replace('`', '')
+        sub = sub.replace(':', '-colon-')
         substitutions.extend([
             f".. |{sub}| replace:: {text}",
             f".. _{sub}: {target}"
