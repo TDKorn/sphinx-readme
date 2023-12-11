@@ -15,7 +15,6 @@ import os
 import sys
 import pkg_resources
 
-
 # ============================== Build Environment ==============================
 
 # Build behaviour is dependent on environment
@@ -212,12 +211,46 @@ def skip(app, what, name, obj, would_skip, options):
     return would_skip
 
 
-def setup(app):
+def force_sphinx_readme_linkcode(app):
+    """Since v1.1.2, sphinx-readme extension setup is connected to the ``builder-inited`` event.
+
+    The linkcode_resolve from sphinx-github-style is added before this event occurs. This function is
+    needed to ensure that the linkcode_resolve from sphinx-readme is used instead.
+    """
     from sphinx_readme.utils.sphinx import get_conf_val, set_conf_val
+
+    # Remove linkcode_resolve added by sphinx-github-style, which links to head
+    set_conf_val(app, 'linkcode_resolve', None)
+
+    # Add linkcode_resolve from sphinx-readme, which links to last tag
+    parser = get_conf_val(app, 'READMEParser')
+    parser.config.setup_linkcode_resolve(app)
+
+
+def add_rst_epilog(app):
+    from sphinx_readme.utils.sphinx import get_conf_val, set_conf_val
+    # Keep target updated for ``readme_docs_url_type`` source code example
+    resolve = get_conf_val(app, "linkcode_resolve")
+    target = resolve(
+        domain="py",
+        info={"module": "sphinx_readme.parser", "fullname": "READMEParser.parse_intersphinx_nodes"}
+    )
+    rst_epilog = f"""
+.. |parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
+.. _parse_intersphinx_nodes: {target}
+"""
+    set_conf_val(app, "rst_epilog", rst_epilog)
+
+
+def setup(app):
     from sphinx.domains.python import PyField
     from sphinx.util.docfields import Field
     from sphinx.locale import _
 
+    if on_rtd or bool(os.getenv('local')):
+        app.connect('builder-inited', force_sphinx_readme_linkcode, priority=501)
+
+    app.connect('builder-inited', add_rst_epilog, priority=502)
     app.connect('autodoc-skip-member', skip)
     app.add_css_file("custom.css")
 
@@ -243,15 +276,3 @@ def setup(app):
             ),
         ]
     )
-    # Keep target updated for ``readme_docs_url_type`` source code example
-    resolve = get_conf_val(app, "linkcode_resolve")
-    target = resolve(
-        domain="py",
-        info={"module": "sphinx_readme.parser", "fullname": "READMEParser.parse_intersphinx_nodes"}
-    )
-    rst_epilog = f"""
-.. |parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
-.. _parse_intersphinx_nodes: {target}
-"""
-    set_conf_val(app, "rst_epilog", rst_epilog)
-
