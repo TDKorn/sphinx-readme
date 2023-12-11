@@ -536,7 +536,7 @@ class READMEParser:
                         rst = re.sub(
                             pattern=pattern,
                             repl=lambda match: self._replace_admonition(
-                                match, admonition, icon),
+                                match, rst_src, admonition, icon),
                             string=rst,
                         )
                     else:
@@ -550,13 +550,21 @@ class READMEParser:
                         )
         return rst
 
-    def _replace_admonition(self, match, admonition: dict, icon: str) -> str:
+    def _replace_admonition(self, match, rst_src, admonition: dict, icon: str) -> str:
         """Helper function for formatting ``list-table`` admonitions"""
+        body = match.group(2)
+        if all((
+                ".. rubric::" in body,
+                self.config.rubric_heading,
+                self.config.raw_directive is False
+        )):
+            body = self.replace_rubrics(rst_src, body, force_markup=True)
+
         template = self.config.admonition_template.format(
             title=admonition['title'],
             icon=icon
         ).replace(
-            r'\2', match.group(2).replace('\n', '\n    ')
+            r'\2', body.replace('\n', '\n    ')
         ).replace(
             r'\1', match.group(1)
         )
@@ -668,7 +676,7 @@ class READMEParser:
             )
         return rst
 
-    def replace_rubrics(self, rst_src: str, rst: str) -> str:
+    def replace_rubrics(self, rst_src: str, rst: str, force_markup: bool = False) -> str:
         """Replaces :rst:dir:`rubric` directives with the section heading
         character specified by :confval:`readme_rubric_heading`
 
@@ -705,7 +713,7 @@ class READMEParser:
             pattern = rubric_pattern.format(body=re.escape(rubric).replace("\\\n", "\\\n[ ]+"))
             text = ' '.join(line.strip() for line in rubric.split('\n'))
 
-            if heading:
+            if heading and not force_markup:
                 repl = text + "\n" + (len(text) * heading)
             else:
                 text = self.replace_xrefs(rst_src, text)
