@@ -1,7 +1,7 @@
 import os
 import sys
 import inspect
-import pkg_resources
+
 from typing import Dict, Optional, Callable
 from sphinx.errors import ExtensionError
 
@@ -49,8 +49,6 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
     :param linkcode_url: the template URL for linking to source code (see :meth:`~get_linkcode_url`)
     """
     repo_dir = get_repo_dir()
-    pkg = pkg_resources.require(repo_dir.name)[0]
-    top_level = pkg.get_metadata('top_level.txt').strip()
 
     def linkcode_resolve(domain, info):
         """Returns a link to the source code on GitHub, with appropriate lines highlighted
@@ -65,6 +63,7 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
 
         modname = info['module']
         fullname = info['fullname']
+        pkg_name = modname.split('.')[0]
 
         submod = sys.modules.get(modname)
         if submod is None:
@@ -92,7 +91,7 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
             linestart, linestop = lineno, lineno + len(source) - 1
 
         # Fix links with "../../../" or "..\\..\\..\\"
-        filepath = '/'.join(filepath[filepath.find(top_level):].split('\\'))
+        filepath = '/'.join(filepath[filepath.find(pkg_name):].split('\\'))
 
         # Example: https://github.com/TDKorn/my-magento/blob/docs/magento/models/model.py#L28-L59
         final_link = linkcode_url.format(
