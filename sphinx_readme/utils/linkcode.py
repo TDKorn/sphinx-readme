@@ -1,6 +1,7 @@
 import os
 import sys
 import inspect
+from pathlib import Path
 
 from typing import Dict, Optional, Callable
 from sphinx.errors import ExtensionError
@@ -63,7 +64,6 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
 
         modname = info['module']
         fullname = info['fullname']
-        pkg_name = modname.split('.')[0]
 
         submod = sys.modules.get(modname)
         if submod is None:
@@ -77,7 +77,8 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
                 return None
 
         try:
-            filepath = os.path.relpath(inspect.getsourcefile(obj), repo_dir)
+            modpath = inspect.getsourcefile(inspect.unwrap(obj))
+            filepath = os.path.relpath(modpath, repo_dir)
             if filepath is None:
                 return
         except Exception:
@@ -91,7 +92,7 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
             linestart, linestop = lineno, lineno + len(source) - 1
 
         # Fix links with "../../../" or "..\\..\\..\\"
-        filepath = '/'.join(filepath[filepath.find(pkg_name):].split('\\'))
+        filepath = Path(filepath).as_posix().lstrip('../')
 
         # Example: https://github.com/TDKorn/my-magento/blob/docs/magento/models/model.py#L28-L59
         final_link = linkcode_url.format(
