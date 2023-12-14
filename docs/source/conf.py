@@ -247,7 +247,7 @@ def setup(app):
     from sphinx.util.docfields import Field
     from sphinx.locale import _
 
-    if on_rtd or bool(os.getenv('local')):
+    if bool(os.getenv('local')):
         app.connect('builder-inited', force_sphinx_readme_linkcode, priority=501)
 
     app.connect('builder-inited', add_rst_epilog, priority=502)
