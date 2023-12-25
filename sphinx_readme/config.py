@@ -22,6 +22,8 @@ class READMEConfig:
         self.out_dir = get_conf_val(app, 'readme_out_dir')
         self.src_files = get_conf_val(app, 'readme_src_files', [])
         self.tags = Tags(get_conf_val(app, "readme_tags"))
+        self.rst_prolog = get_conf_val(app, 'rst_prolog') or ""
+        self.rst_epilog = get_conf_val(app, 'rst_epilog') or ""
         self.html_context = get_conf_val(app, "html_context")
         self.html_baseurl = get_conf_val(app, "html_baseurl", "").rstrip("/")
         self.docs_url_type = get_conf_val(app, 'readme_docs_url_type')
@@ -98,7 +100,7 @@ class READMEConfig:
 
         set_conf_val(app, 'linkcode_resolve', linkcode_func)
 
-    def read_rst(self, rst_file: Union[str, Path], replace_only: bool = True) -> str:
+    def read_rst(self, rst_file: Union[str, Path], replace_only: bool = True, is_included: bool = False) -> str:
         """Reads and partially parses an ``rst`` file
 
         .. tip::
@@ -127,6 +129,9 @@ class READMEConfig:
 
         if self.raw_directive is False:
             rst = remove_raw_directives(rst)
+
+        if not is_included:
+            rst = f"{self.rst_prolog}\n{rst}\n{self.rst_epilog}"
 
         return rst
 
@@ -164,7 +169,7 @@ class READMEConfig:
             temp.write_text('\n'.join(lines), "utf-8")
 
             # Replace directive with parsed file content
-            repl = self.read_rst(temp, replace_only).replace(r'\n', r'\\n')
+            repl = self.read_rst(temp, replace_only, is_included=True).replace(r'\n', r'\\n')
             temp.unlink()
 
         else:
