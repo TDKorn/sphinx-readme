@@ -258,11 +258,7 @@ class READMEParser:
 
         :param doctree: the doctree from one of the :attr:`~.src_files`
         """
-        domains = "|".join(self.domains)
-        roles = "|".join(self.objtypes.keys())
-        xref_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`~?\.?([\w./: -]+)`"
-        xref_title_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`[^`]+?\s<([\w./: -]+?)>`"
-
+        xref_pattern, xref_title_pattern = self.get_xref_regex(self.domains, roles=self.objtypes.keys())
         src = doctree.get('source')
         rst = self.sources[src]
         nodes_to_parse = []
@@ -293,8 +289,8 @@ class READMEParser:
             if not (match := re.match(pattern, node.rawsource)):
                 continue
 
-            external, role, ref_id = match.groups()
-            self.parse_external_node(external, role, ref_id)
+            _, external, role, *_, ref_id = match.groups()
+            self.parse_external_node(external, role, ref_id.lstrip('~.'))
 
     def parse_external_node(self, external, role, ref_id) -> None:
         objtypes = self.objtypes[role]
@@ -843,7 +839,11 @@ class READMEParser:
         rst = replace_xrefs(rst, roles)
         return rst
 
-    def get_xref_regex(self, domains: str | Iterable[str], targets: Optional[str | Iterable[str]] = None, xref_type: Optional[str] = None) -> str | Tuple[str, str]:
+    def get_xref_regex(self,
+                       domains: str | Iterable[str],
+                       roles: Optional[str | Iterable[str]] = None,
+                       targets: Optional[str | Iterable[str]] = None,
+                       xref_type: Optional[str] = None) -> str | Tuple[str, str]:
         """Returns the regex to match cross-references
 
         .. note:: The patterns have the following match groups:
@@ -864,6 +864,7 @@ class READMEParser:
               5. The cross-reference target
 
         :param domains: an individual or list of Sphinx object domains to match
+        :param roles: an individual or list of cross-reference roles to match; matches all domain roles if not provided
         :param targets: an individual or list of targets to match; matches all xrefs if not provided
         :param xref_type: the xref type to match (``"regular"`` or ``"title"``); returns both if not specified
         :return: the regex pattern to match regular xrefs, xrefs with explicit titles, or a tuple containing both
@@ -879,10 +880,13 @@ class READMEParser:
         if isinstance(domains, str):
             domains = [domains]
 
-        roles = [role for domain in domains for role in self.roles[domain]]
-
-        if "py" in domains and self.config.replace_attrs is False:
-            roles.remove("attr")
+        if roles:
+            if isinstance(roles, str):
+                roles = [roles]
+        else:
+            roles = [role for domain in domains for role in self.roles[domain]]
+            if "py" in domains and self.config.replace_attrs is False:
+                roles.remove("attr")
 
         roles = "|".join(roles)
         domains = "|".join(domains)
