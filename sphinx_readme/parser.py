@@ -469,7 +469,7 @@ class READMEParser:
             substitutions = self.substitutions[src]
             header_vals = [
                 '\n'.join(substitutions[target])
-                for target in sorted(substitutions, key=lambda t: (t.lstrip("`~."), t))
+                for target in sorted(substitutions, key=lambda t: (t.lower().lstrip("`~."), t.lower()))
             ]
             # Write the final output
             rst_out = Path(self.config.out_dir, Path(src).name)
