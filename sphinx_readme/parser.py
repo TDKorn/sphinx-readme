@@ -744,26 +744,29 @@ class READMEParser:
                 # intersphinx since it's also used as a fallback resolution
                 ref_id = self.get_external_id(external, role, ref_id)
 
-            if info := ref_map.get(ref_id):
-                # Add inline markup to explicit title if replacement had it
-                if title and info['replace'].startswith("`"):
-                    ref_id = f"{ref_id}+{title}"
+            if not (info := ref_map.get(ref_id)):
+                continue
+
+            if title:  # Include explicit title in substitution name
+                ref_id = f"{ref_id}+{title}"
+
+                # Add inline markup if replacement had it
+                if info['replace'].startswith("`"):
                     title = f"``{title}``"
 
-                # Replace cross-refs with `text <link>`_ or substitutions
-                link, subs = format_hyperlink(
-                    target=info['target'],
-                    text=title or info['replace'],
-                    sub_override=ref_id
-                )
-                if subs:
-                    self.substitutions[rst_src][ref_id] = subs
+            link, subs = format_hyperlink(
+                target=info['target'],
+                text=title or info['replace'],
+                sub_override=ref_id,
+                force_subs=True
+            )
+            self.substitutions[rst_src][ref_id] = subs
 
-                rst = re.sub(
-                    pattern = rf"(?<![^\s{BEFORE_XREF}]){escape_rst(full_xref)}(?=[\s{AFTER_XREF}]|\Z)",
-                    repl=link,
-                    string=rst
-                )
+            rst = re.sub(  # Replace cross-ref with substitution
+                pattern = rf"(?<![^\s{BEFORE_XREF}]){escape_rst(full_xref)}(?=[\s{AFTER_XREF}]|\Z)",
+                repl=link,
+                string=rst
+            )
         return rst
 
     def replace_py_xrefs(self, rst_src: str, rst: str) -> str:

@@ -1,3 +1,5 @@
+.. |sphinx+usage/domains/standard+Standard Domain| replace:: Standard Domain
+.. _sphinx+usage/domains/standard+Standard Domain: https://www.sphinx-doc.org/en/master/usage/domains/standard.html
 .. |.sphinx.ext.autodoc| replace:: ``sphinx.ext.autodoc``
 .. _.sphinx.ext.autodoc: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
 
@@ -13,7 +15,7 @@
 
 **this is a rubric containing a python domain cross-reference to the** |.sphinx.ext.autodoc|_ **module**
 
-**this is a rubric containing a standard domain cross-reference to** `Standard Domain <https://www.sphinx-doc.org/en/master/usage/domains/standard.html>`_
+**this is a rubric containing a standard domain cross-reference to** |sphinx+usage/domains/standard+Standard Domain|_
 
 
 .. list-table::
