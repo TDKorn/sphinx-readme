@@ -78,7 +78,7 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
 
         try:
             modpath = inspect.getsourcefile(inspect.unwrap(obj))
-            filepath = os.path.relpath(modpath, repo_dir)
+            filepath = Path(modpath).relative_to(repo_dir)
             if filepath is None:
                 return
         except Exception:
@@ -91,12 +91,9 @@ def get_linkcode_resolve(linkcode_url: str) -> Callable:
         else:
             linestart, linestop = lineno, lineno + len(source) - 1
 
-        # Fix links with "../../../" or "..\\..\\..\\"
-        filepath = Path(filepath).as_posix().lstrip('../')
-
         # Example: https://github.com/TDKorn/my-magento/blob/docs/magento/models/model.py#L28-L59
         final_link = linkcode_url.format(
-            filepath=filepath,
+            filepath=filepath.as_posix(),
             linestart=linestart,
             linestop=linestop
         )

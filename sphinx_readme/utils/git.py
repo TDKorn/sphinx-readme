@@ -198,6 +198,7 @@ def get_last_tag() -> str:
 def get_repo_dir() -> Path:
     """Returns the root directory of the repository
 
+    :return: A Path object representing the working directory of the repository.
     :raises RuntimeError: if the directory can't be determined
     """
     try:
@@ -207,8 +208,4 @@ def get_repo_dir() -> Path:
     except subprocess.CalledProcessError as e:
         raise RuntimeError("Unable to determine the repository directory") from e
 
-    # For ReadTheDocs, repo is cloned to /path/to/<repo_dir>/checkouts/<version>/
-    if repo_dir.parent.stem == "checkouts":
-        return repo_dir.parent.parent
-    else:
-        return repo_dir
+    return repo_dir

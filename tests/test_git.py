@@ -403,23 +403,14 @@ def test_get_repo_host_invalid_url(repo_url):
     assert get_repo_host(repo_url) is None
 
 
-REPO_DIR = Path('../').resolve().as_posix()
-RTD_CLONE_DIR = Path(f"{REPO_DIR}/checkouts/version/").resolve().as_posix()
+REPO_DIR = Path('../').resolve()
 
 
 @patch('subprocess.check_output')
 def test_get_repo_dir(mock_check_output):
-    mock_check_output.return_value = f"{REPO_DIR}\n".encode('utf-8')
+    mock_check_output.return_value = f"{REPO_DIR.as_posix()}\n".encode('utf-8')
 
-    assert get_repo_dir() == Path(REPO_DIR)
-
-
-@patch('subprocess.check_output')
-def test_get_repo_dir_on_rtd(mock_check_output):
-    """For ReadTheDocs, repo is cloned to /path/to/<repo_dir>/checkouts/<version>/"""
-    mock_check_output.return_value = f"{RTD_CLONE_DIR}\n".encode('utf-8')
-
-    assert get_repo_dir() == Path(REPO_DIR)
+    assert get_repo_dir() == REPO_DIR
 
 
 @patch('subprocess.check_output')
