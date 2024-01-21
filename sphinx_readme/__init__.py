@@ -23,7 +23,6 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.connect("builder-inited", add_readme_parser)
     app.connect('env-check-consistency', parse_env)
     app.connect('doctree-resolved', parse_doctree)
-    app.connect('doctree-resolved', parse_problematic_nodes, priority=501)
     app.connect('build-finished', resolve)
 
     app.add_config_value("readme_src_files", [], True, types=[list, str])
@@ -53,11 +52,6 @@ def parse_env(app: Sphinx, env: BuildEnvironment):
 def parse_doctree(app: Sphinx, doctree: document, docname: str):
     parser = get_conf_val(app, 'READMEParser')
     parser.parse_doctree(app, doctree, docname)
-
-
-def parse_problematic_nodes(app: Sphinx, doctree: document, docname: str):
-    parser = get_conf_val(app, 'READMEParser')
-    parser.parse_problematic_nodes(app, doctree, docname)
 
 
 def resolve(app: Sphinx, exception):

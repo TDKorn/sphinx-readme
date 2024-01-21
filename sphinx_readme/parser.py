@@ -218,7 +218,7 @@ class READMEParser:
             self.parse_admonitions(app, doctree, docname)
             self.parse_rubrics(app, doctree, docname)
             self.parse_toctrees(app, doctree, docname)
-            self.parse_intersphinx_nodes(doctree)
+            self.parse_intersphinx_nodes(app, doctree, docname)
 
     def parse_admonitions(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses data from generic and specific admonitions
@@ -253,37 +253,64 @@ class READMEParser:
 
         self.admonitions[src] = admonitions
 
-    def parse_intersphinx_nodes(self, doctree: nodes.document) -> None:
-        """Parses :mod:`sphinx.ext.autodoc` cross-references that utilize :mod:`sphinx.ext.intersphinx`
+    def parse_intersphinx_nodes(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
+        """Parses cross-references that utilize :mod:`sphinx.ext.intersphinx`
 
         :param doctree: the doctree from one of the :attr:`~.src_files`
         """
-        xref_pattern, xref_title_pattern = self.get_xref_regex('py')
+        domains = "|".join(self.domains)
+        roles = "|".join(self.objtypes.keys())
+        xref_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`~?\.?([\w./: -]+)`"
+        xref_title_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`[^`]+?\s<([\w./: -]+?)>`"
 
-        for node in doctree.findall(nodes.literal):
-            if not isinstance(node.parent, nodes.reference):
-                continue
+        src = doctree.get('source')
+        rst = self.sources[src]
+        nodes_to_parse = []
 
-            if node.parent.get('internal') is True:
-                continue
+        # Add reference nodes with external URIs
+        for node in doctree.findall(nodes.reference):
+            if node.get('internal') is False:
+                nodes_to_parse.append(node.children[0])
 
-            if 'py' not in node['classes']:
-                continue
+        # Generate new doctree to account for only directives, then add problematic nodes
+        problematic_nodes = get_doctree(app, rst, docname).findall(nodes.problematic)
+        nodes_to_parse.extend(problematic_nodes)
 
+        # Parse xrefs from nodes
+        for node in nodes_to_parse:
             if '<' in node.rawsource:
                 pattern = xref_title_pattern
             else:
                 pattern = xref_pattern
 
-            match = re.match(pattern, node.rawsource)
-            target = node.parent.get('refuri')
-
-            if not all((match, target)):
+            if not (match := re.match(pattern, node.rawsource)):
                 continue
 
-            is_callable = match.group(3) in ("meth", "func")
-            qualified_name = target.split("#")[-1].split("-")[-1]
-            self.add_variants(qualified_name, target, is_callable)
+            external, role, ref_id = match.groups()
+            self.parse_external_node(external, role, ref_id)
+
+    def parse_external_node(self, external, role, ref_id) -> None:
+        objtypes = self.objtypes[role]
+
+        for objtype in objtypes:  # Check intersphinx inventory for applicable objtypes
+            if xref := self.get_external_ref(external, objtype, ref_id):
+                break
+
+        if xref is None:
+            return
+
+        if xref.objtype.startswith("py"):
+            is_callable = xref.objtype in ("py:method", "py:function")
+            self.add_variants(xref.id, xref.target, is_callable)
+
+        else:
+            if self.config.inline_markup and xref.objtype not in ('std:label', 'std:doc'):
+                xref.label = f"``{xref.label}``"
+
+            self.ref_map.setdefault(role, {}).setdefault(xref.id, {
+                "replace": xref.label,
+                "target": xref.target
+            })
 
     def parse_toctrees(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
         """Parses the caption and entry data from :class:`~.sphinx.addnodes.toctree` nodes
@@ -375,68 +402,6 @@ class READMEParser:
             rubrics.append(rubric.rawsource)
 
         self.rubrics[source] = rubrics
-
-    def parse_problematic_nodes(self, app: Sphinx, doctree: nodes.document, docname: str) -> None:
-        """Parses unresolved :mod:`sphinx.ext.intersphinx` cross-references using the intersphinx cache
-
-        Unresolved problematic nodes will exist for
-
-        * All cross-references in the |rst_domain|
-        * Cross-references using the ``:external:`` role or ``:role:`pkg:target``` syntax
-        * External cross-references that are exclusively in :rst:dir:`only` directives that
-          have been excluded by the HTML builder.
-
-        :param doctree: the doctree from one of the :attr:`~.src_files`
-        """
-        if (src := doctree.get('source')) not in self.sources:
-            return
-
-        rst = self.sources[src]
-
-        # Generate new doctree to account for only directives
-        doctree = get_doctree(app, rst, docname)
-
-        domains = "|".join(self.domains)
-        roles = "|".join(self.objtypes.keys())
-        xref_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`~?\.?([\w./: -]+)`"
-        xref_title_pattern = rf":(?:(external(?:\+\w+)?):)?(?:(?:{domains}):)?({roles}):`[^`]+?\s<([\w./: -]+?)>`"
-
-        for node in doctree.findall(nodes.problematic):
-            if "<" in node.rawsource:
-                # Ex. :ref:`title <target>`
-                pattern = xref_title_pattern
-            else:
-                # Ex. :ref:`target`
-                pattern = xref_pattern
-
-            if not (match := re.match(pattern, node.rawsource)):
-                continue
-
-            external, role, ref_id = match.groups()
-            objtypes = self.objtypes[role]
-
-            for objtype in objtypes:  # Check intersphinx inventory for applicable objtypes
-                if xref := self.get_external_ref(external, objtype, ref_id):
-                    break
-
-            if xref is None:
-                continue
-
-            if xref.objtype.startswith("py"):
-                if xref.id in self.ref_map:
-                    continue  # Already added by parse_intersphinx_nodes()
-
-                is_callable = xref.objtype in ("py:method", "py:function")
-                self.add_variants(xref.id, xref.target, is_callable)
-
-            else:
-                if self.config.inline_markup and xref.objtype not in ('std:label', 'std:doc'):
-                    xref.label = f"``{xref.label}``"
-
-                self.ref_map.setdefault(role, {}).setdefault(xref.id, {
-                    "replace": xref.label,
-                    "target": xref.target
-                })
 
     def get_external_ref(self, external: str, objtype: str, ref_id: str) -> Optional[ExternalRef]:
         """Retrieves external cross-reference data from the :mod:`sphinx.ext.intersphinx` inventory
