@@ -267,8 +267,15 @@ class READMEParser:
         rst = self.sources[src]
         nodes_to_parse = []
 
-        # Add reference nodes with external URIs
-        for node in doctree.findall(nodes.reference):
+        reference_nodes = list(doctree.findall(nodes.reference))
+
+        # Add reference nodes from substitutions
+        for sub in doctree.substitution_defs.values():
+            if isinstance(sub.children[0], nodes.reference):
+                reference_nodes.append(sub.children[0])
+
+        # Keep nodes with external URIs
+        for node in reference_nodes:
             if node.get('internal') is False:
                 nodes_to_parse.append(node.children[0])
 
