@@ -467,18 +467,17 @@ class READMEParser:
 
             # Prepend substitution definitions for cross-reference
             substitutions = self.substitutions[src]
-            header_vals = [
-                '\n'.join(substitutions[target])
-                for target in sorted(substitutions, key=lambda t: (t.lower().lstrip("`~."), t.lower()))
-            ]
+            header_vals = []
+
+            for target in sorted(substitutions, key=lambda t: (t.lower().lstrip("`~."), t.lower())):
+                header_vals.append('\n'.join(substitutions[target]))
+
             # Write the final output
             rst_out = Path(self.config.out_dir, Path(src).name)
+            output = "\n".join(header_vals) + "\n\n" + rst
+            rst_out.write_text(output, encoding='utf-8')
 
-            with open(rst_out, 'w', encoding='utf-8') as f:
-                f.write(
-                    "\n".join(header_vals) + "\n\n" + rst)
-            print(
-                f'``sphinx_readme``: saved generated .rst file to {rst_out}')
+            print(f'``sphinx_readme``: saved generated file to {rst_out}')
 
     def replace_admonitions(self, rst_src: str, rst: str) -> str:
         """Replaces generic and specific admonition directives with HTML tables or ``list-table``
@@ -714,7 +713,7 @@ class READMEParser:
             if len(xref) == 5:  # From title pattern
                 full_xref, external, role, title, ref_id = xref
             else:
-                full_xref, external, role, ref_id, title = *xref, None
+                full_xref, external, role, ref_id, *title = xref
 
             # If xref is explicitly external, force resolve with external lookup
             if is_explicitly_external := self.is_external_xref(external, role, ref_id):
@@ -799,7 +798,7 @@ class READMEParser:
             if len(xref) == 5:  # From title pattern
                 full_xref, external, role, title, ref_id = xref
             else:
-                full_xref, external, role, ref_id, title = *xref, None
+                full_xref, external, role, ref_id, *title = xref
 
             if not (info := self.ref_map.get(ref_id)):
                 continue
