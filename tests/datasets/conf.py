@@ -1,6 +1,10 @@
 import os
+import sys
+
+sys.path.insert(0, os.path.abspath('../'))
 
 readme_docs_url_type = "code"
+readme_blob = "main"
 extensions = [
     'sphinx_readme',
     'sphinx.ext.autodoc',
