@@ -23,3 +23,23 @@ def test_rubrics(confoverrides, expected_filename, app_params, build_sphinx, get
     expected = get_expected_doctree(app, "rubric", expected_filename)
     generated = get_generated_doctree(app, src_file)
     assert_doctree_equal(generated, expected)
+
+
+@pytest.mark.sphinx(
+    buildername='html',
+    freshenv=True,
+)
+@pytest.mark.parametrize("confoverrides, expected_filename", [
+    ({}, "substitution_xrefs_with_intersphinx"),
+    ({'intersphinx_mapping': {}}, "substitution_xrefs_without_intersphinx")
+])
+def test_substitution_xrefs(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    src_file = "substitution_xrefs.rst"
+    app = build_sphinx(
+        src_file=src_file,
+        app_params=app_params,
+        confoverrides=confoverrides
+    )
+    expected = get_expected_doctree(app, "substitution_xrefs", expected_filename)
+    generated = get_generated_doctree(app, src_file)
+    assert_doctree_equal(generated, expected)
