@@ -1,9 +1,13 @@
+.. |configuration/configuring| replace:: Extension Configuration
+.. _configuration/configuring: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html
 .. |html_baseurl| replace:: ``html_baseurl``
 .. _html_baseurl: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_baseurl
 .. |html_context| replace:: ``html_context``
 .. _html_context: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_context
 .. |.~.parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
-.. _.~.parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v1.1.2/sphinx_readme/parser.py#L256-L286
+.. _.~.parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v1.1.2/sphinx_readme/parser.py#L256-L293
+.. |read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings| replace:: HTML Context Settings
+.. _read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings: https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html#github
 .. |readme_docs_url_type| replace:: ``readme_docs_url_type``
 .. _readme_docs_url_type: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_docs_url_type
 .. |readme_inline_markup| replace:: ``readme_inline_markup``
@@ -18,12 +22,30 @@
 .. _sphinx+html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
 .. |sphinx+html_context| replace:: ``html_context``
 .. _sphinx+html_context: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
+.. |sphinx+usage/domains/restructuredtext+reStructuredText Domain| replace:: reStructuredText Domain
+.. _sphinx+usage/domains/restructuredtext+reStructuredText Domain: https://www.sphinx-doc.org/en/master/usage/domains/restructuredtext.html
+.. |sphinx+usage/domains/standard+Standard Domain| replace:: Standard Domain
+.. _sphinx+usage/domains/standard+Standard Domain: https://www.sphinx-doc.org/en/master/usage/domains/standard.html
+.. |.~.sphinx.domains.python.PythonDomain| replace:: ``PythonDomain``
+.. _.~.sphinx.domains.python.PythonDomain: https://www.sphinx-doc.org/en/master/extdev/domainapi.html#sphinx.domains.python.PythonDomain
+.. |.~.sphinx.environment.BuildEnvironment| replace:: ``BuildEnvironment``
+.. _.~.sphinx.environment.BuildEnvironment: https://www.sphinx-doc.org/en/master/extdev/envapi.html#sphinx.environment.BuildEnvironment
 .. |.sphinx.ext.autodoc| replace:: ``sphinx.ext.autodoc``
 .. _.sphinx.ext.autodoc: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
 .. |.~.sphinx.ext.autodoc| replace:: ``autodoc``
 .. _.~.sphinx.ext.autodoc: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
 .. |.sphinx.ext.linkcode| replace:: ``sphinx.ext.linkcode``
 .. _.sphinx.ext.linkcode: https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode
+
+
+
+.. role:: rst(code)
+   :class: highlight
+
+.. |env| replace:: |.~.sphinx.environment.BuildEnvironment|_
+.. |py_domain| replace:: |.~.sphinx.domains.python.PythonDomain|_
+.. |std_domain| replace:: |sphinx+usage/domains/standard+Standard Domain|_
+.. |rst_domain| replace:: |sphinx+usage/domains/restructuredtext+reStructuredText Domain|_
 
 .. meta::
    :author: Adam Korn
@@ -168,7 +190,7 @@ Add the extension to your ``conf.py``:
 
 
 
-Please see `Extension Configuration <https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html>`_ for full documentation on configuration variables
+Please see |configuration/configuring|_ for full documentation on configuration variables
 
 
 Mandatory ``conf.py`` Values
@@ -180,7 +202,7 @@ Mandatory ``conf.py`` Values
   Type: ``dict``
 
  * At minimum, the username and repository name must be specified
- * Please see `HTML Context Settings <https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html#github>`_
+ * Please see |read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings|_
    to determine the correct dictionary keys for your hosting platform
 
 
@@ -329,3 +351,4 @@ Full documentation can be found on |docs|_
 
 .. |docs| replace:: ``ReadTheDocs``
 .. _docs: https://sphinx-readme.readthedocs.io/en/latest
+
