@@ -156,15 +156,10 @@ class READMEParser:
         if entry.objtype in ("attribute", "data"):
             return None  # Cannot link to source code
 
-        if entry.objtype == "module":  # Link to the file in the repository
-            filepath = entry.node_id.removeprefix("module-").replace(".", "/")
-            return f"{self.config.blob_url}/{filepath}.py"
-
-        # For class/meth/func, use linkcode_resolve
+        # Use linkcode_resolve to generate links
         info = dict.fromkeys(("module", "fullname"))
-        parts = entry.node_id.split('.')
+        parts = entry.node_id.removeprefix('module-').split('.')
 
-        # TODO: look into autodecorator
         if entry.objtype in ("class", "function", "module", "exception"):
             info["module"] = '.'.join(parts[:-1])
             info['fullname'] = parts[-1]
@@ -173,7 +168,12 @@ class READMEParser:
             info["module"] = '.'.join(parts[:-2])
             info['fullname'] = '.'.join(parts[-2:])
 
-        return linkcode_resolve("py", info)
+        link = linkcode_resolve("py", info)
+
+        if link and entry.objtype == 'module':
+            link = link.split('#')[0]  # Avoid highlighting whole file
+
+        return link
 
     def add_variants(self, qualified_name: str, target: str, is_callable: bool = False) -> None:
         """Adds substitution information for an object to the :attr:`ref_map`
