@@ -26,6 +26,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.connect('build-finished', resolve)
 
     app.add_config_value("readme_src_files", [], True, types=[list, str])
+    app.add_config_value("readme_docs_url_type", "", True, types=str)
     app.add_config_value("readme_inline_markup", True, True, types=bool)
     app.add_config_value("readme_raw_directive", True, True, types=bool)
     app.add_config_value("readme_include_directive", True, True, types=bool)
