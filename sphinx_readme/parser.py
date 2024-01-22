@@ -464,6 +464,7 @@ class READMEParser:
             rst = self.replace_rubrics(src, rst)
             rst = self.replace_xrefs(src, rst)
             rst = self.replace_py_xrefs(src, rst)
+            rst = self.replace_unresolved_xrefs(rst)
 
             # Prepend substitution definitions for cross-reference
             substitutions = self.substitutions[src]
@@ -829,13 +830,25 @@ class READMEParser:
                     repl=xref_data['repl'],
                     string=rst
                 )
-        # Replace unresolved cross-refs with inline literals
+        return rst
+
+    def replace_unresolved_xrefs(self, rst: str) -> str:
+        """Replaces any unresolved cross-references from all domains with inline literals"""
+        # Replace unresolved Python cross-refs
         roles = self.roles['py'].copy()
 
         if not self.config.replace_attrs:
             roles.remove('attr')
 
         rst = replace_xrefs(rst, roles)
+
+        # Replace unresolved cross-refs from Standard and RST domain
+        for pattern in self.get_xref_regex(domains=["rst", "std"]):
+            rst = re.sub(
+                pattern=pattern,
+                repl=r"``\4``",  # Target or explicit title
+                string=rst
+            )
         return rst
 
     def get_xref_regex(self,
