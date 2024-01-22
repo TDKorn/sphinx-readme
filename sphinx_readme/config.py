@@ -20,7 +20,7 @@ class READMEConfig:
         self.src_dir = Path(app.srcdir)
         self.repo_dir = get_repo_dir()
         self.out_dir = get_conf_val(app, 'readme_out_dir')
-        self.src_files = get_conf_val(app, 'readme_src_files', [])
+        self.src_files = get_conf_val(app, 'readme_src_files')
         self.tags = Tags(get_conf_val(app, "readme_tags"))
         self.rst_prolog = get_conf_val(app, 'rst_prolog') or ""
         self.rst_epilog = get_conf_val(app, 'rst_epilog') or ""
@@ -189,10 +189,16 @@ class READMEConfig:
         if isinstance(src_files, str):
             src_files = [src_files]
 
-        self._src_files = [  # Absolute paths of files; files should be relative to source directory
-            str((Path(self.src_dir) / Path(src_file)).resolve())
+        src_files = [  # Files should be relative to source dir
+            (self.src_dir / Path(src_file)).resolve()
             for src_file in src_files
         ]
+        if invalid_files := [file for file in src_files if not file.exists()]:
+            raise ExtensionError(
+                f"``sphinx_readme``: The following files"
+                f" do not exist: {invalid_files}"
+            )
+        self._src_files = list(map(str, src_files))
 
     @cached_property
     def sources(self) -> Dict[str, str]:
