@@ -153,8 +153,7 @@ class READMEParser:
             # All links to html documentation follow the same format
             return f"{self.config.html_baseurl}/{entry.docname}.html#{entry.node_id}"
 
-        # Links to source code depend on the object type
-        if entry.objtype in ("attribute", "data", "decorator"):
+        if entry.objtype in ("attribute", "data"):
             return None  # Cannot link to source code
 
         if entry.objtype == "module":  # Link to the file in the repository
@@ -165,8 +164,8 @@ class READMEParser:
         info = dict.fromkeys(("module", "fullname"))
         parts = entry.node_id.split('.')
 
-        # TODO: look into autoexception and autodecorator
-        if entry.objtype in ("class", "function"):
+        # TODO: look into autodecorator
+        if entry.objtype in ("class", "function", "module", "exception"):
             info["module"] = '.'.join(parts[:-1])
             info['fullname'] = parts[-1]
 
