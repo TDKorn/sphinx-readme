@@ -7,11 +7,15 @@ from tests.helpers import assert_doctree_equal
     freshenv=True,
 )
 @pytest.mark.parametrize("confoverrides, expected_filename", [
+    # Test cases with raw directive
     ({}, "rubric_markup_raw"),
-    ({"readme_rubric_heading": "z"}, "rubric_markup_raw"),  # Invalid heading -> use markup
     ({"readme_rubric_heading": "="}, "rubric_heading_raw"),
+    # Test cases without raw directive
     ({"readme_raw_directive": False}, "rubric_markup_list_table"),
     ({"readme_rubric_heading": "=", "readme_raw_directive": False}, "rubric_heading_list_table"),
+    # Test cases with invalid heading -> should use markup
+    ({"readme_rubric_heading": "z"}, "rubric_markup_raw"),
+    ({"readme_rubric_heading": "z", "readme_raw_directive": False}, "rubric_markup_list_table"),
 ])
 def test_rubrics(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
     src_file = "rubric.rst"
