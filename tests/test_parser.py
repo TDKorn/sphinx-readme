@@ -47,3 +47,25 @@ def test_substitution_xrefs(confoverrides, expected_filename, app_params, build_
     expected = get_expected_doctree(app, "substitution_xrefs", expected_filename)
     generated = get_generated_doctree(app, src_file)
     assert_doctree_equal(generated, expected)
+
+
+@pytest.mark.sphinx(
+    buildername='html',
+    freshenv=True,
+)
+@pytest.mark.parametrize("confoverrides, expected_filename", [
+    ({'readme_docs_url_type': 'html'}, "html_links"),
+    ({'readme_docs_url_type': 'code'}, "code_links"),
+    ({'readme_docs_url_type': 'html', 'readme_inline_markup': False}, "html_links_no_inline_markup"),
+    ({'readme_docs_url_type': 'code', 'readme_inline_markup': False}, "code_links_no_inline_markup")
+])
+def test_python_xrefs(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    src_file = "python_xrefs.rst"
+    app = build_sphinx(
+        src_file=src_file,
+        app_params=app_params,
+        confoverrides=confoverrides
+    )
+    expected = get_expected_doctree(app, "python_xrefs", expected_filename)
+    generated = get_generated_doctree(app, src_file)
+    assert_doctree_equal(generated, expected)
