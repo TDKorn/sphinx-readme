@@ -16,7 +16,7 @@ intersphinx_mapping = {
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
 }
 master_doc = 'index'
-html_baseurl = 'https://sphinx-readme.readthedocs.io/en/latest'
+html_baseurl = 'https://sphinx-readme-testing.readthedocs.io/en/latest'
 html_context = {
     'display_github': True,
     'github_user': 'TDKorn',
