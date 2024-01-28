@@ -6,28 +6,27 @@ from tests.helpers import assert_doctree_equal
     buildername='html',
     freshenv=True,
 )
-@pytest.mark.parametrize("confoverrides, expected_filename", [
+@pytest.mark.parametrize("confoverrides, expected_file", [
     # Test cases with raw directive
-    ({}, "rubric_markup_raw"),
-    ({"readme_rubric_heading": "="}, "rubric_heading_raw"),
+    ({}, "rubric_markup_raw.rst"),
+    ({"readme_rubric_heading": "="}, "rubric_heading_raw.rst"),
     # Test cases without raw directive
-    ({"readme_raw_directive": False}, "rubric_markup_list_table"),
-    ({"readme_rubric_heading": "=", "readme_raw_directive": False}, "rubric_heading_list_table"),
+    ({"readme_raw_directive": False}, "rubric_markup_list_table.rst"),
+    ({"readme_rubric_heading": "=", "readme_raw_directive": False}, "rubric_heading_list_table.rst"),
     # Test cases with invalid heading -> should use markup
-    ({"readme_rubric_heading": "z"}, "rubric_markup_raw"),
-    ({"readme_rubric_heading": "z", "readme_raw_directive": False}, "rubric_markup_list_table"),
+    ({"readme_rubric_heading": "z"}, "rubric_markup_raw.rst"),
+    ({"readme_rubric_heading": "z", "readme_raw_directive": False}, "rubric_markup_list_table.rst"),
 ])
-def test_rubrics(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
-    src_file = "rubric.rst"
-    subdir = "directives"
+def test_rubrics(confoverrides, expected_file, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    src_file = "directives/rubric.rst"
+    src_files = {src_file: expected_file}
     app = build_sphinx(
-        subdir=subdir,
-        filename=src_file,
+        src_files=src_files,
         app_params=app_params,
         confoverrides=confoverrides
     )
-    expected = get_expected_doctree(app, subdir, src_file, expected_filename)
-    generated = get_generated_doctree(app, src_file)
+    expected = get_expected_doctree(app, src_file, expected_file)
+    generated = get_generated_doctree(app, expected_file)
     assert_doctree_equal(generated, expected)
 
 
@@ -35,21 +34,20 @@ def test_rubrics(confoverrides, expected_filename, app_params, build_sphinx, get
     buildername='html',
     freshenv=True,
 )
-@pytest.mark.parametrize("confoverrides, expected_filename", [
-    ({}, "substitution_xrefs_with_intersphinx"),
-    ({'intersphinx_mapping': {}}, "substitution_xrefs_without_intersphinx")
+@pytest.mark.parametrize("confoverrides, expected_file", [
+    ({}, "substitution_xrefs_with_intersphinx.rst"),
+    ({'intersphinx_mapping': {}}, "substitution_xrefs_without_intersphinx.rst")
 ])
-def test_substitution_xrefs(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
-    src_file = "substitution_xrefs.rst"
-    subdir = "cross_references"
+def test_substitution_xrefs(confoverrides, expected_file, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    src_file = "cross_references/substitution_xrefs.rst"
+    src_files = {src_file: expected_file}
     app = build_sphinx(
-        subdir=subdir,
-        filename=src_file,
+        src_files=src_files,
         app_params=app_params,
         confoverrides=confoverrides
     )
-    expected = get_expected_doctree(app, subdir, src_file, expected_filename)
-    generated = get_generated_doctree(app, src_file)
+    expected = get_expected_doctree(app, src_file, expected_file)
+    generated = get_generated_doctree(app, expected_file)
     assert_doctree_equal(generated, expected)
 
 
@@ -57,21 +55,20 @@ def test_substitution_xrefs(confoverrides, expected_filename, app_params, build_
     buildername='html',
     freshenv=True,
 )
-@pytest.mark.parametrize("confoverrides, expected_filename", [
-    ({'readme_docs_url_type': 'html'}, "html_links"),
-    ({'readme_docs_url_type': 'code'}, "code_links"),
-    ({'readme_docs_url_type': 'html', 'readme_inline_markup': False}, "html_links_no_inline_markup"),
-    ({'readme_docs_url_type': 'code', 'readme_inline_markup': False}, "code_links_no_inline_markup")
+@pytest.mark.parametrize("confoverrides, expected_file", [
+    ({'readme_docs_url_type': 'html'}, "html_links.rst"),
+    ({'readme_docs_url_type': 'code'}, "code_links.rst"),
+    ({'readme_docs_url_type': 'html', 'readme_inline_markup': False}, "html_links_no_inline_markup.rst"),
+    ({'readme_docs_url_type': 'code', 'readme_inline_markup': False}, "code_links_no_inline_markup.rst")
 ])
-def test_python_xrefs(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
-    src_file = "python_xrefs.rst"
-    subdir = "cross_references"
+def test_python_xrefs(confoverrides, expected_file, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    src_file = "cross_references/python_xrefs.rst"
+    src_files = {src_file: expected_file}
     app = build_sphinx(
-        subdir=subdir,
-        filename=src_file,
+        src_files=src_files,
         app_params=app_params,
         confoverrides=confoverrides
     )
-    expected = get_expected_doctree(app, subdir, src_file, expected_filename)
-    generated = get_generated_doctree(app, src_file)
+    expected = get_expected_doctree(app, src_file, expected_file)
+    generated = get_generated_doctree(app, expected_file)
     assert_doctree_equal(generated, expected)
