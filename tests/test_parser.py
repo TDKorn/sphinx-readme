@@ -19,12 +19,14 @@ from tests.helpers import assert_doctree_equal
 ])
 def test_rubrics(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
     src_file = "rubric.rst"
+    subdir = "directives"
     app = build_sphinx(
-        src_file=src_file,
+        subdir=subdir,
+        filename=src_file,
         app_params=app_params,
         confoverrides=confoverrides
     )
-    expected = get_expected_doctree(app, "rubric", expected_filename)
+    expected = get_expected_doctree(app, subdir, src_file, expected_filename)
     generated = get_generated_doctree(app, src_file)
     assert_doctree_equal(generated, expected)
 
@@ -39,12 +41,14 @@ def test_rubrics(confoverrides, expected_filename, app_params, build_sphinx, get
 ])
 def test_substitution_xrefs(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
     src_file = "substitution_xrefs.rst"
+    subdir = "cross_references"
     app = build_sphinx(
-        src_file=src_file,
+        subdir=subdir,
+        filename=src_file,
         app_params=app_params,
         confoverrides=confoverrides
     )
-    expected = get_expected_doctree(app, "substitution_xrefs", expected_filename)
+    expected = get_expected_doctree(app, subdir, src_file, expected_filename)
     generated = get_generated_doctree(app, src_file)
     assert_doctree_equal(generated, expected)
 
@@ -61,11 +65,13 @@ def test_substitution_xrefs(confoverrides, expected_filename, app_params, build_
 ])
 def test_python_xrefs(confoverrides, expected_filename, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
     src_file = "python_xrefs.rst"
+    subdir = "cross_references"
     app = build_sphinx(
-        src_file=src_file,
+        subdir=subdir,
+        filename=src_file,
         app_params=app_params,
         confoverrides=confoverrides
     )
-    expected = get_expected_doctree(app, "python_xrefs", expected_filename)
+    expected = get_expected_doctree(app, subdir, src_file, expected_filename)
     generated = get_generated_doctree(app, src_file)
     assert_doctree_equal(generated, expected)

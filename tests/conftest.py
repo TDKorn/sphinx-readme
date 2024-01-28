@@ -39,7 +39,8 @@ def remove_output_from_sphinx_builds(src_dir, output_dir):
 def build_sphinx(src_dir, output_dir, make_app):
     """Provides a function to run a Sphinx build with a specific file"""
 
-    def _build(app_params, src_file: str, confoverrides: dict):
+    def _build(app_params, subdir: str, filename: str, confoverrides: dict):
+        src_file = f"{subdir}/{filename}"
         confoverrides["readme_src_files"] = src_file
         filenames = [src_dir.joinpath(src_file)]
 
@@ -62,8 +63,8 @@ def build_sphinx(src_dir, output_dir, make_app):
 @pytest.fixture(scope='session')
 def get_expected_doctree(expected_dir):
     """Provides a function to parse an expected output file into a doctree"""
-    def _get_expected(app, subdir, file):
-        filepath = (expected_dir/subdir/f"{file}.rst")
+    def _get_expected(app, subdir, src_file, expected_file):
+        filepath = (expected_dir/subdir/Path(src_file).stem/f"{expected_file}.rst")
         return parse_doctree(filepath, app)
 
     return _get_expected
