@@ -5,13 +5,15 @@
 .. |html_context| replace:: ``html_context``
 .. _html_context: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_context
 .. |.~.parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
-.. _.~.parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v1.2.0/sphinx_readme/parser.py#L256-L293
+.. _.~.parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v1.2.0/sphinx_readme/parser.py#L255-L292
 .. |read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings| replace:: HTML Context Settings
 .. _read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings: https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html#github
 .. |readme_docs_url_type| replace:: ``readme_docs_url_type``
 .. _readme_docs_url_type: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_docs_url_type
 .. |readme_inline_markup| replace:: ``readme_inline_markup``
 .. _readme_inline_markup: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_inline_markup
+.. |readme_out_dir+output directory| replace:: ``output directory``
+.. _readme_out_dir+output directory: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_out_dir
 .. |readme_raw_directive| replace:: ``readme_raw_directive``
 .. _readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_raw_directive
 .. |readme_replace_attrs| replace:: ``readme_replace_attrs``
@@ -199,7 +201,7 @@ Mandatory ``conf.py`` Values
 |html_context|_
  A dictionary containing info about your repository (|sphinx+html_context|_)
 
-  Type: ``dict``
+  **Type:** ``dict``
 
  * At minimum, the username and repository name must be specified
  * Please see |read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings|_
@@ -211,15 +213,15 @@ Mandatory ``conf.py`` Values
 |html_baseurl|_
  The base URL which points to the root of the HTML documentation (|sphinx+html_baseurl|_)
 
-  Type: ``str``
+  **Type:** ``str``
 
 
 |
 
 |readme_src_files|_
- An individual or list of ``rst`` files to parse
+ An individual/list of ``rst`` source files to parse, or a dictionary of source files mapped to output files
 
-  Type: ``Union[str, List]``
+  **Type:** ``Union[str, List[str], Dict[str,str]]``
 
 
 .. raw:: html
@@ -236,6 +238,7 @@ Mandatory ``conf.py`` Values
    <tr><td>
 
 Filepaths should be specified relative to the source directory
+and |readme_out_dir+output directory|_
 
 .. raw:: html
 
@@ -248,7 +251,7 @@ Filepaths should be specified relative to the source directory
 |readme_docs_url_type|_
  The documentation source to link to when resolving |.~.sphinx.ext.autodoc|_ cross-references
 
-  Type: ``str``
+  **Type:** ``str``
 
  Must be either ``"code"`` or ``"html"``
 

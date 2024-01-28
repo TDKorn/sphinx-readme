@@ -56,9 +56,10 @@ Mandatory ``conf.py`` values
 
 .. confval:: readme_src_files
 
-   An individual or list of ``rst`` files to parse
+   An individual/list of ``rst`` source files to parse, or a dictionary of source files mapped to output files
 
    .. important:: Filepaths should be specified relative to the source directory
+      and :confval:`output directory <readme_out_dir>`
 
    :type: ``Union[str, List]``
 

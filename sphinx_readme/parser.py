@@ -473,7 +473,9 @@ class READMEParser:
                 header_vals.append('\n'.join(substitutions[target]))
 
             # Write the final output
-            rst_out = Path(self.config.out_dir, Path(src).name)
+            rst_out = self.config.src_files[src]
+            rst_out.parent.mkdir(parents=True, exist_ok=True)
+
             output = "\n".join(header_vals) + "\n\n" + rst
             rst_out.write_text(output, encoding='utf-8')
 

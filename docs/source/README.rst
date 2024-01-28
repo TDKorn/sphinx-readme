@@ -164,7 +164,7 @@ Add the extension to your ``conf.py``:
    :confval:`html_context`
     A dictionary containing info about your repository (:external+sphinx:confval:`html_context`)
 
-     Type: ``dict``
+     **Type:** ``dict``
 
     * At minimum, the username and repository name must be specified
     * Please see :ref:`HTML Context Settings <rtd:guides/edit-source-links-sphinx:github>`
@@ -176,24 +176,25 @@ Add the extension to your ``conf.py``:
    :confval:`html_baseurl`
     The base URL which points to the root of the HTML documentation (:confval:`sphinx:html_baseurl`)
 
-     Type: ``str``
+     **Type:** ``str``
 
 
    |
 
    :confval:`readme_src_files`
-    An individual or list of ``rst`` files to parse
+    An individual/list of ``rst`` source files to parse, or a dictionary of source files mapped to output files
 
-     Type: ``Union[str, List]``
+     **Type:** ``Union[str, List[str], Dict[str,str]]``
 
    .. important:: Filepaths should be specified relative to the source directory
+      and :confval:`output directory <readme_out_dir>`
 
    |
 
    :confval:`readme_docs_url_type`
     The documentation source to link to when resolving :mod:`~.sphinx.ext.autodoc` cross-references
 
-     Type: ``str``
+     **Type:** ``str``
 
     Must be either ``"code"`` or ``"html"``
 

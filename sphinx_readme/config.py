@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
-from typing import Union, List, Dict
 from functools import cached_property
+from typing import Union, List, Dict, Iterable
 
 from sphinx.util.tags import Tags
 from sphinx.application import Sphinx
@@ -180,25 +180,35 @@ class READMEConfig:
         return repl
 
     @property
-    def src_files(self) -> List[str]:
-        """Absolute paths of the :confval:`readme_src_files`"""
+    def src_files(self) -> Dict[str, Path]:
+        """Absolute paths of the :confval:`readme_src_files` mapped to corresponding output files"""
         return self._src_files
 
     @src_files.setter
-    def src_files(self, src_files: Union[str, List[str]]):
-        if isinstance(src_files, str):
-            src_files = [src_files]
+    def src_files(self, src_files: Union[str, List[str], Dict[str, str]]):
+        if not isinstance(src_files, Iterable):
+            raise TypeError(
+                "``sphinx_readme``: confval ``readme_src_files`` must be a"
+                " string, list or dictionary of source and output files"
+            )
+        if not isinstance(src_files, Dict):
+            if isinstance(src_files, str):
+                src_files = [src_files]
+            src_files = dict.fromkeys(src_files)
 
-        src_files = [  # Files should be relative to source dir
-            (self.src_dir / Path(src_file)).resolve()
-            for src_file in src_files
-        ]
+        src_files = {  # Files should be relative to source dir
+            (self.src_dir / Path(src_file)).resolve(): out_file
+            for src_file, out_file in src_files.items()
+        }
         if invalid_files := [file for file in src_files if not file.exists()]:
             raise ExtensionError(
                 f"``sphinx_readme``: The following files"
                 f" do not exist: {invalid_files}"
             )
-        self._src_files = list(map(str, src_files))
+        self._src_files = {
+            str(src_file): self.out_dir.joinpath(out_file or src_file.name)
+            for src_file, out_file in src_files.items()
+        }
 
     @cached_property
     def sources(self) -> Dict[str, str]:
