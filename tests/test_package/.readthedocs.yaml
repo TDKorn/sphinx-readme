@@ -22,6 +22,6 @@ sphinx:
 python:
    install:
    - method: pip
-     path: ./tests
+     path: ./tests/test_package
    - method: pip
      path: .

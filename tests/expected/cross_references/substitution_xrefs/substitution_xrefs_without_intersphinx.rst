@@ -1,7 +1,7 @@
 .. |.~.test_function| replace:: ``test_function()``
-.. _.~.test_function: https://github.com/TDKorn/sphinx-readme/blob/main/tests/test_package/test_module.py#L31-L32
+.. _.~.test_function: https://github.com/TDKorn/sphinx-readme/blob/main/tests/test_package/test_package/test_module.py#L31-L32
 .. |.~.TestClass| replace:: ``TestClass``
-.. _.~.TestClass: https://github.com/TDKorn/sphinx-readme/blob/main/tests/test_package/test_module.py#L7-L23
+.. _.~.TestClass: https://github.com/TDKorn/sphinx-readme/blob/main/tests/test_package/test_package/test_module.py#L7-L23
 
 
 .. |env| replace:: ``BuildEnvironment``

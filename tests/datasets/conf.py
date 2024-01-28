@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('../test_package'))
 
 readme_docs_url_type = "code"
 readme_blob = "main"
