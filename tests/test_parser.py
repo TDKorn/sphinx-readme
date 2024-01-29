@@ -30,6 +30,35 @@ def test_rubrics(confoverrides, expected_file, app_params, build_sphinx, get_gen
     assert_doctree_equal(generated, expected)
 
 
+# Icons for a custom admonition class and override of a default admonition class
+ADMONITION_CONF = {'readme_admonition_icons': {'custom': "🔥", "danger": "😱"}}
+
+
+@pytest.mark.sphinx(
+    buildername='html',
+    freshenv=True,
+)
+@pytest.mark.parametrize("confoverrides, expected_file", [
+    # Test cases for HTML admonitions
+    (ADMONITION_CONF, "html_admonitions.rst"),
+    (ADMONITION_CONF | {"readme_default_admonition_icon": "✨"}, "html_admonitions_default_icon.rst"),
+    # Test cases for ``list-table` admonitions
+    (ADMONITION_CONF | {"readme_raw_directive": False}, "list_table_admonitions.rst"),
+    (ADMONITION_CONF | {"readme_raw_directive": False, "readme_default_admonition_icon": "✨"}, "list_table_admonitions_default_icon.rst")
+])
+def test_admonitions(confoverrides, expected_file, app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    src_file = "directives/admonition.rst"
+    src_files = {src_file: expected_file}
+    app = build_sphinx(
+        src_files=src_files,
+        app_params=app_params,
+        confoverrides=confoverrides
+    )
+    expected = get_expected_doctree(app, src_file, expected_file)
+    generated = get_generated_doctree(app, expected_file)
+    assert_doctree_equal(generated, expected)
+
+
 @pytest.mark.sphinx(
     buildername='html',
     freshenv=True,
@@ -72,3 +101,4 @@ def test_python_xrefs(confoverrides, expected_file, app_params, build_sphinx, ge
     expected = get_expected_doctree(app, src_file, expected_file)
     generated = get_generated_doctree(app, expected_file)
     assert_doctree_equal(generated, expected)
+
