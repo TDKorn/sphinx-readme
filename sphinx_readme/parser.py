@@ -497,9 +497,7 @@ class READMEParser:
         :param rst: content of the source file
         """
         for admonition in self.admonitions[rst_src]:
-            if not (pattern := self.get_admonition_regex(admonition)):
-                continue
-
+            pattern = self.get_admonition_regex(admonition)
             icon = self.get_admonition_icon(admonition)
             if not self.config.raw_directive:
                 rst = re.sub(
