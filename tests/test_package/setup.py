@@ -11,5 +11,5 @@ setup(
     license="MIT License",
     packages=find_packages(),
     url="https://github.com/tdkorn/sphinx-readme/blob/main/tests",
-    install_requires=["sphinx==5.3.0","docutils<0.17"],
+    install_requires=["sphinx==5.3.0","docutils<0.17", "sphinx-rtd-theme>=0.5.2"],
 )
