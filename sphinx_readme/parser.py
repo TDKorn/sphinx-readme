@@ -529,11 +529,13 @@ class READMEParser:
         )):
             body = self.replace_rubrics(rst_src, body, force_markup=True)
 
+        # Add extra indentation to ensure body lines up with directive
+        body = re.sub(pattern=r"(\n+)", repl=r"\1    ", string=body)
         template = self.config.admonition_template.format(
             title=admonition['title'],
             icon=icon
         ).replace(
-            r'\2', body.replace('\n', '\n    ')
+            r'\2', body
         ).replace(
             r'\1', match.group(1)
         )
@@ -937,12 +939,12 @@ class READMEParser:
 
         if not self.config.raw_directive:
             # list-table template body uses match group
-            pattern = rf"([ ]*){pattern}({body})"
+            pattern = rf"([ ]*){pattern}({body})(?=\n*(?:\1)?"
         else:
             # raw html template body uses string formatting
-            pattern += rf"{body}"
+            pattern += rf"{body}(?=\n*"
 
-        pattern += r"(?=\n*(?:\S+|\Z))"
+        pattern += r"(?:\S+|\Z))"
         return pattern
 
     def get_admonition_icon(self, admonition: dict) -> str:
