@@ -28,7 +28,7 @@ class READMEParser:
         #: Mapping of source files to their toctree data
         self.toctrees: Dict[str, List[Dict]] = defaultdict(list)
         #: Mapping of source files to their admonition data
-        self.admonitions: Dict[str, Dict[str, List[Dict]]] = {}
+        self.admonitions: Dict[str, List[Dict]] = {}
         #: Mapping of source files to their rubric data
         self.rubrics: Dict[str, List[str]] = {}
         #: Mapping of source files to cross-reference substitution definitions
@@ -224,9 +224,9 @@ class READMEParser:
 
         :param doctree: the doctree from one of the :attr:`~.src_files`
         """
-        admonitions = {'generic': [], 'specific': []}
         src = doctree.get('source')
         rst = self.sources[src]
+        admonitions = []
 
         # Generate new doctree to account for only directives
         doctree = get_doctree(app, rst, docname)
@@ -238,17 +238,18 @@ class READMEParser:
             if isinstance(admonition, nodes.admonition):
                 # Generic Admonition (using admonition directive)
                 info.update({
+                    'type': 'generic',
                     'class': admonition.get('classes')[0],
                     'title': admonition.children[0].rawsource
                 })
-                admonitions['generic'].append(info)
             else:
                 # Specific Admonition (for example, .. note::)
                 info.update({
+                    'type': 'specific',
                     'class': admonition.tagname,
-                    'title': admonition.tagname.title(),
+                    'title': admonition.tagname.title()
                 })
-                admonitions['specific'].append(info)
+            admonitions.append(info)
 
         self.admonitions[src] = admonitions
 
@@ -495,28 +496,27 @@ class READMEParser:
         :param rst_src: absolute path of the source file
         :param rst: content of the source file
         """
-        admonitions = self.admonitions[rst_src]
+        for admonition in self.admonitions[rst_src]:
+            if not (pattern := self.get_admonition_regex(admonition)):
+                continue
 
-        for _type in ('generic', 'specific'):
-            for admonition in admonitions[_type]:
-                if pattern := self.get_admonition_regex(admonition, _type):
-                    icon = self.get_admonition_icon(admonition)
-                    if not self.config.raw_directive:
-                        rst = re.sub(
-                            pattern=pattern,
-                            repl=lambda match: self._replace_admonition(
-                                match, rst_src, admonition, icon),
-                            string=rst,
-                        )
-                    else:
-                        rst = re.sub(
-                            pattern=pattern,
-                            repl=self.config.admonition_template.format(
-                                title=admonition['title'],
-                                text=admonition['body'],
-                                icon=icon),
-                            string=rst
-                        )
+            icon = self.get_admonition_icon(admonition)
+            if not self.config.raw_directive:
+                rst = re.sub(
+                    pattern=pattern,
+                    repl=lambda match: self._replace_admonition(
+                        match, rst_src, admonition, icon),
+                    string=rst,
+                )
+            else:
+                rst = re.sub(
+                    pattern=pattern,
+                    repl=self.config.admonition_template.format(
+                        title=admonition['title'],
+                        text=admonition['body'],
+                        icon=icon),
+                    string=rst
+                )
         return rst
 
     def _replace_admonition(self, match, rst_src, admonition: dict, icon: str) -> str:
@@ -914,21 +914,19 @@ class READMEParser:
         else:
             return xref_pattern, xref_title_pattern
 
-    def get_admonition_regex(self, admonition: Dict[str, str], admonition_type: str) -> str:
+    def get_admonition_regex(self, admonition: Dict[str, str]) -> str:
         """Returns the regex to match a specific admonition directive
 
         :param admonition: a dict containing admonition data
-        :param admonition_type: ``"generic"`` or ``"specific"``
         """
         body = escape_rst(admonition['body']).replace('\n', r'\n\s*')
         title = escape_rst(admonition['title'])
 
-        if admonition_type == 'specific':
+        if admonition['type'] == 'specific':
             # For example, .. note:: This is a note
             pattern = fr"\.\. {admonition['class']}::\n*?\s+"
 
-        else:
-            # Generic admonition directives with/without class option
+        else:  # Generic admonition directives with/without class option
             pattern = rf"\.\. admonition::\s+{title}" + r"\n"
 
             if cls := admonition['class']:
