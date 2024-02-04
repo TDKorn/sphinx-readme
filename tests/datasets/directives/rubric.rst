@@ -1,4 +1,5 @@
-:orphan:
+Rubrics
+---------------
 
 .. rubric:: this is a rubric
 

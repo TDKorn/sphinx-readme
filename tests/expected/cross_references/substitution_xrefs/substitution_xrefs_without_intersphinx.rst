@@ -9,6 +9,9 @@
 .. |rubric| replace:: ``rubric``
 .. |test_class| replace:: |.~.TestClass|_
 
+Cross-References in Substitution Definitions
+------------------------------------------------
+
 
 File-Level Substitution Definitions
 ========================================

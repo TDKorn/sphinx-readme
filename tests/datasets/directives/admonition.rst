@@ -1,3 +1,6 @@
+Admonitions
+----------------------
+
 Generic Admonitions
 ============================
 

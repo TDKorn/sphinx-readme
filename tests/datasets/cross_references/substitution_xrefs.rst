@@ -3,6 +3,9 @@
 .. |rubric| replace:: :rst:dir:`rubric`
 .. |test_class| replace:: :class:`~.TestClass`
 
+Cross-References in Substitution Definitions
+------------------------------------------------
+
 
 File-Level Substitution Definitions
 ========================================

@@ -4,6 +4,9 @@
 .. _.sphinx-readme+readme_default_admonition_icon: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_default_admonition_icon
 
 
+Admonitions
+----------------------
+
 Generic Admonitions
 ============================
 

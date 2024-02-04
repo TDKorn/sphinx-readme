@@ -3,7 +3,9 @@
 .. |.sphinx.ext.autodoc| replace:: ``sphinx.ext.autodoc``
 .. _.sphinx.ext.autodoc: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc
 
-:orphan:
+
+Rubrics
+---------------
 
 **this is a rubric**
 
