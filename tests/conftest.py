@@ -40,7 +40,7 @@ def remove_output_from_sphinx_builds(src_dir, output_dir):
 def build_sphinx(src_dir, output_dir, make_app):
     """Provides a function to run a Sphinx build with a specific file"""
 
-    def _build(app_params, src_files: str | List[str] | Dict[str, str], confoverrides: dict):
+    def _build(app_params, src_files: str | List[str] | Dict[str, str], confoverrides: dict, force_all=False):
         confoverrides["readme_src_files"] = src_files
         filenames = [src_dir.joinpath(src_file) for src_file in src_files]
 
@@ -50,7 +50,7 @@ def build_sphinx(src_dir, output_dir, make_app):
             "srcdir": path(src_dir)
         })
         app = make_app(*args, **kwargs)
-        app.build(filenames=filenames)
+        app.build(filenames=filenames, force_all=force_all)
         return app
 
     yield _build

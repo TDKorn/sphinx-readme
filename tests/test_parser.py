@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 from tests.helpers import assert_doctree_equal
 
 
@@ -101,4 +102,33 @@ def test_python_xrefs(confoverrides, expected_file, app_params, build_sphinx, ge
     expected = get_expected_doctree(app, src_file, expected_file)
     generated = get_generated_doctree(app, expected_file)
     assert_doctree_equal(generated, expected)
+
+
+@pytest.mark.sphinx(
+    buildername='html',
+    freshenv=True,
+)
+def test_toctree(app_params, build_sphinx, get_generated_doctree, get_expected_doctree):
+    toc_dir = "directives/toctree"
+    files = (
+        "basic_toctree.rst",
+        "max_depth_toctree.rst",
+        "titles_only_toctree.rst",
+        "subfolder/self_toctree.rst",
+        "subfolder/sub_toctree.rst",
+        "subfolder/contents.rst",
+        "index.rst"
+    )
+    src_files = [f"{toc_dir}/{file}" for file in files[:-1]]
+    src_files.append(files[-1])  # datasets/index.rst
+    app = build_sphinx(
+        src_files=src_files,
+        app_params=app_params,
+        confoverrides={},
+        force_all=True
+    )
+    for file in files:
+        expected = get_expected_doctree(app, toc_dir, file)
+        generated = get_generated_doctree(app, Path(file).name)
+        assert_doctree_equal(generated, expected)
 
