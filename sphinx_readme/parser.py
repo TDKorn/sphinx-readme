@@ -339,16 +339,18 @@ class READMEParser:
             toc['maxdepth'] = toctree.get('maxdepth')
 
         for text, entry in toctree.get('entries', []):
-            entry = entry if entry != 'self' else docname
-            title = text if text else self.titles.get(entry)
-            subtree = tocs[entry].next_node(nodes.bullet_list)
+            entry_name = entry if entry != 'self' else docname
+            title = text if text else self.titles.get(entry_name)
+            subtree = tocs[entry_name].next_node(nodes.bullet_list)
 
-            if subtree:
+            if subtree and entry != 'self':
                 if is_subtoc or 'maxdepth' in toc:
                     subtree = self._parse_subtree(subtree, tocs)
+            else:
+                subtree = None  # Sphinx treats "self" as titlesonly
 
             toc['entries'].append({
-                'entry': entry,
+                'entry': entry_name,
                 'title': title,
                 'entries': subtree
             })
@@ -359,8 +361,9 @@ class READMEParser:
 
         for child in tree.children:
             if isinstance(child, addnodes.toctree):
+                child_doc = Path(child.source).relative_to(self.config.src_dir)
                 sub_toc = self._parse_toctree(
-                    docname=Path(child.source).stem,
+                    docname=child_doc.as_posix().removesuffix(child_doc.suffix),
                     is_subtoc=True, tocs=tocs,
                     toctree=child,
                 )
