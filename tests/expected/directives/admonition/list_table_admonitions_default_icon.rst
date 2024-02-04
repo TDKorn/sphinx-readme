@@ -1,7 +1,7 @@
-.. |sphinx-readme+readme_admonition_icons| replace:: ``readme_admonition_icons``
-.. _sphinx-readme+readme_admonition_icons: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_admonition_icons
-.. |sphinx-readme+readme_default_admonition_icon| replace:: ``readme_default_admonition_icon``
-.. _sphinx-readme+readme_default_admonition_icon: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_default_admonition_icon
+.. |.sphinx-readme+readme_admonition_icons| replace:: ``readme_admonition_icons``
+.. _.sphinx-readme+readme_admonition_icons: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_admonition_icons
+.. |.sphinx-readme+readme_default_admonition_icon| replace:: ``readme_default_admonition_icon``
+.. _.sphinx-readme+readme_default_admonition_icon: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_default_admonition_icon
 
 
 Generic Admonitions
@@ -23,7 +23,7 @@ This is outside of the admonition
    
    * - 🔥 Custom Admonition Classes
    * - This is an admonition with a custom class. You can add icons for custom admonition classes
-       and override predefined classes by setting the |sphinx-readme+readme_admonition_icons|_ confval
+       and override predefined classes by setting the |.sphinx-readme+readme_admonition_icons|_ confval
 
 
 
@@ -41,7 +41,7 @@ This is outside of the admonition
    :header-rows: 1
    
    * - ✨ Admonition Without a Class
-   * - This is an admonition with no class. It uses the |sphinx-readme+readme_default_admonition_icon|_
+   * - This is an admonition with no class. It uses the |.sphinx-readme+readme_default_admonition_icon|_
        as an icon
 
 
@@ -50,9 +50,9 @@ This is outside of the admonition
    :header-rows: 1
    
    * - ✨ Admonition With an Undefined Class
-   * - This is an admonition with a class that's not in the |sphinx-readme+readme_admonition_icons|_ mapping.
+   * - This is an admonition with a class that's not in the |.sphinx-readme+readme_admonition_icons|_ mapping.
 
-       Since the icon can't be found, it uses the |sphinx-readme+readme_default_admonition_icon|_.
+       Since the icon can't be found, it uses the |.sphinx-readme+readme_default_admonition_icon|_.
 
 
 

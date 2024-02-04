@@ -754,7 +754,7 @@ class READMEParser:
             link, subs = format_hyperlink(
                 target=info['target'],
                 text=title or info['replace'],
-                sub_override=ref_id,
+                sub_override=f".{ref_id}",
                 force_subs=True
             )
             self.substitutions[rst_src][ref_id] = subs

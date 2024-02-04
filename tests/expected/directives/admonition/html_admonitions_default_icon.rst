@@ -1,7 +1,7 @@
-.. |sphinx-readme+readme_admonition_icons| replace:: ``readme_admonition_icons``
-.. _sphinx-readme+readme_admonition_icons: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_admonition_icons
-.. |sphinx-readme+readme_default_admonition_icon| replace:: ``readme_default_admonition_icon``
-.. _sphinx-readme+readme_default_admonition_icon: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_default_admonition_icon
+.. |.sphinx-readme+readme_admonition_icons| replace:: ``readme_admonition_icons``
+.. _.sphinx-readme+readme_admonition_icons: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_admonition_icons
+.. |.sphinx-readme+readme_default_admonition_icon| replace:: ``readme_default_admonition_icon``
+.. _.sphinx-readme+readme_default_admonition_icon: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_default_admonition_icon
 
 
 Generic Admonitions
@@ -46,7 +46,7 @@ This is outside of the admonition
    <tr><td>
 
 This is an admonition with a custom class. You can add icons for custom admonition classes
-and override predefined classes by setting the |sphinx-readme+readme_admonition_icons|_ confval
+and override predefined classes by setting the |.sphinx-readme+readme_admonition_icons|_ confval
 
 .. raw:: html
 
@@ -92,7 +92,7 @@ However, the icon has been overridden to use "😱" instead of the default value
    </th>
    <tr><td>
 
-This is an admonition with no class. It uses the |sphinx-readme+readme_default_admonition_icon|_
+This is an admonition with no class. It uses the |.sphinx-readme+readme_default_admonition_icon|_
 as an icon
 
 .. raw:: html
@@ -115,9 +115,9 @@ as an icon
    </th>
    <tr><td>
 
-This is an admonition with a class that's not in the |sphinx-readme+readme_admonition_icons|_ mapping.
+This is an admonition with a class that's not in the |.sphinx-readme+readme_admonition_icons|_ mapping.
 
-Since the icon can't be found, it uses the |sphinx-readme+readme_default_admonition_icon|_.
+Since the icon can't be found, it uses the |.sphinx-readme+readme_default_admonition_icon|_.
 
 .. raw:: html
 
