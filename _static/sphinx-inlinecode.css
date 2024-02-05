@@ -1,0 +1,40 @@
+.sphinx-inlinecode div.highlight,
+.sphinx-inlinecode summary {
+    margin: 4px 0 1px;
+}
+
+.sphinx-inlinecode div.highlight {
+    font-weight: 400;
+}
+
+.sphinx-inlinecode summary {
+    color: #00ee;
+    font-size: 80%;
+    cursor: pointer;
+}
+
+.sphinx-inlinecode .viewcode-block span.k {
+    font-style: normal !important;
+}
+
+/* Add overflow scrolling for the source code block */
+html.writer-html4 .rst-content dl:not(.docutils), html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.citation):not(.glossary):not(.simple) {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+.sphinx-inlinecode div.highlight pre {
+    flex-grow: 1;
+    overflow-x: auto;
+}
+.sphinx-inlinecode .viewcode-block {
+    max-width: 10px;
+}
+.rst-content dl dd dl.field-list.simple {
+    margin-bottom: 0;
+}
+
+/* Maintain original width of documentation entry when dropdown is closed */
+dt.sig.sig-object.py {
+    max-width: fit-content;
+}
