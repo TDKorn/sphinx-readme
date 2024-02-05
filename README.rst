@@ -1,33 +1,33 @@
-.. |configuration/configuring| replace:: Extension Configuration
-.. _configuration/configuring: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html
-.. |html_baseurl| replace:: ``html_baseurl``
-.. _html_baseurl: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_baseurl
-.. |html_context| replace:: ``html_context``
-.. _html_context: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_context
+.. |.configuration/configuring| replace:: Extension Configuration
+.. _.configuration/configuring: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html
+.. |.html_baseurl| replace:: ``html_baseurl``
+.. _.html_baseurl: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_baseurl
+.. |.html_context| replace:: ``html_context``
+.. _.html_context: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-html_context
 .. |.~.parse_intersphinx_nodes| replace:: ``parse_intersphinx_nodes()``
-.. _.~.parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v1.2.0/sphinx_readme/parser.py#L255-L292
-.. |read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings| replace:: HTML Context Settings
-.. _read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings: https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html#github
-.. |readme_docs_url_type| replace:: ``readme_docs_url_type``
-.. _readme_docs_url_type: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_docs_url_type
-.. |readme_inline_markup| replace:: ``readme_inline_markup``
-.. _readme_inline_markup: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_inline_markup
-.. |readme_out_dir+output directory| replace:: ``output directory``
-.. _readme_out_dir+output directory: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_out_dir
-.. |readme_raw_directive| replace:: ``readme_raw_directive``
-.. _readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_raw_directive
-.. |readme_replace_attrs| replace:: ``readme_replace_attrs``
-.. _readme_replace_attrs: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_replace_attrs
-.. |readme_src_files| replace:: ``readme_src_files``
-.. _readme_src_files: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_src_files
-.. |sphinx+html_baseurl| replace:: ``html_baseurl``
-.. _sphinx+html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
-.. |sphinx+html_context| replace:: ``html_context``
-.. _sphinx+html_context: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
-.. |sphinx+usage/domains/restructuredtext+reStructuredText Domain| replace:: reStructuredText Domain
-.. _sphinx+usage/domains/restructuredtext+reStructuredText Domain: https://www.sphinx-doc.org/en/master/usage/domains/restructuredtext.html
-.. |sphinx+usage/domains/standard+Standard Domain| replace:: Standard Domain
-.. _sphinx+usage/domains/standard+Standard Domain: https://www.sphinx-doc.org/en/master/usage/domains/standard.html
+.. _.~.parse_intersphinx_nodes: https://github.com/TDKorn/sphinx-readme/blob/v1.2.1/sphinx_readme/parser.py#L256-L293
+.. |.read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings| replace:: HTML Context Settings
+.. _.read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings: https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html#github
+.. |.readme_docs_url_type| replace:: ``readme_docs_url_type``
+.. _.readme_docs_url_type: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_docs_url_type
+.. |.readme_inline_markup| replace:: ``readme_inline_markup``
+.. _.readme_inline_markup: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_inline_markup
+.. |.readme_out_dir+output directory| replace:: ``output directory``
+.. _.readme_out_dir+output directory: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_out_dir
+.. |.readme_raw_directive| replace:: ``readme_raw_directive``
+.. _.readme_raw_directive: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_raw_directive
+.. |.readme_replace_attrs| replace:: ``readme_replace_attrs``
+.. _.readme_replace_attrs: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_replace_attrs
+.. |.readme_src_files| replace:: ``readme_src_files``
+.. _.readme_src_files: https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html#confval-readme_src_files
+.. |.sphinx+html_baseurl| replace:: ``html_baseurl``
+.. _.sphinx+html_baseurl: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
+.. |.sphinx+html_context| replace:: ``html_context``
+.. _.sphinx+html_context: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
+.. |.sphinx+usage/domains/restructuredtext+reStructuredText Domain| replace:: reStructuredText Domain
+.. _.sphinx+usage/domains/restructuredtext+reStructuredText Domain: https://www.sphinx-doc.org/en/master/usage/domains/restructuredtext.html
+.. |.sphinx+usage/domains/standard+Standard Domain| replace:: Standard Domain
+.. _.sphinx+usage/domains/standard+Standard Domain: https://www.sphinx-doc.org/en/master/usage/domains/standard.html
 .. |.~.sphinx.domains.python.PythonDomain| replace:: ``PythonDomain``
 .. _.~.sphinx.domains.python.PythonDomain: https://www.sphinx-doc.org/en/master/extdev/domainapi.html#sphinx.domains.python.PythonDomain
 .. |.~.sphinx.environment.BuildEnvironment| replace:: ``BuildEnvironment``
@@ -46,8 +46,8 @@
 
 .. |env| replace:: |.~.sphinx.environment.BuildEnvironment|_
 .. |py_domain| replace:: |.~.sphinx.domains.python.PythonDomain|_
-.. |std_domain| replace:: |sphinx+usage/domains/standard+Standard Domain|_
-.. |rst_domain| replace:: |sphinx+usage/domains/restructuredtext+reStructuredText Domain|_
+.. |std_domain| replace:: |.sphinx+usage/domains/standard+Standard Domain|_
+.. |rst_domain| replace:: |.sphinx+usage/domains/restructuredtext+reStructuredText Domain|_
 
 .. meta::
    :author: Adam Korn
@@ -60,7 +60,7 @@
 
    <div align="center">
 
-.. image:: https://raw.githubusercontent.com/TDKorn/sphinx-readme/v1.2.0/docs/source/_static/logo_readme.png
+.. image:: https://raw.githubusercontent.com/TDKorn/sphinx-readme/v1.2.1/docs/source/_static/logo_readme.png
    :alt: Sphinx README: Generate Beautiful reStructuredText README.rst for GitHub, PyPi, GitLab, BitBucket
    :align: center
    :width: 25%
@@ -149,7 +149,7 @@ as ``html`` builds, including |.sphinx.ext.autodoc|_ cross-references!
 
 
 
-.. image:: https://raw.githubusercontent.com/TDKorn/sphinx-readme/v1.2.0/docs/source/_static/demo/demo.gif
+.. image:: https://raw.githubusercontent.com/TDKorn/sphinx-readme/v1.2.1/docs/source/_static/demo/demo.gif
    :alt: Demonstration of how reStructuredText README.rst files generated by Sphinx README render on GitHub, PyPi, GitLab, BitBucket
    :width: 75%
 
@@ -192,33 +192,33 @@ Add the extension to your ``conf.py``:
 
 
 
-Please see |configuration/configuring|_ for full documentation on configuration variables
+Please see |.configuration/configuring|_ for full documentation on configuration variables
 
 
 Mandatory ``conf.py`` Values
 ==================================
 
-|html_context|_
- A dictionary containing info about your repository (|sphinx+html_context|_)
+|.html_context|_
+ A dictionary containing info about your repository (|.sphinx+html_context|_)
 
   **Type:** ``dict``
 
  * At minimum, the username and repository name must be specified
- * Please see |read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings|_
+ * Please see |.read the docs user documentation+guides/edit-source-links-sphinx-colon-github+HTML Context Settings|_
    to determine the correct dictionary keys for your hosting platform
 
 
 |
 
-|html_baseurl|_
- The base URL which points to the root of the HTML documentation (|sphinx+html_baseurl|_)
+|.html_baseurl|_
+ The base URL which points to the root of the HTML documentation (|.sphinx+html_baseurl|_)
 
   **Type:** ``str``
 
 
 |
 
-|readme_src_files|_
+|.readme_src_files|_
  An individual/list of ``rst`` source files to parse, or a dictionary of source files mapped to output files
 
   **Type:** ``Union[str, List[str], Dict[str,str]]``
@@ -238,7 +238,7 @@ Mandatory ``conf.py`` Values
    <tr><td>
 
 Filepaths should be specified relative to the source directory
-and |readme_out_dir+output directory|_
+and |.readme_out_dir+output directory|_
 
 .. raw:: html
 
@@ -248,7 +248,7 @@ and |readme_out_dir+output directory|_
 
 |
 
-|readme_docs_url_type|_
+|.readme_docs_url_type|_
  The documentation source to link to when resolving |.~.sphinx.ext.autodoc|_ cross-references
 
   **Type:** ``str``
@@ -281,7 +281,7 @@ and |readme_out_dir+output directory|_
 If set to ``code``, non-external :code:`:attr:` cross-references will not be replaced with links
 
 * Instead, they'll be replaced with ``inline literals`` or left as is
-* Please see |readme_replace_attrs|_ and |readme_inline_markup|_
+* Please see |.readme_replace_attrs|_ and |.readme_inline_markup|_
 
 .. raw:: html
 
@@ -332,7 +332,7 @@ Sample ``conf.py``
    <tr><td>
 
 For platforms that don't support the ``raw`` directive (PyPi, GitLab, and BitBucket),
-be sure to disable |readme_raw_directive|_:
+be sure to disable |.readme_raw_directive|_:
 
 .. code-block:: python
 
