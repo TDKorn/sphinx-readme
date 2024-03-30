@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sphinx_readme.utils.rst &mdash; sphinx-readme 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-inlinecode.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/github_style.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+
+  
+    <link rel="canonical" href="https://sphinx-readme.readthedocs.io/en/latest/_modules/sphinx_readme/utils/rst.html" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/sphinx-inlinecode.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../contents.html" class="icon icon-home">
+            sphinx-readme
+              <img src="../../../_static/logo_html.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">README</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#about-sphinx-readme">About Sphinx README</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#features">📋 Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#installation">⚙ Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#configuration">🔧 Configuration</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration/configuring.html">Extension Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/configuring.html#mandatory-conf-py-values">Mandatory <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#html-context"><code class="docutils literal notranslate"><span class="pre">html_context</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#html-baseurl"><code class="docutils literal notranslate"><span class="pre">html_baseurl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-src-files"><code class="docutils literal notranslate"><span class="pre">readme_src_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-docs-url-type"><code class="docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/configuring.html#optional-conf-py-values">Optional <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-out-dir"><code class="docutils literal notranslate"><span class="pre">readme_out_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-replace-attrs"><code class="docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-inline-markup"><code class="docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-raw-directive"><code class="docutils literal notranslate"><span class="pre">readme_raw_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-tags"><code class="docutils literal notranslate"><span class="pre">readme_tags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-include-directive"><code class="docutils literal notranslate"><span class="pre">readme_include_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-admonition-icons"><code class="docutils literal notranslate"><span class="pre">readme_admonition_icons</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-default-admonition-icon"><code class="docutils literal notranslate"><span class="pre">readme_default_admonition_icon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-rubric-heading"><code class="docutils literal notranslate"><span class="pre">readme_rubric_heading</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#readme-blob"><code class="docutils literal notranslate"><span class="pre">readme_blob</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration/configuring.html#linkcode-resolve"><code class="docutils literal notranslate"><span class="pre">linkcode_resolve</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration/sample_conf.html">Sample <code class="docutils literal notranslate"><span class="pre">conf.py</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme</span></code> package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../parser.html">The <code class="docutils literal notranslate"><span class="pre">READMEParser</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser"><code class="docutils literal notranslate"><span class="pre">READMEParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.__init__"><code class="docutils literal notranslate"><span class="pre">READMEParser.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.config"><code class="docutils literal notranslate"><span class="pre">READMEParser.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.ref_map"><code class="docutils literal notranslate"><span class="pre">READMEParser.ref_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.sources"><code class="docutils literal notranslate"><span class="pre">READMEParser.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.toctrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.admonitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.rubrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.substitutions"><code class="docutils literal notranslate"><span class="pre">READMEParser.substitutions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.titles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.domains"><code class="docutils literal notranslate"><span class="pre">READMEParser.domains</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.roles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.objtypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.intersphinx_pkgs"><code class="docutils literal notranslate"><span class="pre">READMEParser.intersphinx_pkgs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.named_inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.named_inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_env"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_titles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_roles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_objtypes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_std_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_std_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_py_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_py_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.get_py_target"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_py_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.add_variants"><code class="docutils literal notranslate"><span class="pre">READMEParser.add_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_doctree"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_intersphinx_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_external_node"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_external_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.parse_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.get_external_ref"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_ref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.get_external_id"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.is_external_xref"><code class="docutils literal notranslate"><span class="pre">READMEParser.is_external_xref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.resolve"><code class="docutils literal notranslate"><span class="pre">READMEParser.resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_rst_images"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rst_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_py_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_py_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.replace_unresolved_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_unresolved_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.get_xref_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_xref_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_icon"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_icon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme_config.html">The <code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig"><code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.__init__"><code class="docutils literal notranslate"><span class="pre">READMEConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.repo_blob"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_blob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.blob_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.blob_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.get_repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.get_docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_docs_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.setup_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">READMEConfig.setup_linkcode_resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.read_rst"><code class="docutils literal notranslate"><span class="pre">READMEConfig.read_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.parse_include_directives"><code class="docutils literal notranslate"><span class="pre">READMEConfig.parse_include_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.src_files"><code class="docutils literal notranslate"><span class="pre">READMEConfig.src_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.sources"><code class="docutils literal notranslate"><span class="pre">READMEConfig.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.out_dir"><code class="docutils literal notranslate"><span class="pre">READMEConfig.out_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.docs_url_type"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.repo_host"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.image_baseurl"><code class="docutils literal notranslate"><span class="pre">READMEConfig.image_baseurl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">READMEConfig.icon_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../readme_config.html#sphinx_readme.config.READMEConfig.admonition_template"><code class="docutils literal notranslate"><span class="pre">READMEConfig.admonition_template</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../utils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils</span></code> subpackage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../git.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_repo_url"><code class="docutils literal notranslate"><span class="pre">get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.is_valid_username"><code class="docutils literal notranslate"><span class="pre">is_valid_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.is_valid_repo"><code class="docutils literal notranslate"><span class="pre">is_valid_repo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_blob_url"><code class="docutils literal notranslate"><span class="pre">get_blob_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_repo_host"><code class="docutils literal notranslate"><span class="pre">get_repo_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_blob"><code class="docutils literal notranslate"><span class="pre">get_blob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_head"><code class="docutils literal notranslate"><span class="pre">get_head()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_last_tag"><code class="docutils literal notranslate"><span class="pre">get_last_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../git.html#sphinx_readme.utils.git.get_repo_dir"><code class="docutils literal notranslate"><span class="pre">get_repo_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../linkcode.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.linkcode</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_url"><code class="docutils literal notranslate"><span class="pre">get_linkcode_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">get_linkcode_resolve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../rst.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.rst</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.escape_rst"><code class="docutils literal notranslate"><span class="pre">escape_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.BEFORE_XREF"><code class="docutils literal notranslate"><span class="pre">BEFORE_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.AFTER_XREF"><code class="docutils literal notranslate"><span class="pre">AFTER_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.format_hyperlink"><code class="docutils literal notranslate"><span class="pre">format_hyperlink()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.format_rst"><code class="docutils literal notranslate"><span class="pre">format_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.replace_only_directives"><code class="docutils literal notranslate"><span class="pre">replace_only_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.remove_raw_directives"><code class="docutils literal notranslate"><span class="pre">remove_raw_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.replace_attrs"><code class="docutils literal notranslate"><span class="pre">replace_attrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.get_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_xref_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../rst.html#sphinx_readme.utils.rst.get_all_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_all_xref_variants()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../sphinx.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.sphinx</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../sphinx.html#sphinx_readme.utils.sphinx.ExternalRef"><code class="docutils literal notranslate"><span class="pre">ExternalRef</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sphinx.html#sphinx_readme.utils.sphinx.set_conf_val"><code class="docutils literal notranslate"><span class="pre">set_conf_val()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sphinx.html#sphinx_readme.utils.sphinx.get_conf_val"><code class="docutils literal notranslate"><span class="pre">get_conf_val()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docutils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.docutils</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../docutils.html#sphinx_readme.utils.docutils.get_doctree"><code class="docutils literal notranslate"><span class="pre">get_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../docutils.html#sphinx_readme.utils.docutils.parse_node_text"><code class="docutils literal notranslate"><span class="pre">parse_node_text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../contents.html">sphinx-readme</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../contents.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sphinx_readme.utils.rst</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sphinx_readme.utils.rst</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="nc">List</span><span class="p">,</span> <span class="nc">Optional</span><span class="p">,</span> <span class="nc">Tuple</span>
+<span class="kn">import</span> <span class="nn">sphinx.util.tags</span>
+
+
+<div class="viewcode-block" id="escape_rst"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.escape_rst">[docs]</a><span class="k">def</span> <span class="nf">escape_rst</span><span class="p">(</span><span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Escape regex special characters from the content of an ``rst`` file&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="s2">&quot;.+?*|()&lt;&gt;</span><span class="si">{}</span><span class="s2">^$[]&quot;</span><span class="p">:</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">rst</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="sa">rf</span><span class="s2">&quot;\</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rst</span></div>
+
+
+<span class="c1">#: Characters that are allowed directly before a cross-reference</span>
+<span class="nc">BEFORE_XREF</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">escape</span><span class="p">(</span><span class="s2">&quot;:[{(/</span><span class="se">\&quot;</span><span class="s2">&#39;-&quot;</span><span class="p">)</span>
+<span class="c1">#: Characters that are allowed directly after a cross-reference</span>
+<span class="nc">AFTER_XREF</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">escape</span><span class="p">(</span><span class="s2">&quot;.:;!?,</span><span class="se">\&quot;</span><span class="s2">&#39;/</span><span class="se">\\</span><span class="s2">])}-&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="format_hyperlink"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.format_hyperlink">[docs]</a><span class="k">def</span> <span class="nf">format_hyperlink</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">sub_override</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_subs</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Tuple</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Formats a hyperlink, preserving any ``inline literals`` within the text</span>
+
+<span class="sd">    Since nested inline markup isn&#39;t possible, substitutions are used</span>
+<span class="sd">    when link text contains inline literals</span>
+
+<span class="sd">    **Example:**</span>
+
+<span class="sd">    &gt;&gt;&gt; target = &quot;https://www.github.com/tdkorn/sphinx-readme&quot;</span>
+<span class="sd">    &gt;&gt;&gt; format_hyperlink(target, &quot;The Sphinx README Repository&quot;)</span>
+<span class="sd">    (&#39;`The Sphinx README Repository &lt;https://www.github.com/tdkorn/sphinx-readme&gt;`_&#39;, [])</span>
+
+<span class="sd">    &gt;&gt;&gt; format_hyperlink(target, &quot;The ``Sphinx README`` Repository&quot;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    (&#39;|The Sphinx README Repository|_&#39;,</span>
+<span class="sd">    [&#39;.. |The Sphinx README Repository| replace:: The ``Sphinx README`` Repository&#39;,</span>
+<span class="sd">     &#39;.. _The Sphinx README Repository: https://www.github.com/tdkorn/sphinx-readme&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; format_hyperlink(target, &quot;The ``Sphinx README`` Repository&quot;, sub_override=&quot;repo&quot;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    (&#39;|repo|_&#39;,</span>
+<span class="sd">    [&#39;.. |repo| replace:: The ``Sphinx README`` Repository&#39;,</span>
+<span class="sd">     &#39;.. _repo: https://www.github.com/tdkorn/sphinx-readme&#39;])</span>
+
+<span class="sd">    :param target: the link URL</span>
+<span class="sd">    :param text: the link text</span>
+<span class="sd">    :param sub_override: overrides the name for the label/substitution, if applicable</span>
+<span class="sd">    :param force_subs: boolean indicating if substitutions should be used regardless of inline markup being present</span>
+<span class="sd">    :returns: a tuple containing the formatted hyperlink and a list of substitution definitions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">substitutions</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;`&quot;</span> <span class="ow">in</span> <span class="n">text</span> <span class="ow">or</span> <span class="n">force_subs</span><span class="p">:</span>
+        <span class="c1"># Substitutions must be used for inline literals</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">sub_override</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s1">&#39;`&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;-colon-&#39;</span><span class="p">)</span>
+        <span class="n">substitutions</span><span class="o">.</span><span class="kp">extend</span><span class="p">([</span>
+            <span class="sa">f</span><span class="s2">&quot;.. |</span><span class="si">{</span><span class="n">sub</span><span class="si">}</span><span class="s2">| replace:: </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;.. _</span><span class="si">{</span><span class="n">sub</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">])</span>
+        <span class="n">link</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;|</span><span class="si">{</span><span class="n">sub</span><span class="si">}</span><span class="s2">|_&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use a normal link otherwise</span>
+        <span class="n">link</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2"> &lt;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&gt;`_&quot;</span>
+
+    <span class="k">return</span> <span class="n">link</span><span class="p">,</span> <span class="n">substitutions</span></div>
+
+
+<span class="c1"># TODO: The replace_attributes kwarg isn&#39;t actually used</span>
+<span class="c1">#   --&gt; Either change it to ``replace_cross_refs`` for versatility or scrap the kwarg entirely</span>
+<div class="viewcode-block" id="format_rst"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.format_rst">[docs]</a><span class="k">def</span> <span class="nf">format_rst</span><span class="p">(</span><span class="n">inline_markup</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">replace_attributes</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Formats text with the specified type of inline markup</span>
+
+<span class="sd">    Preserves any ``inline literals``, ``|substitutions|``, and</span>
+<span class="sd">    :rst:`\`Custom Link Text &lt;https://website.com&gt;\`_` within the text</span>
+
+<span class="sd">    **Example:**</span>
+
+<span class="sd">    &gt;&gt;&gt; format_rst(&quot;bold&quot;, &quot;This is part of the ``sphinx_readme.utils`` module&quot;)</span>
+<span class="sd">    &quot;**This is part of the** ``sphinx_readme.utils`` **module**&quot;</span>
+
+
+<span class="sd">    **This is part of the** ``sphinx_readme.utils`` **module**</span>
+
+<span class="sd">    :param inline_markup: either &quot;bold&quot; or &quot;italic&quot;</span>
+<span class="sd">    :param rst: the rst content to format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">inline_markup</span> <span class="o">==</span> <span class="s2">&quot;bold&quot;</span><span class="p">:</span>
+        <span class="n">markup</span> <span class="o">=</span> <span class="s2">&quot;**&quot;</span>
+    <span class="k">elif</span> <span class="n">inline_markup</span> <span class="o">==</span> <span class="s2">&quot;italic&quot;</span><span class="p">:</span>
+        <span class="n">markup</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;``inline_markup`` must be either &#39;bold&#39; or &#39;italic&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">replace_attributes</span><span class="p">:</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="kp">replace_attrs</span><span class="p">(</span><span class="n">rst</span><span class="p">)</span>
+
+    <span class="n">split</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*?(``.+?``|\|.+?\|_?|`.+? &lt;.+?&gt;`_)\s*?&quot;</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">split</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">part</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;`&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">part</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">):</span>
+            <span class="n">parts</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">markup</span><span class="si">}{</span><span class="n">part</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span><span class="si">}{</span><span class="n">markup</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="replace_only_directives"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.replace_only_directives">[docs]</a><span class="k">def</span> <span class="nf">replace_only_directives</span><span class="p">(</span><span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="nc">Tags</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces and removes :rst:dir:`only` directives.</span>
+
+<span class="sd">    The :confval:`readme_tags` are temporarily added as :external+sphinx:ref:`tags &lt;conf-tags&gt;`,</span>
+<span class="sd">    then the ``&lt;expression&gt;`` argument of the directive is evaluated.</span>
+
+<span class="sd">    * If ``True``, the content will be used</span>
+<span class="sd">    * If ``False``, the directive is removed</span>
+
+<span class="sd">    .. tip:: The default value of :confval:`readme_tags` is ``[&quot;readme&quot;]``</span>
+
+
+<span class="sd">    **Expression Examples:**</span>
+
+<span class="sd">    Using default value of :rst:`readme_tags = [&quot;readme&quot;]`:</span>
+
+<span class="sd">    .. code-block:: rst</span>
+
+<span class="sd">       .. only:: readme</span>
+
+<span class="sd">          This will be included in the generated file</span>
+
+<span class="sd">       .. only:: html</span>
+
+<span class="sd">          This will be excluded from the generated file</span>
+
+<span class="sd">       .. only:: readme or html</span>
+
+<span class="sd">          This will be included in the generated file</span>
+
+<span class="sd">       .. only:: readme and html</span>
+
+<span class="sd">          This will be excluded from the generated file.</span>
+
+<span class="sd">    Setting :rst:`readme_tags = [&quot;pypi&quot;]` in ``conf.py``:</span>
+
+<span class="sd">    .. code-block:: rst</span>
+
+<span class="sd">       .. only:: pypi</span>
+
+<span class="sd">          This will be included in the generated file</span>
+
+<span class="sd">       .. only:: readme</span>
+
+<span class="sd">          This will be excluded from the generated file</span>
+
+<span class="sd">       .. only:: readme or pypi</span>
+
+<span class="sd">          This will be included in the generated file</span>
+
+
+<span class="sd">    :param rst: the content of an ``rst`` file</span>
+<span class="sd">    :param tags: the :class:`sphinx.util.tags.Tags` object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Match all ``only`` directives</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.\. only::\s+(\S.*?)\n+?((?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)&quot;</span>
+    <span class="n">directives</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="nc">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="nc">DOTALL</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">expression</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">directives</span><span class="p">:</span>
+        <span class="c1"># Pattern to match each block exactly</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;\.\. only:: </span><span class="si">{</span><span class="n">expression</span><span class="si">}</span><span class="s2">\n+?</span><span class="si">{</span><span class="kp">escape_rst</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2">\n*?&quot;</span>
+
+        <span class="k">if</span> <span class="n">tags</span><span class="o">.</span><span class="kp">eval_condition</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+            <span class="c1"># For replacement, remove preceding indent (3 spaces) from each line</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+
+            <span class="c1"># Replace directive with content</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Remove directive</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rst</span></div>
+
+
+<div class="viewcode-block" id="remove_raw_directives"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.remove_raw_directives">[docs]</a><span class="k">def</span> <span class="nf">remove_raw_directives</span><span class="p">(</span><span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes all ``raw`` directives from ``rst``</span>
+
+<span class="sd">    :param rst: the rst to remove ``raw`` directives from</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(\.\. raw::\s+\S.*?\n+?(?:^[ ]+.+?$|^\s*$)+?)(?=\n*\S+|\Z)&quot;</span><span class="p">,</span>
+        <span class="n">repl</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">rst</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="nc">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="nc">DOTALL</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Is this needed anymore?</span>
+<div class="viewcode-block" id="replace_attrs"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.replace_attrs">[docs]</a><span class="k">def</span> <span class="nf">replace_attrs</span><span class="p">(</span><span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces ``:attr:`` cross-references with ``inline literals``</span>
+
+<span class="sd">    .. tip::</span>
+
+<span class="sd">       When :confval:`readme_replace_attrs` is ``True``, this function will be called to replace</span>
+
+<span class="sd">       1. Non-external and unresolved ``:attr:`` xrefs when :confval:`readme_docs_url_type` is ``&quot;code&quot;``</span>
+<span class="sd">       2. Unresolved ``:attr:`` xrefs when :confval:`readme_docs_url_type` is ``&quot;html&quot;``</span>
+
+<span class="sd">    :param rst: the rst to replace attribute xrefs in</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kp">replace_xrefs</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="s1">&#39;attr&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="replace_xrefs"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.replace_xrefs">[docs]</a><span class="k">def</span> <span class="nf">replace_xrefs</span><span class="p">(</span><span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">roles</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span> <span class="o">|</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces cross-references in the |py_domain| with ``inline literals``</span>
+
+<span class="sd">    :param roles: an individual or list of cross-reference roles to match; replaces all roles if not specified</span>
+<span class="sd">    :param rst: the rst to replace cross-references in</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">roles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Replace all cross-reference roles</span>
+        <span class="n">roles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;exc&#39;</span><span class="p">,</span> <span class="s1">&#39;func&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;const&#39;</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">,</span> <span class="s1">&#39;meth&#39;</span><span class="p">,</span> <span class="s1">&#39;mod&#39;</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">roles</span><span class="p">,</span> <span class="bp">str</span><span class="p">):</span>
+        <span class="n">roles</span> <span class="o">=</span> <span class="p">[</span><span class="n">roles</span><span class="p">]</span>
+
+    <span class="n">roles</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">roles</span><span class="p">)</span>
+    <span class="n">xref_pattern</span> <span class="o">=</span> <span class="sa">fr</span><span class="s2">&quot;(?&lt;![^\s</span><span class="si">{</span><span class="nc">BEFORE_XREF</span><span class="si">}</span><span class="s2">]):(?:external(?:\+\w+)?:)?(?:py:)?(?:</span><span class="si">{</span><span class="n">roles</span><span class="si">}</span><span class="s2">):`(?:\w+:)?%s`(?=[\s</span><span class="si">{</span><span class="nc">AFTER_XREF</span><span class="si">}</span><span class="s2">]|\Z)&quot;</span>
+    <span class="n">xref_title_pattern</span> <span class="o">=</span> <span class="sa">fr</span><span class="s2">&quot;(?&lt;![^\s</span><span class="si">{</span><span class="nc">BEFORE_XREF</span><span class="si">}</span><span class="s2">]):(?:external(?:\+\w+)?:)?(?:py:)?(?:</span><span class="si">{</span><span class="n">roles</span><span class="si">}</span><span class="s2">):`([^`]+?)\s&lt;(?:\w+:)?%s&gt;`(?=[\s</span><span class="si">{</span><span class="nc">AFTER_XREF</span><span class="si">}</span><span class="s2">]|\Z)&quot;</span>
+
+    <span class="n">short_ref</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;~[.\w]*?(\w+)&quot;</span>  <span class="c1"># Ex. :attr:`~.Class.attr`</span>
+    <span class="n">long_ref</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.?([.\w]+)&quot;</span>  <span class="c1"># Ex. :attr:`.Class.attr`</span>
+    <span class="n">repl</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;``\1``&quot;</span>
+
+    <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="p">(</span><span class="n">short_ref</span><span class="p">,</span> <span class="n">long_ref</span><span class="p">):</span>
+        <span class="c1"># Replace :attr:`~.Class.attr` =&gt; ``attr`` || :attr:`.Class.attr` =&gt; ``Class.attr``</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+            <span class="n">pattern</span><span class="o">=</span><span class="n">xref_pattern</span> <span class="o">%</span> <span class="n">ref</span><span class="p">,</span>
+            <span class="n">repl</span><span class="o">=</span><span class="n">repl</span><span class="p">,</span>
+            <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+        <span class="p">)</span>
+        <span class="c1"># Replace :attr:`title &lt;pkg.module.Class.attr&gt;` =&gt; ``title``</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+            <span class="n">pattern</span><span class="o">=</span><span class="n">xref_title_pattern</span> <span class="o">%</span> <span class="n">ref</span><span class="p">,</span>
+            <span class="n">repl</span><span class="o">=</span><span class="n">repl</span><span class="p">,</span>
+            <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">rst</span></div>
+
+
+<div class="viewcode-block" id="get_xref_variants"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.get_xref_variants">[docs]</a><span class="k">def</span> <span class="nf">get_xref_variants</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of ways to make a cross-reference to ``target``</span>
+
+<span class="sd">    **Example:**</span>
+
+<span class="sd">    &gt;&gt;&gt; get_xref_variants(&#39;mod.Class.meth&#39;)</span>
+<span class="sd">    [&#39;mod.Class.meth&#39;, &#39;.mod.Class.meth&#39;, &#39;~mod.Class.meth&#39;, &#39;~.mod.Class.meth&#39;]</span>
+
+<span class="sd">    :param target: the object to generate cross-reference syntax for</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">target</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;~.&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="get_all_xref_variants"><a class="viewcode-back" href="../../../rst.html#sphinx_readme.utils.rst.get_all_xref_variants">[docs]</a><span class="k">def</span> <span class="nf">get_all_xref_variants</span><span class="p">(</span><span class="n">fully_qualified_name</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns all possible cross-reference targets for an object</span>
+
+<span class="sd">    **Example:**</span>
+
+<span class="sd">    &gt;&gt;&gt; get_all_xref_variants(&quot;sphinx_readme.utils.get_all_xref_variants&quot;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    [&#39;get_all_xref_variants&#39;, &#39;.get_all_xref_variants&#39;, &#39;~get_all_xref_variants&#39;,</span>
+<span class="sd">    &#39;~.get_all_xref_variants&#39;, &#39;utils.get_all_xref_variants&#39;, &#39;.utils.get_all_xref_variants&#39;,</span>
+<span class="sd">    &#39;~utils.get_all_xref_variants&#39;, &#39;~.utils.get_all_xref_variants&#39;,</span>
+<span class="sd">    &#39;sphinx_readme.utils.get_all_xref_variants&#39;, &#39;.sphinx_readme.utils.get_all_xref_variants&#39;,</span>
+<span class="sd">    &#39;~sphinx_readme.utils.get_all_xref_variants&#39;, &#39;~.sphinx_readme.utils.get_all_xref_variants&#39;]</span>
+
+<span class="sd">    :param fully_qualified_name: the fully qualified name of the target (ex. ``pkg.module.class.method``)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">fully_qualified_name</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># =&gt; [&#39;meth&#39;, &#39;Class&#39;, &#39;mod&#39;, &quot;pkg&quot;]</span>
+    <span class="n">variants</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parts</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># &#39;meth&#39;, &#39;Class.meth&#39;, &#39;mod.class.meth&#39;, &#39;pkg.mod.class.meth&#39;</span>
+        <span class="n">variants</span><span class="o">.</span><span class="kp">extend</span><span class="p">(</span><span class="kp">get_xref_variants</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">variants</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Adam Korn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

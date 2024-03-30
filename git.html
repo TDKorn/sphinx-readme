@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The sphinx_readme.utils.git submodule — sphinx-readme 1.2.1 documentation</title>
+<link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sphinx-inlinecode.css" rel="stylesheet" type="text/css"/>
+<link href="_static/github_style.css" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css" rel="stylesheet" type="text/css"/>
+<link href="https://sphinx-readme.readthedocs.io/en/latest/git.html" rel="canonical"/>
+<!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/sphinx_highlight.js"></script>
+<script src="_static/sphinx-inlinecode.js"></script>
+<script src="_static/js/theme.js"></script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="linkcode.html" rel="next" title="The sphinx_readme.utils.linkcode submodule"/>
+<link href="utils.html" rel="prev" title="The sphinx_readme.utils subpackage"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="contents.html">
+            sphinx-readme
+              <img alt="Logo" class="logo" src="_static/logo_html.png"/>
+</a>
+<div class="version">
+                1.2.1
+              </div>
+<div role="search">
+<form action="search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">README</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#about-sphinx-readme">About Sphinx README</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#features">📋 Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#installation">⚙ Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#configuration">🔧 Configuration</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration/configuring.html">Extension Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration/configuring.html#mandatory-conf-py-values">Mandatory <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#html-context"><code class="docutils literal notranslate"><span class="pre">html_context</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#html-baseurl"><code class="docutils literal notranslate"><span class="pre">html_baseurl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-src-files"><code class="docutils literal notranslate"><span class="pre">readme_src_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-docs-url-type"><code class="docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/configuring.html#optional-conf-py-values">Optional <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-out-dir"><code class="docutils literal notranslate"><span class="pre">readme_out_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-replace-attrs"><code class="docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-inline-markup"><code class="docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-raw-directive"><code class="docutils literal notranslate"><span class="pre">readme_raw_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-tags"><code class="docutils literal notranslate"><span class="pre">readme_tags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-include-directive"><code class="docutils literal notranslate"><span class="pre">readme_include_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-admonition-icons"><code class="docutils literal notranslate"><span class="pre">readme_admonition_icons</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-default-admonition-icon"><code class="docutils literal notranslate"><span class="pre">readme_default_admonition_icon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-rubric-heading"><code class="docutils literal notranslate"><span class="pre">readme_rubric_heading</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#readme-blob"><code class="docutils literal notranslate"><span class="pre">readme_blob</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration/configuring.html#linkcode-resolve"><code class="docutils literal notranslate"><span class="pre">linkcode_resolve</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration/sample_conf.html">Sample <code class="docutils literal notranslate"><span class="pre">conf.py</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme</span></code> package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="parser.html">The <code class="docutils literal notranslate"><span class="pre">READMEParser</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser"><code class="docutils literal notranslate"><span class="pre">READMEParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.__init__"><code class="docutils literal notranslate"><span class="pre">READMEParser.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.config"><code class="docutils literal notranslate"><span class="pre">READMEParser.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.ref_map"><code class="docutils literal notranslate"><span class="pre">READMEParser.ref_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.sources"><code class="docutils literal notranslate"><span class="pre">READMEParser.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.toctrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.admonitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.rubrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.substitutions"><code class="docutils literal notranslate"><span class="pre">READMEParser.substitutions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.titles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.domains"><code class="docutils literal notranslate"><span class="pre">READMEParser.domains</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.roles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.objtypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.intersphinx_pkgs"><code class="docutils literal notranslate"><span class="pre">READMEParser.intersphinx_pkgs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.named_inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.named_inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_env"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_titles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_roles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_objtypes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_std_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_std_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_py_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_py_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.get_py_target"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_py_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.add_variants"><code class="docutils literal notranslate"><span class="pre">READMEParser.add_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_doctree"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_intersphinx_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_external_node"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_external_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.parse_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.get_external_ref"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_ref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.get_external_id"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.is_external_xref"><code class="docutils literal notranslate"><span class="pre">READMEParser.is_external_xref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.resolve"><code class="docutils literal notranslate"><span class="pre">READMEParser.resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_rst_images"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rst_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_py_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_py_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.replace_unresolved_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_unresolved_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.get_xref_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_xref_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.get_admonition_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="parser.html#sphinx_readme.parser.READMEParser.get_admonition_icon"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_icon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="readme_config.html">The <code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig"><code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.__init__"><code class="docutils literal notranslate"><span class="pre">READMEConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.repo_blob"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_blob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.blob_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.blob_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.get_repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.get_docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_docs_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.setup_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">READMEConfig.setup_linkcode_resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.read_rst"><code class="docutils literal notranslate"><span class="pre">READMEConfig.read_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.parse_include_directives"><code class="docutils literal notranslate"><span class="pre">READMEConfig.parse_include_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.src_files"><code class="docutils literal notranslate"><span class="pre">READMEConfig.src_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.sources"><code class="docutils literal notranslate"><span class="pre">READMEConfig.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.out_dir"><code class="docutils literal notranslate"><span class="pre">READMEConfig.out_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.docs_url_type"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.repo_host"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.image_baseurl"><code class="docutils literal notranslate"><span class="pre">READMEConfig.image_baseurl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">READMEConfig.icon_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="readme_config.html#sphinx_readme.config.READMEConfig.admonition_template"><code class="docutils literal notranslate"><span class="pre">READMEConfig.admonition_template</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="utils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils</span></code> subpackage</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_repo_url"><code class="docutils literal notranslate"><span class="pre">get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.is_valid_username"><code class="docutils literal notranslate"><span class="pre">is_valid_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.is_valid_repo"><code class="docutils literal notranslate"><span class="pre">is_valid_repo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_blob_url"><code class="docutils literal notranslate"><span class="pre">get_blob_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_repo_host"><code class="docutils literal notranslate"><span class="pre">get_repo_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_blob"><code class="docutils literal notranslate"><span class="pre">get_blob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_head"><code class="docutils literal notranslate"><span class="pre">get_head()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_last_tag"><code class="docutils literal notranslate"><span class="pre">get_last_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_readme.utils.git.get_repo_dir"><code class="docutils literal notranslate"><span class="pre">get_repo_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="linkcode.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.linkcode</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_url"><code class="docutils literal notranslate"><span class="pre">get_linkcode_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">get_linkcode_resolve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rst.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.rst</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.escape_rst"><code class="docutils literal notranslate"><span class="pre">escape_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.BEFORE_XREF"><code class="docutils literal notranslate"><span class="pre">BEFORE_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.AFTER_XREF"><code class="docutils literal notranslate"><span class="pre">AFTER_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.format_hyperlink"><code class="docutils literal notranslate"><span class="pre">format_hyperlink()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.format_rst"><code class="docutils literal notranslate"><span class="pre">format_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.replace_only_directives"><code class="docutils literal notranslate"><span class="pre">replace_only_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.remove_raw_directives"><code class="docutils literal notranslate"><span class="pre">remove_raw_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.replace_attrs"><code class="docutils literal notranslate"><span class="pre">replace_attrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.get_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_xref_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rst.html#sphinx_readme.utils.rst.get_all_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_all_xref_variants()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sphinx.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.sphinx</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sphinx.html#sphinx_readme.utils.sphinx.ExternalRef"><code class="docutils literal notranslate"><span class="pre">ExternalRef</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sphinx.html#sphinx_readme.utils.sphinx.set_conf_val"><code class="docutils literal notranslate"><span class="pre">set_conf_val()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sphinx.html#sphinx_readme.utils.sphinx.get_conf_val"><code class="docutils literal notranslate"><span class="pre">get_conf_val()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docutils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.docutils</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docutils.html#sphinx_readme.utils.docutils.get_doctree"><code class="docutils literal notranslate"><span class="pre">get_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="docutils.html#sphinx_readme.utils.docutils.parse_node_text"><code class="docutils literal notranslate"><span class="pre">parse_node_text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="contents.html">sphinx-readme</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="contents.html"></a></li>
+<li class="breadcrumb-item"><a href="modules.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme</span></code> package</a></li>
+<li class="breadcrumb-item"><a href="utils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils</span></code> subpackage</a></li>
+<li class="breadcrumb-item active">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule</li>
+<li class="wy-breadcrumbs-aside">
+<a class="fa fa-github" href="https://github.com/TDKorn/sphinx-readme/blob/git.rst"> Edit on GitHub</a>
+</li>
+</ul><div aria-label="Sequential page navigation" class="rst-breadcrumbs-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="utils.html" title="The sphinx_readme.utils subpackage"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="linkcode.html" title="The sphinx_readme.utils.linkcode submodule">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="module-sphinx_readme.utils.git">
+<span id="the-sphinx-readme-utils-git-submodule"></span><h1>The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule<a class="headerlink" href="#module-sphinx_readme.utils.git" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_repo_url">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_repo_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L9-L42"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_repo_url" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_repo_url"><span class="k">def</span> <span class="nf">get_repo_url</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Parses the repository URL from the Sphinx :external+sphinx:confval:`html_context` dict</span>
+
+<span class="sd">    :param context: the ``html_context`` dict</span>
+<span class="sd">    :return: the base URL of the project's repository</span>
+<span class="sd">    :raises ExtensionError: if the repository URL cannot be parsed from ``html_context``</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"``context`` must be a dictionary"</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'github'</span><span class="p">,</span> <span class="s1">'gitlab'</span><span class="p">,</span> <span class="s1">'bitbucket'</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">_user"</span><span class="p">)</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">_repo"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">((</span><span class="n">user</span><span class="p">,</span> <span class="n">repo</span><span class="p">)):</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="kp">is_valid_username</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"``sphinx_readme``: </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2"> username is invalid."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="kp">is_valid_repo</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"``sphinx_readme``: </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2"> repo is invalid."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">"bitbucket"</span><span class="p">:</span>
+            <span class="n">tld</span> <span class="o">=</span> <span class="s2">"org"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tld</span> <span class="o">=</span> <span class="s2">"com"</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">tld</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">"</span>
+
+    <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+        <span class="s2">"``sphinx_readme``: unable to determine repo url"</span><span class="p">)</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Parses the repository URL from the Sphinx <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context" title="(in Sphinx v7.3.0)"><code class="xref std std-confval docutils literal notranslate"><span class="pre">html_context</span></code></a> dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><em>Dict</em></a>) – the <code class="docutils literal notranslate"><span class="pre">html_context</span></code> dict</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the base URL of the project’s repository</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ExtensionError</strong> – if the repository URL cannot be parsed from <code class="docutils literal notranslate"><span class="pre">html_context</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.is_valid_username">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">is_valid_username</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L45-L72"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.is_valid_username" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.is_valid_username"><span class="k">def</span> <span class="nf">is_valid_username</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Validates a username on the given hosting platform.</span>
+
+<span class="sd">    .. admonition:: **Username Constraints**</span>
+<span class="sd">       :class: tip</span>
+
+<span class="sd">       :GitHub:</span>
+<span class="sd">          Usernames can only contain alphanumeric characters and hyphens; can't start or end with a hyphen or</span>
+<span class="sd">          have consecutive hyphens; must be between 1 and 39 characters long.</span>
+<span class="sd">       :GitLab:</span>
+<span class="sd">          Usernames can only contain alphanumeric characters, underscores, hyphens, and periods;</span>
+<span class="sd">          can't start or end with special characters or contain consecutive special characters;</span>
+<span class="sd">          must be between 2 and 255 characters long.</span>
+<span class="sd">       :BitBucket:</span>
+<span class="sd">          Usernames can only contain alphanumeric characters, hyphens, and underscores.</span>
+
+<span class="sd">    :param username: the username to validate.</span>
+<span class="sd">    :param host: the platform where the repository is hosted.</span>
+<span class="sd">    :return: True if the username is valid for the given platform, otherwise False.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s1">'github'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$"</span><span class="p">,</span> <span class="n">username</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">host</span> <span class="o">==</span> <span class="s1">'gitlab'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z0-9](?:[a-zA-Z0-9]|[_.-](?=[a-zA-Z0-9])){1,254}$"</span><span class="p">,</span> <span class="n">username</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">host</span> <span class="o">==</span> <span class="s1">'bitbucket'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^[\w-]+$'</span><span class="p">,</span> <span class="n">username</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Validates a username on the given hosting platform.</p>
+<div class="tip admonition">
+<p class="admonition-title"><strong>Username Constraints</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">GitHub</dt>
+<dd class="field-odd"><p>Usernames can only contain alphanumeric characters and hyphens; can’t start or end with a hyphen or
+have consecutive hyphens; must be between 1 and 39 characters long.</p>
+</dd>
+<dt class="field-even">GitLab</dt>
+<dd class="field-even"><p>Usernames can only contain alphanumeric characters, underscores, hyphens, and periods;
+can’t start or end with special characters or contain consecutive special characters;
+must be between 2 and 255 characters long.</p>
+</dd>
+<dt class="field-odd">BitBucket</dt>
+<dd class="field-odd"><p>Usernames can only contain alphanumeric characters, hyphens, and underscores.</p>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the username to validate.</p></li>
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the platform where the repository is hosted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the username is valid for the given platform, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.is_valid_repo">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">is_valid_repo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L75-L103"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.is_valid_repo" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.is_valid_repo"><span class="k">def</span> <span class="nf">is_valid_repo</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Validates the name of a git repository on the given hosting platform.</span>
+
+<span class="sd">    .. admonition:: **Repository Name Constraints**</span>
+<span class="sd">       :class: tip</span>
+
+<span class="sd">       :GitHub:</span>
+<span class="sd">          Repository names can only contain alphanumeric characters, hyphens, underscores, and periods;</span>
+<span class="sd">          must be between 1 and 100 characters long.</span>
+<span class="sd">       :GitLab:</span>
+<span class="sd">          Repository name can only contain alphanumeric characters, hyphens, underscores, periods, "+", or spaces.</span>
+<span class="sd">          It must start with a letter, digit, or '_' and be at least 1 character long.</span>
+<span class="sd">       :BitBucket:</span>
+<span class="sd">          Repository name can only contain alphanumeric characters, hyphens, underscores, and periods.</span>
+<span class="sd">          It must start with an alphanumeric character, underscore or period and can't have consecutive</span>
+<span class="sd">          hyphens or end with a hyphen. Must be between 1 and 62 characters long.</span>
+
+<span class="sd">    :param repo: the name of the repository.</span>
+<span class="sd">    :param host: the platform where the repository is hosted.</span>
+<span class="sd">    :return: True if the repository name is valid, otherwise False.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">"github"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[\w.-]{1,100}$"</span><span class="p">,</span> <span class="n">repo</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">"gitlab"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\w[\w.+ -]*$"</span><span class="p">,</span> <span class="n">repo</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">"bitbucket"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[\w.](?:[\w.]|-(?=[\w.])){0,61}$"</span><span class="p">,</span> <span class="n">repo</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Validates the name of a git repository on the given hosting platform.</p>
+<div class="tip admonition">
+<p class="admonition-title"><strong>Repository Name Constraints</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">GitHub</dt>
+<dd class="field-odd"><p>Repository names can only contain alphanumeric characters, hyphens, underscores, and periods;
+must be between 1 and 100 characters long.</p>
+</dd>
+<dt class="field-even">GitLab</dt>
+<dd class="field-even"><p>Repository name can only contain alphanumeric characters, hyphens, underscores, periods, “+”, or spaces.
+It must start with a letter, digit, or ‘_’ and be at least 1 character long.</p>
+</dd>
+<dt class="field-odd">BitBucket</dt>
+<dd class="field-odd"><p>Repository name can only contain alphanumeric characters, hyphens, underscores, and periods.
+It must start with an alphanumeric character, underscore or period and can’t have consecutive
+hyphens or end with a hyphen. Must be between 1 and 62 characters long.</p>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>repo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the name of the repository.</p></li>
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the platform where the repository is hosted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the repository name is valid, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_blob_url">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_blob_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L106-L127"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_blob_url" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_blob_url"><span class="k">def</span> <span class="nf">get_blob_url</span><span class="p">(</span><span class="n">repo_url</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="nc">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generates the base URL for a specific blob of a repository</span>
+
+<span class="sd">    :param repo_url: the base URL of the repository</span>
+<span class="sd">    :param blob: the blob of the repository to generate the link for</span>
+<span class="sd">    :param context: the Sphinx :external+sphinx:confval:`html_context` dict</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">dict</span><span class="p">):</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="kp">get_repo_host</span><span class="p">(</span><span class="n">repo_url</span><span class="p">)</span>
+        <span class="n">blob</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">_version"</span><span class="p">,</span> <span class="n">blob</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">blob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Use blob from kwarg/html_context</span>
+        <span class="n">blob</span> <span class="o">=</span> <span class="kp">get_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use hash of the most recent commit</span>
+        <span class="n">blob</span> <span class="o">=</span> <span class="kp">get_blob</span><span class="p">(</span><span class="s1">'head'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">"bitbucket"</span> <span class="ow">in</span> <span class="n">repo_url</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">repo_url</span><span class="o">.</span><span class="kp">strip</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"/src/</span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">repo_url</span><span class="o">.</span><span class="kp">strip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"/blob/</span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2">"</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Generates the base URL for a specific blob of a repository</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>repo_url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the base URL of the repository</p></li>
+<li><p><strong>blob</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – the blob of the repository to generate the link for</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><em>Dict</em></a><em>]</em>) – the Sphinx <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context" title="(in Sphinx v7.3.0)"><code class="xref std std-confval docutils literal notranslate"><span class="pre">html_context</span></code></a> dict</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_repo_host">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_repo_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo_url</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L130-L140"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_repo_host" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_repo_host"><span class="k">def</span> <span class="nf">get_repo_host</span><span class="p">(</span><span class="n">repo_url</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Returns the hosting platform of a repository</span>
+
+<span class="sd">    &gt;&gt;&gt; get_repo_host("https://github.com/TDKorn/sphinx-readme")</span>
+<span class="sd">    'github'</span>
+
+<span class="sd">    :param repo_url: the URL of the repository</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(?:https?://)?(?:www\.)?(\w+)\.(?:com|org)"</span><span class="p">,</span> <span class="n">repo_url</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="kp">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Returns the hosting platform of a repository</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_repo_host</span><span class="p">(</span><span class="s2">"https://github.com/TDKorn/sphinx-readme"</span><span class="p">)</span>
+<span class="go">'github'</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>repo_url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the URL of the repository</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><em>Optional</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_blob">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blob</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L143-L157"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_blob" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_blob"><span class="k">def</span> <span class="nf">get_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Returns the git blob corresponding to ``blob``</span>
+
+<span class="sd">    The value of ``blob`` can be any of ``"head"``, ``"last_tag"``, or ``"{blob}"``</span>
+
+<span class="sd">    * ``"head"``: returns the hash of the most recent commit; if this commit is tagged, uses the tag instead</span>
+<span class="sd">    * ``"last_tag"``: returns the most recent commit tag; if no tags exist, uses ``"head"``</span>
+<span class="sd">    * ``"{blob}"``: returns the specified blob as is, for example ``"master"`` or ``"v2.0.1"``</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">blob</span> <span class="o">==</span> <span class="s2">"head"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kp">get_head</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">blob</span> <span class="o">==</span> <span class="s1">'last_tag'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kp">get_last_tag</span><span class="p">()</span>
+    <span class="c1"># Return the branch/tree/blob you provided</span>
+    <span class="k">return</span> <span class="n">blob</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Returns the git blob corresponding to <code class="docutils literal notranslate"><span class="pre">blob</span></code></p>
+<p>The value of <code class="docutils literal notranslate"><span class="pre">blob</span></code> can be any of <code class="docutils literal notranslate"><span class="pre">"head"</span></code>, <code class="docutils literal notranslate"><span class="pre">"last_tag"</span></code>, or <code class="docutils literal notranslate"><span class="pre">"{blob}"</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">"head"</span></code>: returns the hash of the most recent commit; if this commit is tagged, uses the tag instead</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"last_tag"</span></code>: returns the most recent commit tag; if no tags exist, uses <code class="docutils literal notranslate"><span class="pre">"head"</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"{blob}"</span></code>: returns the specified blob as is, for example <code class="docutils literal notranslate"><span class="pre">"master"</span></code> or <code class="docutils literal notranslate"><span class="pre">"v2.0.1"</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_head">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_head</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L160-L182"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_head" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_head"><span class="k">def</span> <span class="nf">get_head</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Returns the hash of the most recent commit</span>
+
+<span class="sd">    If the most recent commit is tagged, the tag is returned instead</span>
+
+<span class="sd">    :raises RuntimeError: if the most recent commit can't be found</span>
+<span class="sd">    """</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">"git log -n1 --pretty=%H"</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># get most recent commit hash</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="kp">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="kp">split</span><span class="p">())</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span><span class="o">.</span><span class="kp">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+
+        <span class="c1"># if head is a tag, use tag as reference</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">"git describe --exact-match --tags "</span> <span class="o">+</span> <span class="n">head</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="kp">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">),</span> <span class="n">stderr</span><span class="o">=</span><span class="nc">DEVNULL</span><span class="p">)</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span><span class="o">.</span><span class="kp">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">tag</span>
+
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="nc">CalledProcessError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">head</span>
+
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="nc">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Failed to get head"</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>  <span class="c1"># so no head?</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Returns the hash of the most recent commit</p>
+<p>If the most recent commit is tagged, the tag is returned instead</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><strong>RuntimeError</strong></a> – if the most recent commit can’t be found</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_last_tag">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_last_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L185-L195"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_last_tag" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_last_tag"><span class="k">def</span> <span class="nf">get_last_tag</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Returns the most recent commit tag</span>
+
+<span class="sd">    :raises RuntimeError: if there are no tagged commits</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">"git describe --tags --abbrev=0"</span>
+        <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="kp">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span><span class="o">.</span><span class="kp">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="nc">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"No tags exist for the repo"</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Returns the most recent commit tag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><strong>RuntimeError</strong></a> – if there are no tagged commits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="sphinx_readme.utils.git.get_repo_dir">
+<span class="sig-prename descclassname"><span class="pre">sphinx_readme.utils.git.</span></span><span class="sig-name descname"><span class="pre">get_repo_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/utils/git.py#L198-L211"><span class="linkcode-link"><span class="pre">View</span> <span class="pre">on</span> <span class="pre">GitHub</span></span></a><a class="headerlink" href="#sphinx_readme.utils.git.get_repo_dir" title="Permalink to this definition"></a>
+<details class="sphinx-inlinecode">
+<summary>
+<span class="pre">View Source Code</span>
+</summary>
+<div class="highlight"><pre><div class="viewcode-block" id="sphinx_readme.utils.git.get_repo_dir"><span class="k">def</span> <span class="nf">get_repo_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Returns the root directory of the repository</span>
+
+<span class="sd">    :return: A Path object representing the working directory of the repository.</span>
+<span class="sd">    :raises RuntimeError: if the directory can't be determined</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">"git rev-parse --show-toplevel"</span>
+        <span class="n">repo_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="kp">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span><span class="o">.</span><span class="kp">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span>
+
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="nc">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Unable to determine the repository directory"</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+    <span class="k">return</span> <span class="n">repo_dir</span>
+</div></pre></div>
+</details>
+</dt>
+<dd><p>Returns the root directory of the repository</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A Path object representing the working directory of the repository.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><strong>RuntimeError</strong></a> – if the directory can’t be determined</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><em>Path</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="utils.html" rel="prev" title="The sphinx_readme.utils subpackage"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="linkcode.html" rel="next" title="The sphinx_readme.utils.linkcode submodule">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2023, Adam Korn.</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

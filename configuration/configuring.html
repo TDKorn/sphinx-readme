@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Extension Configuration — sphinx-readme 1.2.1 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-inlinecode.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/github_style.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css" rel="stylesheet" type="text/css"/>
+<link href="https://sphinx-readme.readthedocs.io/en/latest/configuration/configuring.html" rel="canonical"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/sphinx_highlight.js"></script>
+<script src="../_static/sphinx-inlinecode.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="sample_conf.html" rel="next" title="Sample conf.py"/>
+<link href="../index.html" rel="prev" title="Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../contents.html">
+            sphinx-readme
+              <img alt="Logo" class="logo" src="../_static/logo_html.png"/>
+</a>
+<div class="version">
+                1.2.1
+              </div>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">README</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#about-sphinx-readme">About Sphinx README</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#features">📋 Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#installation">⚙ Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#configuration">🔧 Configuration</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extension Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mandatory-conf-py-values">Mandatory <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#html-context"><code class="docutils literal notranslate"><span class="pre">html_context</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#html-baseurl"><code class="docutils literal notranslate"><span class="pre">html_baseurl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-src-files"><code class="docutils literal notranslate"><span class="pre">readme_src_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-docs-url-type"><code class="docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-conf-py-values">Optional <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#readme-out-dir"><code class="docutils literal notranslate"><span class="pre">readme_out_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-replace-attrs"><code class="docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-inline-markup"><code class="docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-raw-directive"><code class="docutils literal notranslate"><span class="pre">readme_raw_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-tags"><code class="docutils literal notranslate"><span class="pre">readme_tags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-include-directive"><code class="docutils literal notranslate"><span class="pre">readme_include_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-admonition-icons"><code class="docutils literal notranslate"><span class="pre">readme_admonition_icons</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-default-admonition-icon"><code class="docutils literal notranslate"><span class="pre">readme_default_admonition_icon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-rubric-heading"><code class="docutils literal notranslate"><span class="pre">readme_rubric_heading</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme-blob"><code class="docutils literal notranslate"><span class="pre">readme_blob</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linkcode-resolve"><code class="docutils literal notranslate"><span class="pre">linkcode_resolve</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample_conf.html">Sample <code class="docutils literal notranslate"><span class="pre">conf.py</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme</span></code> package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../parser.html">The <code class="docutils literal notranslate"><span class="pre">READMEParser</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser"><code class="docutils literal notranslate"><span class="pre">READMEParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.__init__"><code class="docutils literal notranslate"><span class="pre">READMEParser.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.config"><code class="docutils literal notranslate"><span class="pre">READMEParser.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.ref_map"><code class="docutils literal notranslate"><span class="pre">READMEParser.ref_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.sources"><code class="docutils literal notranslate"><span class="pre">READMEParser.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.toctrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.admonitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.rubrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.substitutions"><code class="docutils literal notranslate"><span class="pre">READMEParser.substitutions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.titles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.domains"><code class="docutils literal notranslate"><span class="pre">READMEParser.domains</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.roles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.objtypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.intersphinx_pkgs"><code class="docutils literal notranslate"><span class="pre">READMEParser.intersphinx_pkgs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.named_inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.named_inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_env"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_titles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_roles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_objtypes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_std_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_std_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_py_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_py_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.get_py_target"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_py_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.add_variants"><code class="docutils literal notranslate"><span class="pre">READMEParser.add_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_doctree"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_intersphinx_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_external_node"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_external_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.get_external_ref"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_ref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.get_external_id"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.is_external_xref"><code class="docutils literal notranslate"><span class="pre">READMEParser.is_external_xref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.resolve"><code class="docutils literal notranslate"><span class="pre">READMEParser.resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_rst_images"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rst_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_py_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_py_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.replace_unresolved_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_unresolved_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.get_xref_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_xref_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.get_admonition_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.get_admonition_icon"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_icon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../readme_config.html">The <code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig"><code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.__init__"><code class="docutils literal notranslate"><span class="pre">READMEConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.repo_blob"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_blob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.blob_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.blob_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.get_repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.get_docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_docs_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.setup_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">READMEConfig.setup_linkcode_resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.read_rst"><code class="docutils literal notranslate"><span class="pre">READMEConfig.read_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.parse_include_directives"><code class="docutils literal notranslate"><span class="pre">READMEConfig.parse_include_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.src_files"><code class="docutils literal notranslate"><span class="pre">READMEConfig.src_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.sources"><code class="docutils literal notranslate"><span class="pre">READMEConfig.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.out_dir"><code class="docutils literal notranslate"><span class="pre">READMEConfig.out_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.docs_url_type"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.repo_host"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.image_baseurl"><code class="docutils literal notranslate"><span class="pre">READMEConfig.image_baseurl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">READMEConfig.icon_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.admonition_template"><code class="docutils literal notranslate"><span class="pre">READMEConfig.admonition_template</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils</span></code> subpackage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../git.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_repo_url"><code class="docutils literal notranslate"><span class="pre">get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.is_valid_username"><code class="docutils literal notranslate"><span class="pre">is_valid_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.is_valid_repo"><code class="docutils literal notranslate"><span class="pre">is_valid_repo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_blob_url"><code class="docutils literal notranslate"><span class="pre">get_blob_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_repo_host"><code class="docutils literal notranslate"><span class="pre">get_repo_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_blob"><code class="docutils literal notranslate"><span class="pre">get_blob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_head"><code class="docutils literal notranslate"><span class="pre">get_head()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_last_tag"><code class="docutils literal notranslate"><span class="pre">get_last_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_repo_dir"><code class="docutils literal notranslate"><span class="pre">get_repo_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../linkcode.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.linkcode</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_url"><code class="docutils literal notranslate"><span class="pre">get_linkcode_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">get_linkcode_resolve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../rst.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.rst</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.escape_rst"><code class="docutils literal notranslate"><span class="pre">escape_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.BEFORE_XREF"><code class="docutils literal notranslate"><span class="pre">BEFORE_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.AFTER_XREF"><code class="docutils literal notranslate"><span class="pre">AFTER_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.format_hyperlink"><code class="docutils literal notranslate"><span class="pre">format_hyperlink()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.format_rst"><code class="docutils literal notranslate"><span class="pre">format_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.replace_only_directives"><code class="docutils literal notranslate"><span class="pre">replace_only_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.remove_raw_directives"><code class="docutils literal notranslate"><span class="pre">remove_raw_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.replace_attrs"><code class="docutils literal notranslate"><span class="pre">replace_attrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.get_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_xref_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.get_all_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_all_xref_variants()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../sphinx.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.sphinx</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../sphinx.html#sphinx_readme.utils.sphinx.ExternalRef"><code class="docutils literal notranslate"><span class="pre">ExternalRef</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../sphinx.html#sphinx_readme.utils.sphinx.set_conf_val"><code class="docutils literal notranslate"><span class="pre">set_conf_val()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../sphinx.html#sphinx_readme.utils.sphinx.get_conf_val"><code class="docutils literal notranslate"><span class="pre">get_conf_val()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docutils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.docutils</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../docutils.html#sphinx_readme.utils.docutils.get_doctree"><code class="docutils literal notranslate"><span class="pre">get_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../docutils.html#sphinx_readme.utils.docutils.parse_node_text"><code class="docutils literal notranslate"><span class="pre">parse_node_text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../contents.html">sphinx-readme</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../contents.html"></a></li>
+<li class="breadcrumb-item active">Extension Configuration</li>
+<li class="wy-breadcrumbs-aside">
+<a class="fa fa-github" href="https://github.com/TDKorn/sphinx-readme/blob/configuration/configuring.rst"> Edit on GitHub</a>
+</li>
+</ul><div aria-label="Sequential page navigation" class="rst-breadcrumbs-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../index.html" title="Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="sample_conf.html" title="Sample conf.py">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="extension-configuration">
+<h1>Extension Configuration<a class="headerlink" href="#extension-configuration" title="Permalink to this heading"></a></h1>
+<p>Install using pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sphinx</span><span class="o">-</span><span class="n">readme</span>
+</pre></div>
+</div>
+<p>Add the extension to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="s2">"sphinx_readme"</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>For an example of the minimum required configuration,
+please see the <a class="reference external" href="sample_conf.html">sample <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file</a></p>
+<div class="section" id="mandatory-conf-py-values">
+<span id="mandatory-vals"></span><h2>Mandatory <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values<a class="headerlink" href="#mandatory-conf-py-values" title="Permalink to this heading"></a></h2>
+<div class="section" id="html-context">
+<h3><code class="docutils literal notranslate"><span class="pre">html_context</span></code><a class="headerlink" href="#html-context" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-html_context">
+<span class="sig-name descname"><span class="pre">html_context</span></span><a class="headerlink" href="#confval-html_context" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary containing info about your repository (<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context" title="(in Sphinx v7.3.0)"><code class="xref std std-confval docutils literal notranslate"><span class="pre">html_context</span></code></a>)</p>
+<ul class="simple">
+<li><p>At minimum, the username and repository name must be specified</p></li>
+<li><p>Please see <a class="reference external" href="https://docs.readthedocs.io/en/stable/guides/edit-source-links-sphinx.html#github" title="(in Read the Docs user documentation v10.23.1)"><span class="xref std std-ref">HTML Context Settings</span></a>
+to determine the correct dictionary keys for your hosting platform</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="html-baseurl">
+<h3><code class="docutils literal notranslate"><span class="pre">html_baseurl</span></code><a class="headerlink" href="#html-baseurl" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-html_baseurl">
+<span class="sig-name descname"><span class="pre">html_baseurl</span></span><a class="headerlink" href="#confval-html_baseurl" title="Permalink to this definition"></a></dt>
+<dd><p>The base URL which points to the root of the HTML documentation (<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl" title="(in Sphinx v7.3.0)"><code class="xref std std-confval docutils literal notranslate"><span class="pre">html_baseurl</span></code></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-src-files">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_src_files</span></code><a class="headerlink" href="#readme-src-files" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_src_files">
+<span class="sig-name descname"><span class="pre">readme_src_files</span></span><a class="headerlink" href="#confval-readme_src_files" title="Permalink to this definition"></a></dt>
+<dd><p>An individual/list of <code class="docutils literal notranslate"><span class="pre">rst</span></code> source files to parse, or a dictionary of source files mapped to output files</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Filepaths should be specified relative to the source directory
+and <a class="reference internal" href="#confval-readme_out_dir"><code class="xref std std-confval docutils literal notranslate"><span class="pre">output</span> <span class="pre">directory</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">Union[str,</span> <span class="pre">List]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-docs-url-type">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code><a class="headerlink" href="#readme-docs-url-type" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_docs_url_type">
+<span class="sig-name descname"><span class="pre">readme_docs_url_type</span></span><a class="headerlink" href="#confval-readme_docs_url_type" title="Permalink to this definition"></a></dt>
+<dd><p>The documentation source to link to when resolving <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc" title="(in Sphinx v7.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">autodoc</span></code></a> cross-references</p>
+<p>Must be either <code class="docutils literal notranslate"><span class="pre">"code"</span></code> or <code class="docutils literal notranslate"><span class="pre">"html"</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">"code"</span></code>: uses <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode" title="(in Sphinx v7.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.linkcode</span></code></a> to replace references with links to highlighted source code</p></li>
+</ul>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://github.com/TDKorn/sphinx-readme/blob/main/sphinx_readme/parser.py#L256-L293"><code class="docutils literal notranslate"><span class="pre">parse_intersphinx_nodes()</span></code></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">"html"</span></code>: replaces references with links to HTML documentation entries</p></li>
+</ul>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes" title="sphinx_readme.parser.READMEParser.parse_intersphinx_nodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_intersphinx_nodes()</span></code></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If set to <code class="docutils literal notranslate"><span class="pre">code</span></code>, non-external <code class="code docutils literal notranslate"><span class="pre">:attr:</span></code> cross-references will not be replaced with links</p>
+<ul class="simple">
+<li><p>Instead, they’ll be replaced with <code class="docutils literal notranslate"><span class="pre">inline</span> <span class="pre">literals</span></code> or left as is</p></li>
+<li><p>Please see <a class="reference internal" href="#confval-readme_replace_attrs"><code class="xref std std-confval docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code></a> and <a class="reference internal" href="#confval-readme_inline_markup"><code class="xref std std-confval docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+</div>
+</div>
+<div class="section" id="optional-conf-py-values">
+<span id="optional-vals"></span><h2>Optional <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values<a class="headerlink" href="#optional-conf-py-values" title="Permalink to this heading"></a></h2>
+<div class="section" id="readme-out-dir">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_out_dir</span></code><a class="headerlink" href="#readme-out-dir" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_out_dir">
+<span class="sig-name descname"><span class="pre">readme_out_dir</span></span><a class="headerlink" href="#confval-readme_out_dir" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies the path of the directory to save generated <code class="docutils literal notranslate"><span class="pre">rst</span></code> files to</p>
+<p>The value should be provided as either</p>
+<ol class="arabic simple">
+<li><p>An absolute path; or</p></li>
+<li><p>A path relative to the source directory</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Union[str, Path]</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p>the root directory of your repository, via <a class="reference internal" href="../git.html#sphinx_readme.utils.git.get_repo_dir" title="sphinx_readme.utils.git.get_repo_dir"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_repo_dir()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-replace-attrs">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code><a class="headerlink" href="#readme-replace-attrs" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_replace_attrs">
+<span class="sig-name descname"><span class="pre">readme_replace_attrs</span></span><a class="headerlink" href="#confval-readme_replace_attrs" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies if non-external attribute (<code class="docutils literal notranslate"><span class="pre">:attr:</span></code>) cross-references should be replaced</p>
+<p>…</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the value of <a class="reference internal" href="#confval-readme_docs_url_type"><code class="xref std std-confval docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code></a> determines how replacements are made:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">"html"</span></code>: references are replaced with a link to the corresponding documentation entry</p></li>
+</ul>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><code class="code highlight docutils literal notranslate"><span class="pre">:attr:`icon_map`</span></code> would be replaced with <a class="reference external" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">icon_map</span></code></a> or <a class="reference external" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map">icon_map</a>,
+depending on the value of <a class="reference internal" href="#confval-readme_inline_markup"><code class="xref std std-confval docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></p>
+</dd>
+</dl>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">"code"</span></code>: attributes are replaced with inline markup</p></li>
+</ul>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><code class="code highlight docutils literal notranslate"><span class="pre">:attr:`icon_map`</span></code> would be replaced with <code class="docutils literal notranslate"><span class="pre">icon_map</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>External attribute cross-references are always replaced with links to documentation</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>bool</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-inline-markup">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_inline_markup</span></code><a class="headerlink" href="#readme-inline-markup" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_inline_markup">
+<span class="sig-name descname"><span class="pre">readme_inline_markup</span></span><a class="headerlink" href="#confval-readme_inline_markup" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies if replacements for cross-references should use inline markup</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the substitution for <code class="code highlight docutils literal notranslate"><span class="pre">:attr:`icon_map`</span></code> would be <a class="reference external" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">icon_map</span></code></a></p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">False</span></code>, the substitution for <code class="code highlight docutils literal notranslate"><span class="pre">:attr:`icon_map`</span></code> would be <a class="reference external" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map">icon_map</a></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>bool</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-raw-directive">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_raw_directive</span></code><a class="headerlink" href="#readme-raw-directive" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_raw_directive">
+<span class="sig-name descname"><span class="pre">readme_raw_directive</span></span><a class="headerlink" href="#confval-readme_raw_directive" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies if the <code class="docutils literal notranslate"><span class="pre">raw</span></code> directive is supported by the platform
+you intend to render the generated file on</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul class="simple">
+<li><p>GitHub supports the <code class="docutils literal notranslate"><span class="pre">raw</span></code> directive</p></li>
+<li><p>PyPi, GitLab, and BitBucket do not support the <code class="docutils literal notranslate"><span class="pre">raw</span></code> directive</p></li>
+</ul>
+</div>
+<p>If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>,</p>
+<ul class="simple">
+<li><p>Admonitions will be replaced with the <code class="docutils literal notranslate"><span class="pre">list-table</span></code> directive instead of HTML tables</p></li>
+<li><p>All <code class="docutils literal notranslate"><span class="pre">raw</span></code> directives in the file will be removed</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>bool</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-tags">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_tags</span></code><a class="headerlink" href="#readme-tags" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_tags">
+<span class="sig-name descname"><span class="pre">readme_tags</span></span><a class="headerlink" href="#confval-readme_tags" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#conf-tags" title="(in Sphinx v7.3.0)"><span class="xref std std-ref">tags</span></a> to use when evaluating
+the <code class="docutils literal notranslate"><span class="pre">&lt;expression&gt;</span></code> argument of <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-only" title="(in Sphinx v7.3.0)"><code class="xref rst rst-dir docutils literal notranslate"><span class="pre">only</span></code></a> directives</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>See <a class="reference internal" href="../rst.html#sphinx_readme.utils.rst.replace_only_directives" title="sphinx_readme.utils.rst.replace_only_directives"><code class="xref py py-func docutils literal notranslate"><span class="pre">replace_only_directives()</span></code></a> for more detail</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>List[str]</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">["readme"]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-include-directive">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_include_directive</span></code><a class="headerlink" href="#readme-include-directive" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_include_directive">
+<span class="sig-name descname"><span class="pre">readme_include_directive</span></span><a class="headerlink" href="#confval-readme_include_directive" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies if <code class="docutils literal notranslate"><span class="pre">include</span></code> directives should be parsed
+(file content inserted) or removed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>bool</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-admonition-icons">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_admonition_icons</span></code><a class="headerlink" href="#readme-admonition-icons" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_admonition_icons">
+<span class="sig-name descname"><span class="pre">readme_admonition_icons</span></span><a class="headerlink" href="#confval-readme_admonition_icons" title="Permalink to this definition"></a></dt>
+<dd><p>An optional mapping of admonition classes and their icons</p>
+<ul class="simple">
+<li><p>If specified, will be used to update the <a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map" title="sphinx_readme.config.READMEConfig.icon_map"><code class="xref py py-attr docutils literal notranslate"><span class="pre">icon_map</span></code></a> (below)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Optional[Dict[str, str]]</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s1">'attention'</span><span class="p">:</span> <span class="s1">'🔔️'</span><span class="p">,</span>
+ <span class="s1">'caution'</span><span class="p">:</span> <span class="s1">'⚠️'</span><span class="p">,</span>
+ <span class="s1">'danger'</span><span class="p">:</span> <span class="s1">'☢'</span><span class="p">,</span>
+ <span class="s1">'error'</span><span class="p">:</span> <span class="s1">'⛔'</span><span class="p">,</span>
+ <span class="s1">'hint'</span><span class="p">:</span> <span class="s1">'🧠'</span><span class="p">,</span>
+ <span class="s1">'important'</span><span class="p">:</span> <span class="s1">'📢'</span><span class="p">,</span>
+ <span class="s1">'note'</span><span class="p">:</span> <span class="s1">'📝'</span><span class="p">,</span>
+ <span class="s1">'tip'</span><span class="p">:</span> <span class="s1">'💡'</span><span class="p">,</span>
+ <span class="s1">'warning'</span><span class="p">:</span> <span class="s1">'🚩'</span><span class="p">,</span>
+ <span class="s1">'default'</span><span class="p">:</span> <span class="s1">'📄'</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="readme-default-admonition-icon">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_default_admonition_icon</span></code><a class="headerlink" href="#readme-default-admonition-icon" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_default_admonition_icon">
+<span class="sig-name descname"><span class="pre">readme_default_admonition_icon</span></span><a class="headerlink" href="#confval-readme_default_admonition_icon" title="Permalink to this definition"></a></dt>
+<dd><p>The icon to use when a generic admonition either</p>
+<ul class="simple">
+<li><p>Has no class</p></li>
+<li><p>Uses a class that has no corresponding icon in the <a class="reference internal" href="../readme_config.html#sphinx_readme.config.READMEConfig.icon_map" title="sphinx_readme.config.READMEConfig.icon_map"><code class="xref py py-attr docutils literal notranslate"><span class="pre">icon_map</span></code></a></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>str</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">"📄"</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-rubric-heading">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_rubric_heading</span></code><a class="headerlink" href="#readme-rubric-heading" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_rubric_heading">
+<span class="sig-name descname"><span class="pre">readme_rubric_heading</span></span><a class="headerlink" href="#confval-readme_rubric_heading" title="Permalink to this definition"></a></dt>
+<dd><p>The character to use when replacing <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-rubric" title="(in Sphinx v7.3.0)"><code class="xref rst rst-dir docutils literal notranslate"><span class="pre">rubric</span></code></a> directives with section headers</p>
+<p>Must be one of the following valid section title adornment characters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>! " # $ % &amp; ' ( ) * + , - . / : ; &lt; = &gt; ? @ [ \ ] ^ _ ` { | } ~
+</pre></div>
+</div>
+<p>If not specified, rubrics will be replaced with bold text instead of a heading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>str</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p>bold inline markup (<code class="docutils literal notranslate"><span class="pre">**title**</span></code>)</p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="readme-blob">
+<h3><code class="docutils literal notranslate"><span class="pre">readme_blob</span></code><a class="headerlink" href="#readme-blob" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-readme_blob">
+<span class="sig-name descname"><span class="pre">readme_blob</span></span><a class="headerlink" href="#confval-readme_blob" title="Permalink to this definition"></a></dt>
+<dd><p>The repository blob to link to - any of <code class="docutils literal notranslate"><span class="pre">"head"</span></code>, <code class="docutils literal notranslate"><span class="pre">"last_tag"</span></code>, or <code class="docutils literal notranslate"><span class="pre">"{blob}"</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">"head"</span></code>: links to the most recent commit hash; if this commit is tagged, uses the tag instead</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"last_tag"</span></code>: links to the most recently tagged commit; if no tags exist, uses <code class="docutils literal notranslate"><span class="pre">"head"</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"{blob}"</span></code>: links to the specified blob, for example <code class="docutils literal notranslate"><span class="pre">"master"</span></code> or <code class="docutils literal notranslate"><span class="pre">"v2.0.1"</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>str</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">"head"</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="section" id="linkcode-resolve">
+<h3><code class="docutils literal notranslate"><span class="pre">linkcode_resolve</span></code><a class="headerlink" href="#linkcode-resolve" title="Permalink to this heading"></a></h3>
+<dl class="std confval">
+<dt class="sig sig-object std" id="confval-linkcode_resolve">
+<span class="sig-name descname"><span class="pre">linkcode_resolve</span></span><a class="headerlink" href="#confval-linkcode_resolve" title="Permalink to this definition"></a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">linkcode_resolve()</span></code> function for <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode" title="(in Sphinx v7.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.linkcode</span></code></a> to use
+when resolving the target of <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#module-sphinx.ext.autodoc" title="(in Sphinx v7.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">autodoc</span></code></a> cross-references</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Callable</em></p>
+</dd>
+<dt class="field-even">Default</dt>
+<dd class="field-even"><p>return value of <a class="reference internal" href="../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_resolve" title="sphinx_readme.utils.linkcode.get_linkcode_resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_linkcode_resolve()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../index.html" rel="prev" title="Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="sample_conf.html" rel="next" title="Sample conf.py">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2023, Adam Korn.</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

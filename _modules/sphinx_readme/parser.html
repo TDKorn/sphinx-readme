@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sphinx_readme.parser &mdash; sphinx-readme 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-inlinecode.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/github_style.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="canonical" href="https://sphinx-readme.readthedocs.io/en/latest/_modules/sphinx_readme/parser.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/sphinx-inlinecode.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../contents.html" class="icon icon-home">
+            sphinx-readme
+              <img src="../../_static/logo_html.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">README</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#about-sphinx-readme">About Sphinx README</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#features">📋 Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#installation">⚙ Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#configuration">🔧 Configuration</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration/configuring.html">Extension Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/configuring.html#mandatory-conf-py-values">Mandatory <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#html-context"><code class="docutils literal notranslate"><span class="pre">html_context</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#html-baseurl"><code class="docutils literal notranslate"><span class="pre">html_baseurl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-src-files"><code class="docutils literal notranslate"><span class="pre">readme_src_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-docs-url-type"><code class="docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/configuring.html#optional-conf-py-values">Optional <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-out-dir"><code class="docutils literal notranslate"><span class="pre">readme_out_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-replace-attrs"><code class="docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-inline-markup"><code class="docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-raw-directive"><code class="docutils literal notranslate"><span class="pre">readme_raw_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-tags"><code class="docutils literal notranslate"><span class="pre">readme_tags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-include-directive"><code class="docutils literal notranslate"><span class="pre">readme_include_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-admonition-icons"><code class="docutils literal notranslate"><span class="pre">readme_admonition_icons</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-default-admonition-icon"><code class="docutils literal notranslate"><span class="pre">readme_default_admonition_icon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-rubric-heading"><code class="docutils literal notranslate"><span class="pre">readme_rubric_heading</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-blob"><code class="docutils literal notranslate"><span class="pre">readme_blob</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#linkcode-resolve"><code class="docutils literal notranslate"><span class="pre">linkcode_resolve</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration/sample_conf.html">Sample <code class="docutils literal notranslate"><span class="pre">conf.py</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme</span></code> package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../parser.html">The <code class="docutils literal notranslate"><span class="pre">READMEParser</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser"><code class="docutils literal notranslate"><span class="pre">READMEParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.__init__"><code class="docutils literal notranslate"><span class="pre">READMEParser.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.config"><code class="docutils literal notranslate"><span class="pre">READMEParser.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.ref_map"><code class="docutils literal notranslate"><span class="pre">READMEParser.ref_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.sources"><code class="docutils literal notranslate"><span class="pre">READMEParser.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.toctrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.admonitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.rubrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.substitutions"><code class="docutils literal notranslate"><span class="pre">READMEParser.substitutions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.titles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.domains"><code class="docutils literal notranslate"><span class="pre">READMEParser.domains</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.roles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.objtypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.intersphinx_pkgs"><code class="docutils literal notranslate"><span class="pre">READMEParser.intersphinx_pkgs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.named_inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.named_inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_env"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_titles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_roles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_objtypes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_std_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_std_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_py_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_py_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_py_target"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_py_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.add_variants"><code class="docutils literal notranslate"><span class="pre">READMEParser.add_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_doctree"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_intersphinx_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_external_node"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_external_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_external_ref"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_ref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_external_id"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.is_external_xref"><code class="docutils literal notranslate"><span class="pre">READMEParser.is_external_xref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.resolve"><code class="docutils literal notranslate"><span class="pre">READMEParser.resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_rst_images"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rst_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_py_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_py_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_unresolved_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_unresolved_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_xref_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_xref_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_icon"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_icon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme_config.html">The <code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig"><code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.__init__"><code class="docutils literal notranslate"><span class="pre">READMEConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.repo_blob"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_blob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.blob_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.blob_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.get_repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.get_docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_docs_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.setup_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">READMEConfig.setup_linkcode_resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.read_rst"><code class="docutils literal notranslate"><span class="pre">READMEConfig.read_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.parse_include_directives"><code class="docutils literal notranslate"><span class="pre">READMEConfig.parse_include_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.src_files"><code class="docutils literal notranslate"><span class="pre">READMEConfig.src_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.sources"><code class="docutils literal notranslate"><span class="pre">READMEConfig.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.out_dir"><code class="docutils literal notranslate"><span class="pre">READMEConfig.out_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.docs_url_type"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.repo_host"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.image_baseurl"><code class="docutils literal notranslate"><span class="pre">READMEConfig.image_baseurl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">READMEConfig.icon_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.admonition_template"><code class="docutils literal notranslate"><span class="pre">READMEConfig.admonition_template</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils</span></code> subpackage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../git.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_repo_url"><code class="docutils literal notranslate"><span class="pre">get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.is_valid_username"><code class="docutils literal notranslate"><span class="pre">is_valid_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.is_valid_repo"><code class="docutils literal notranslate"><span class="pre">is_valid_repo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_blob_url"><code class="docutils literal notranslate"><span class="pre">get_blob_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_repo_host"><code class="docutils literal notranslate"><span class="pre">get_repo_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_blob"><code class="docutils literal notranslate"><span class="pre">get_blob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_head"><code class="docutils literal notranslate"><span class="pre">get_head()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_last_tag"><code class="docutils literal notranslate"><span class="pre">get_last_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_repo_dir"><code class="docutils literal notranslate"><span class="pre">get_repo_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../linkcode.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.linkcode</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_url"><code class="docutils literal notranslate"><span class="pre">get_linkcode_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">get_linkcode_resolve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../rst.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.rst</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.escape_rst"><code class="docutils literal notranslate"><span class="pre">escape_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.BEFORE_XREF"><code class="docutils literal notranslate"><span class="pre">BEFORE_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.AFTER_XREF"><code class="docutils literal notranslate"><span class="pre">AFTER_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.format_hyperlink"><code class="docutils literal notranslate"><span class="pre">format_hyperlink()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.format_rst"><code class="docutils literal notranslate"><span class="pre">format_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.replace_only_directives"><code class="docutils literal notranslate"><span class="pre">replace_only_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.remove_raw_directives"><code class="docutils literal notranslate"><span class="pre">remove_raw_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.replace_attrs"><code class="docutils literal notranslate"><span class="pre">replace_attrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.get_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_xref_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.get_all_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_all_xref_variants()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../sphinx.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.sphinx</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../sphinx.html#sphinx_readme.utils.sphinx.ExternalRef"><code class="docutils literal notranslate"><span class="pre">ExternalRef</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sphinx.html#sphinx_readme.utils.sphinx.set_conf_val"><code class="docutils literal notranslate"><span class="pre">set_conf_val()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sphinx.html#sphinx_readme.utils.sphinx.get_conf_val"><code class="docutils literal notranslate"><span class="pre">get_conf_val()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../docutils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.docutils</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../docutils.html#sphinx_readme.utils.docutils.get_doctree"><code class="docutils literal notranslate"><span class="pre">get_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../docutils.html#sphinx_readme.utils.docutils.parse_node_text"><code class="docutils literal notranslate"><span class="pre">parse_node_text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">sphinx-readme</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../contents.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sphinx_readme.parser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sphinx_readme.parser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="nc">Path</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="nc">Dict</span><span class="p">,</span> <span class="nc">List</span><span class="p">,</span> <span class="nc">Set</span><span class="p">,</span> <span class="nc">Union</span><span class="p">,</span> <span class="nc">Callable</span><span class="p">,</span> <span class="nc">Optional</span><span class="p">,</span> <span class="nc">Tuple</span><span class="p">,</span> <span class="nc">Iterable</span>
+
+<span class="kn">from</span> <span class="nn">docutils</span> <span class="kn">import</span> <span class="n">nodes</span>
+<span class="kn">from</span> <span class="nn">sphinx</span> <span class="kn">import</span> <span class="n">addnodes</span>
+<span class="kn">from</span> <span class="nn">sphinx.domains.python</span> <span class="kn">import</span> <span class="nc">ObjectEntry</span>
+<span class="kn">from</span> <span class="nn">sphinx.application</span> <span class="kn">import</span> <span class="nc">Sphinx</span><span class="p">,</span> <span class="nc">BuildEnvironment</span>
+
+<span class="kn">from</span> <span class="nn">sphinx_readme.config</span> <span class="kn">import</span> <span class="nc">READMEConfig</span>
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.docutils</span> <span class="kn">import</span> <span class="n">get_doctree</span><span class="p">,</span> <span class="n">parse_node_text</span>
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.sphinx</span> <span class="kn">import</span> <span class="n">get_conf_val</span><span class="p">,</span> <span class="nc">ExternalRef</span>
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.rst</span> <span class="kn">import</span> <span class="n">get_all_xref_variants</span><span class="p">,</span> <span class="n">escape_rst</span><span class="p">,</span> <span class="n">format_rst</span><span class="p">,</span> <span class="n">replace_xrefs</span><span class="p">,</span> <span class="n">format_hyperlink</span><span class="p">,</span> <span class="nc">BEFORE_XREF</span><span class="p">,</span> <span class="nc">AFTER_XREF</span>
+
+
+<div class="viewcode-block" id="READMEParser"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser">[docs]</a><span class="k">class</span> <span class="nc">READMEParser</span><span class="p">:</span>
+
+<div class="viewcode-block" id="READMEParser.__init__"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">):</span>
+        <span class="c1">#: The :class:`~.READMEConfig` for the parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="nc">READMEConfig</span> <span class="o">=</span> <span class="nc">READMEConfig</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logger</span>
+        <span class="c1">#: Mapping of info for standard and :mod:`sphinx.ext.autodoc` cross-references</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Union</span><span class="p">[</span><span class="nc">List</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Mapping of source files to their content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sources</span>
+        <span class="c1">#: Mapping of source files to their toctree data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toctrees</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kp">defaultdict</span><span class="p">(</span><span class="bp">list</span><span class="p">)</span>
+        <span class="c1">#: Mapping of source files to their admonition data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admonitions</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Mapping of source files to their rubric data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rubrics</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Mapping of source files to cross-reference substitution definitions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">substitutions</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kp">defaultdict</span><span class="p">(</span><span class="bp">dict</span><span class="p">)</span>
+        <span class="c1">#: Mapping of docnames to their parsed titles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">titles</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Tuple of currently supported Sphinx domains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">:</span> <span class="nc">Tuple</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="s2">&quot;rst&quot;</span><span class="p">)</span>
+        <span class="c1">#: Mapping of domain names to their cross-reference roles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Mapping of role names to the object types they can cross-reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objtypes</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Packages in the intersphinx cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intersphinx_pkgs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#: Easy access to intersphinx inventory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inventory</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Easy access to intersphinx named inventory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_inventory</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_env"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_env">[docs]</a>    <span class="k">def</span> <span class="nf">parse_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nc">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses domain data and document titles from the |env|&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="kp">parse_titles</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="kp">parse_roles</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="kp">parse_objtypes</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="kp">parse_py_domain</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="kp">parse_std_domain</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="c1"># Add access to data from intersphinx, if applicable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inventory</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;intersphinx_inventory&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_inventory</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;intersphinx_named_inventory&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intersphinx_pkgs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;intersphinx_named_inventory&#39;</span><span class="p">,</span> <span class="p">{}))</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_titles"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_titles">[docs]</a>    <span class="k">def</span> <span class="nf">parse_titles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nc">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses document and section titles from the |env|&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">docname</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">found_docs</span><span class="p">:</span>
+            <span class="n">doctree</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="kp">get_doctree</span><span class="p">(</span><span class="n">docname</span><span class="p">)</span>
+            <span class="n">sections</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">doctree</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">section</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+                <span class="c1"># Parse titles of sections referenced with :ref:</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s2">&quot;expect_referenced_by_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="n">ref_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">expect_referenced_by_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="kp">next_node</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">rawsource</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">titles</span><span class="p">[</span><span class="n">ref_id</span><span class="p">]</span> <span class="o">=</span> <span class="kp">replace_xrefs</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Parse title of document for :doc: refs</span>
+                <span class="n">h1</span> <span class="o">=</span> <span class="n">sections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="kp">next_node</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">rawsource</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">titles</span><span class="p">[</span><span class="n">docname</span><span class="p">]</span> <span class="o">=</span> <span class="kp">replace_xrefs</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">continue</span>  <span class="c1"># Document without title</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_roles"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_roles">[docs]</a>    <span class="k">def</span> <span class="nf">parse_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nc">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses the available roles for cross-referencing objects in the</span>
+<span class="sd">        |py_domain|, |std_domain|, and |rst_domain|</span>
+
+<span class="sd">        :param env: the |env|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="n">domain</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="kp">get_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">.</span><span class="n">roles</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_objtypes"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_objtypes">[docs]</a>    <span class="k">def</span> <span class="nf">parse_objtypes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nc">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps cross-reference roles to their corresponding object types in the</span>
+<span class="sd">        |py_domain|, |std_domain|, and |rst_domain|</span>
+
+<span class="sd">        :param env: the |env|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="n">domain</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objtypes</span><span class="p">[</span><span class="n">role</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">objtype</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Prefix with domain to match intersphinx inventory</span>
+                    <span class="k">for</span> <span class="n">objtype</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="kp">get_domain</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">.</span><span class="kp">objtypes_for_role</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="p">]</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_std_domain"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_std_domain">[docs]</a>    <span class="k">def</span> <span class="nf">parse_std_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nc">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses cross-reference data from the |std_domain|</span>
+
+<span class="sd">        :param env: the |env|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ref_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">docname</span><span class="p">,</span> <span class="n">anchor</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="kp">get_domain</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">)</span><span class="o">.</span><span class="kp">get_objects</span><span class="p">():</span>
+            <span class="n">replace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">titles</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">html_baseurl</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">docname</span><span class="si">}</span><span class="s2">.html&quot;</span>
+
+            <span class="k">if</span> <span class="n">anchor</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">anchor</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;confval&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inline_markup</span><span class="p">:</span>
+                <span class="n">replace</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;``</span><span class="si">{</span><span class="n">replace</span><span class="si">}</span><span class="s2">``&quot;</span>
+
+            <span class="k">elif</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span>
+                <span class="n">role</span> <span class="o">=</span> <span class="s2">&quot;ref&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="o">.</span><span class="kp">setdefault</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">{})[</span><span class="n">ref_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;replace&quot;</span><span class="p">:</span> <span class="n">replace</span><span class="p">,</span>
+                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target</span>
+            <span class="p">}</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_py_domain"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_py_domain">[docs]</a>    <span class="k">def</span> <span class="nf">parse_py_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nc">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses cross-reference data for |py_domain| objects</span>
+
+<span class="sd">        :param env: the |env|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">py_objects</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">domaindata</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;py&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s2">&quot;objects&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">linkcode_resolve</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;linkcode_resolve&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">qualname</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">py_objects</span><span class="o">.</span><span class="kp">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_py_target</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">linkcode_resolve</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="kp">add_variants</span><span class="p">(</span>
+                    <span class="n">qualified_name</span><span class="o">=</span><span class="n">qualname</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+                    <span class="n">is_callable</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">objtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;function&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="READMEParser.get_py_target"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.get_py_target">[docs]</a>    <span class="k">def</span> <span class="nf">get_py_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nc">ObjectEntry</span><span class="p">,</span> <span class="n">linkcode_resolve</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="nc">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolves the target for a cross-reference to an object in the |py_domain|</span>
+
+<span class="sd">        :param entry: the ``ObjectEntry`` for the object</span>
+<span class="sd">        :param linkcode_resolve: function to resolve targets when linking to source code</span>
+<span class="sd">        :return: the link to the object&#39;s corresponding documentation entry or highlighted source code</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">docs_url_type</span> <span class="o">==</span> <span class="s2">&quot;html&quot;</span><span class="p">:</span>
+            <span class="c1"># All links to html documentation follow the same format</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">html_baseurl</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">docname</span><span class="si">}</span><span class="s2">.html#</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">objtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;attribute&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Cannot link to source code</span>
+
+        <span class="c1"># Use linkcode_resolve to generate links</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">dict</span><span class="o">.</span><span class="kp">fromkeys</span><span class="p">((</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="s2">&quot;fullname&quot;</span><span class="p">))</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">node_id</span><span class="o">.</span><span class="kp">removeprefix</span><span class="p">(</span><span class="s1">&#39;module-&#39;</span><span class="p">)</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">objtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="s2">&quot;exception&quot;</span><span class="p">):</span>
+            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;fullname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">entry</span><span class="o">.</span><span class="n">objtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;property&quot;</span><span class="p">):</span>
+            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;fullname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+
+        <span class="n">link</span> <span class="o">=</span> <span class="kp">linkcode_resolve</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">link</span> <span class="ow">and</span> <span class="n">entry</span><span class="o">.</span><span class="n">objtype</span> <span class="o">==</span> <span class="s1">&#39;module&#39;</span><span class="p">:</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Avoid highlighting whole file</span>
+
+        <span class="k">return</span> <span class="n">link</span></div>
+
+<div class="viewcode-block" id="READMEParser.add_variants"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.add_variants">[docs]</a>    <span class="k">def</span> <span class="nf">add_variants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qualified_name</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">is_callable</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds substitution information for an object to the :attr:`ref_map`</span>
+
+<span class="sd">        This data is used to replace any :mod:`~sphinx.ext.autodoc` cross-reference to</span>
+<span class="sd">        the object with a substitution, hyperlinked to the corresponding</span>
+<span class="sd">        source code or documentation entry</span>
+
+<span class="sd">        .. tip:: See :func:`~.get_all_xref_variants` and :meth:`replace_autodoc_refs`</span>
+
+<span class="sd">        :param qualified_name: the fully qualified name of an object (ex. ``&quot;sphinx_readme.parser.add_variants&quot;``)</span>
+<span class="sd">        :param target: the refuri of the object&#39;s corresponding source code or documentation entry</span>
+<span class="sd">        :param is_callable: specifies if the object is a method or function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">short_ref</span> <span class="o">=</span> <span class="n">qualified_name</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">variants</span> <span class="o">=</span> <span class="kp">get_all_xref_variants</span><span class="p">(</span><span class="n">qualified_name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">variants</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">variant</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">variant</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+                <span class="n">replace</span> <span class="o">=</span> <span class="n">short_ref</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">replace</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="kp">lstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">is_callable</span><span class="p">:</span>
+                <span class="n">replace</span> <span class="o">+=</span> <span class="s2">&quot;()&quot;</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inline_markup</span><span class="p">:</span>
+                <span class="n">replace</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;``</span><span class="si">{</span><span class="n">replace</span><span class="si">}</span><span class="s2">``&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="p">[</span><span class="n">variant</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="n">replace</span><span class="p">,</span>
+                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">target</span>
+            <span class="p">}</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_doctree"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_doctree">[docs]</a>    <span class="k">def</span> <span class="nf">parse_doctree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">,</span> <span class="n">doctree</span><span class="p">:</span> <span class="n">nodes</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses cross-reference, admonition, rubric, and toctree data from a resolved doctree&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">doctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">parse_admonitions</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">parse_rubrics</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">parse_toctrees</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">parse_intersphinx_nodes</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_admonitions"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_admonitions">[docs]</a>    <span class="k">def</span> <span class="nf">parse_admonitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">,</span> <span class="n">doctree</span><span class="p">:</span> <span class="n">nodes</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses data from generic and specific admonitions</span>
+
+<span class="sd">        :param doctree: the doctree from one of the :attr:`~.src_files`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">doctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
+        <span class="n">admonitions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Generate new doctree to account for only directives</span>
+        <span class="n">doctree</span> <span class="o">=</span> <span class="kp">get_doctree</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">admonition</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">doctree</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="nc">Admonition</span><span class="p">)):</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">admonition</span><span class="o">.</span><span class="n">rawsource</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">admonition</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">admonition</span><span class="p">):</span>
+                <span class="c1"># Generic Admonition (using admonition directive)</span>
+                <span class="n">info</span><span class="o">.</span><span class="kp">update</span><span class="p">({</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;generic&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="n">admonition</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;classes&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">admonition</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rawsource</span>
+                <span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Specific Admonition (for example, .. note::)</span>
+                <span class="n">info</span><span class="o">.</span><span class="kp">update</span><span class="p">({</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;specific&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="n">admonition</span><span class="o">.</span><span class="n">tagname</span><span class="p">,</span>
+                    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">admonition</span><span class="o">.</span><span class="n">tagname</span><span class="o">.</span><span class="kp">title</span><span class="p">()</span>
+                <span class="p">})</span>
+            <span class="n">admonitions</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">admonitions</span><span class="p">[</span><span class="n">src</span><span class="p">]</span> <span class="o">=</span> <span class="n">admonitions</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_intersphinx_nodes"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">parse_intersphinx_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">,</span> <span class="n">doctree</span><span class="p">:</span> <span class="n">nodes</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses cross-references that utilize :mod:`sphinx.ext.intersphinx`</span>
+
+<span class="sd">        :param doctree: the doctree from one of the :attr:`~.src_files`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xref_pattern</span><span class="p">,</span> <span class="n">xref_title_pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_xref_regex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">objtypes</span><span class="o">.</span><span class="kp">keys</span><span class="p">())</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">doctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
+        <span class="n">nodes_to_parse</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">reference_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">doctree</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">reference</span><span class="p">))</span>
+
+        <span class="c1"># Add reference nodes from substitutions</span>
+        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">doctree</span><span class="o">.</span><span class="n">substitution_defs</span><span class="o">.</span><span class="kp">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nodes</span><span class="o">.</span><span class="n">reference</span><span class="p">):</span>
+                <span class="n">reference_nodes</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">sub</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Keep nodes with external URIs</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">reference_nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;internal&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">nodes_to_parse</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Generate new doctree to account for only directives, then add problematic nodes</span>
+        <span class="n">problematic_nodes</span> <span class="o">=</span> <span class="kp">get_doctree</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">problematic</span><span class="p">)</span>
+        <span class="n">nodes_to_parse</span><span class="o">.</span><span class="kp">extend</span><span class="p">(</span><span class="n">problematic_nodes</span><span class="p">)</span>
+
+        <span class="c1"># Parse xrefs from nodes</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes_to_parse</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;&lt;&#39;</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">rawsource</span><span class="p">:</span>
+                <span class="n">pattern</span> <span class="o">=</span> <span class="n">xref_title_pattern</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pattern</span> <span class="o">=</span> <span class="n">xref_pattern</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">rawsource</span><span class="p">)):</span>
+                <span class="k">continue</span>
+
+            <span class="n">_</span><span class="p">,</span> <span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">ref_id</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="kp">groups</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">parse_external_node</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="o">.</span><span class="kp">lstrip</span><span class="p">(</span><span class="s1">&#39;~.&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_external_node"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_external_node">[docs]</a>    <span class="k">def</span> <span class="nf">parse_external_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">objtypes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objtypes</span><span class="p">[</span><span class="n">role</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">objtype</span> <span class="ow">in</span> <span class="n">objtypes</span><span class="p">:</span>  <span class="c1"># Check intersphinx inventory for applicable objtypes</span>
+            <span class="k">if</span> <span class="n">xref</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_external_ref</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">objtype</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">xref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">xref</span><span class="o">.</span><span class="n">objtype</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">):</span>
+            <span class="n">is_callable</span> <span class="o">=</span> <span class="n">xref</span><span class="o">.</span><span class="n">objtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;py:method&quot;</span><span class="p">,</span> <span class="s2">&quot;py:function&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">add_variants</span><span class="p">(</span><span class="n">xref</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">xref</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">is_callable</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inline_markup</span> <span class="ow">and</span> <span class="n">xref</span><span class="o">.</span><span class="n">objtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;std:label&#39;</span><span class="p">,</span> <span class="s1">&#39;std:doc&#39;</span><span class="p">):</span>
+                <span class="n">xref</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;``</span><span class="si">{</span><span class="n">xref</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">``&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="o">.</span><span class="kp">setdefault</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="kp">setdefault</span><span class="p">(</span><span class="n">xref</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;replace&quot;</span><span class="p">:</span> <span class="n">xref</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">xref</span><span class="o">.</span><span class="n">target</span>
+            <span class="p">})</span></div>
+
+<div class="viewcode-block" id="READMEParser.parse_toctrees"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_toctrees">[docs]</a>    <span class="k">def</span> <span class="nf">parse_toctrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">,</span> <span class="n">doctree</span><span class="p">:</span> <span class="n">nodes</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses the caption and entry data from :class:`~.sphinx.addnodes.toctree` nodes</span>
+
+<span class="sd">        .. caution:: Toctrees are currently parsed as if the directive has the ``:titlesonly:`` option</span>
+
+<span class="sd">        :param doctree: the doctree from one of the :attr:`~.src_files`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">doctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)</span>
+        <span class="n">tocs</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">tocs</span>
+
+        <span class="k">for</span> <span class="n">toctree</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">doctree</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">addnodes</span><span class="o">.</span><span class="n">toctree</span><span class="p">)):</span>
+            <span class="n">toc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_parse_toctree</span><span class="p">(</span><span class="n">toctree</span><span class="p">,</span> <span class="n">docname</span><span class="p">,</span> <span class="n">tocs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">toctrees</span><span class="p">[</span><span class="n">source</span><span class="p">]</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">toc</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_parse_toctree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toctree</span><span class="p">,</span> <span class="n">docname</span><span class="p">,</span> <span class="n">tocs</span><span class="p">,</span> <span class="n">is_subtoc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">toc</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;caption&#39;</span><span class="p">:</span> <span class="n">toctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;caption&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;titles_only&#39;</span><span class="p">:</span> <span class="n">toctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;titlesonly&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;entries&#39;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">toctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;maxdepth&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">toc</span><span class="p">[</span><span class="s1">&#39;maxdepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">toctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;maxdepth&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">toctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;entries&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">entry_name</span> <span class="o">=</span> <span class="n">entry</span> <span class="k">if</span> <span class="n">entry</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span> <span class="k">else</span> <span class="n">docname</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">text</span> <span class="k">if</span> <span class="n">text</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">titles</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">entry_name</span><span class="p">)</span>
+            <span class="n">subtree</span> <span class="o">=</span> <span class="n">tocs</span><span class="p">[</span><span class="n">entry_name</span><span class="p">]</span><span class="o">.</span><span class="kp">next_node</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">bullet_list</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">subtree</span> <span class="ow">and</span> <span class="n">entry</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_subtoc</span> <span class="ow">or</span> <span class="s1">&#39;maxdepth&#39;</span> <span class="ow">in</span> <span class="n">toc</span><span class="p">:</span>
+                    <span class="n">subtree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_parse_subtree</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">tocs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subtree</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Sphinx treats &quot;self&quot; as titlesonly</span>
+
+            <span class="n">toc</span><span class="p">[</span><span class="s1">&#39;entries&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">append</span><span class="p">({</span>
+                <span class="s1">&#39;entry&#39;</span><span class="p">:</span> <span class="n">entry_name</span><span class="p">,</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                <span class="s1">&#39;entries&#39;</span><span class="p">:</span> <span class="n">subtree</span>
+            <span class="p">})</span>
+        <span class="k">return</span> <span class="n">toc</span>
+
+    <span class="k">def</span> <span class="nf">_parse_subtree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">nodes</span><span class="o">.</span><span class="n">bullet_list</span><span class="p">,</span> <span class="n">tocs</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">bullet_list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Dict</span><span class="p">]:</span>
+        <span class="n">sub_trees</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">addnodes</span><span class="o">.</span><span class="n">toctree</span><span class="p">):</span>
+                <span class="n">child_doc</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="kp">relative_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">src_dir</span><span class="p">)</span>
+                <span class="n">sub_toc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_parse_toctree</span><span class="p">(</span>
+                    <span class="n">docname</span><span class="o">=</span><span class="n">child_doc</span><span class="o">.</span><span class="kp">as_posix</span><span class="p">()</span><span class="o">.</span><span class="kp">removesuffix</span><span class="p">(</span><span class="n">child_doc</span><span class="o">.</span><span class="n">suffix</span><span class="p">),</span>
+                    <span class="n">is_subtoc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tocs</span><span class="o">=</span><span class="n">tocs</span><span class="p">,</span>
+                    <span class="n">toctree</span><span class="o">=</span><span class="n">child</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">sub_toc</span><span class="p">[</span><span class="s1">&#39;entries&#39;</span><span class="p">]:</span>
+                    <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;is_subtoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="n">sub_trees</span><span class="o">.</span><span class="kp">extend</span><span class="p">(</span><span class="n">sub_toc</span><span class="p">[</span><span class="s1">&#39;entries&#39;</span><span class="p">])</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">list_item</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">sub_tree</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;entry&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;anchor&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;entries&#39;</span><span class="p">:</span> <span class="p">[]</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">addnodes</span><span class="o">.</span><span class="n">compact_paragraph</span><span class="p">):</span>
+                    <span class="n">ref_node</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="kp">next_node</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+                    <span class="n">sub_tree</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kp">parse_node_text</span><span class="p">(</span><span class="n">ref_node</span><span class="p">)</span>
+                    <span class="n">sub_tree</span><span class="p">[</span><span class="s1">&#39;anchor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_node</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;anchorname&#39;</span><span class="p">)</span>
+                    <span class="n">sub_tree</span><span class="p">[</span><span class="s1">&#39;entry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_node</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;refuri&#39;</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">bullet_list</span><span class="p">):</span>
+                    <span class="n">sub_tree</span><span class="p">[</span><span class="s1">&#39;entries&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="kp">_parse_subtree</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">tocs</span><span class="p">))</span>
+
+            <span class="n">sub_trees</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">sub_tree</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sub_trees</span>
+
+<div class="viewcode-block" id="READMEParser.parse_rubrics"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_rubrics">[docs]</a>    <span class="k">def</span> <span class="nf">parse_rubrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">,</span> <span class="n">doctree</span><span class="p">:</span> <span class="n">nodes</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses the content from :rst:dir:`rubric` directives&quot;&quot;&quot;</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">doctree</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="n">source</span><span class="p">]</span>
+        <span class="n">rubrics</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Generate new doctree to account for only directives</span>
+        <span class="n">doctree</span> <span class="o">=</span> <span class="kp">get_doctree</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">rubric</span> <span class="ow">in</span> <span class="n">doctree</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">rubric</span><span class="p">):</span>
+            <span class="n">rubrics</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">rubric</span><span class="o">.</span><span class="n">rawsource</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rubrics</span><span class="p">[</span><span class="n">source</span><span class="p">]</span> <span class="o">=</span> <span class="n">rubrics</span></div>
+
+<div class="viewcode-block" id="READMEParser.get_external_ref"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.get_external_ref">[docs]</a>    <span class="k">def</span> <span class="nf">get_external_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">objtype</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Optional</span><span class="p">[</span><span class="nc">ExternalRef</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves external cross-reference data from the :mod:`sphinx.ext.intersphinx` inventory</span>
+
+<span class="sd">        :param external: the ``:external:`` or ``:external+pkg:`` portion of the xref, if present</span>
+<span class="sd">        :param objtype: the name of the object type being referenced</span>
+<span class="sd">        :param ref_id: the target of the cross-reference</span>
+<span class="sd">        :return: an :class:`~.ExternalRef` object if the lookup was successful, otherwise ``None``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pkg</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># First, attempt to constrain lookup to specific package</span>
+
+        <span class="c1"># Check for :external+pkg:role:`ref_id` syntax</span>
+        <span class="k">if</span> <span class="n">external</span> <span class="ow">and</span> <span class="s2">&quot;+&quot;</span> <span class="ow">in</span> <span class="n">external</span><span class="p">:</span>
+            <span class="n">pkg</span> <span class="o">=</span> <span class="n">external</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Check for :role:`pkg:ref_id` syntax</span>
+        <span class="k">elif</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">ref_id</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">ref_id</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Ensure it&#39;s not `directive:option` or `doc:section`</span>
+            <span class="k">if</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersphinx_pkgs</span><span class="p">:</span>
+                <span class="n">pkg</span><span class="p">,</span> <span class="n">ref_id</span> <span class="o">=</span> <span class="n">tokens</span>
+
+        <span class="k">if</span> <span class="n">objtype</span> <span class="o">==</span> <span class="s2">&quot;std:label&quot;</span><span class="p">:</span>
+            <span class="n">ref_id</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="kp">fully_normalize_name</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)</span>
+
+        <span class="c1"># Lookup reference in intersphinx named or regular inventory</span>
+        <span class="n">inventory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_inventory</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inventory</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">xref</span> <span class="o">:=</span> <span class="n">inventory</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">objtype</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">ref_id</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nc">ExternalRef</span><span class="p">(</span><span class="n">objtype</span><span class="p">,</span> <span class="o">*</span><span class="n">xref</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEParser.get_external_id"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.get_external_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_external_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function to get the ``ref_id`` when replacing external xrefs&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">objtype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objtypes</span><span class="p">[</span><span class="n">role</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">xref</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_external_ref</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">objtype</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">xref</span><span class="o">.</span><span class="n">id</span></div>
+
+<div class="viewcode-block" id="READMEParser.is_external_xref"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.is_external_xref">[docs]</a>    <span class="k">def</span> <span class="nf">is_external_xref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function to check if a cross-reference is explicitly external&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">((</span>
+            <span class="n">external</span><span class="p">,</span>
+            <span class="n">role</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="s1">&#39;rst&#39;</span><span class="p">],</span>
+            <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">ref_id</span> <span class="ow">and</span> <span class="n">ref_id</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersphinx_pkgs</span>
+        <span class="p">))</span></div>
+
+<div class="viewcode-block" id="READMEParser.resolve"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.resolve">[docs]</a>    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Uses parsed data from to replace cross-references and directives in the :attr:`~.src_files`</span>
+
+<span class="sd">        Once resolved, files are written to the :attr:`~.out_dir`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">rst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="kp">items</span><span class="p">():</span>
+            <span class="c1"># Replace everything using parsed data</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_admonitions</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_rst_images</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_toctrees</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_rubrics</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_xrefs</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_py_xrefs</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_unresolved_xrefs</span><span class="p">(</span><span class="n">rst</span><span class="p">)</span>
+
+            <span class="c1"># Prepend substitution definitions for cross-reference</span>
+            <span class="n">substitutions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substitutions</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
+            <span class="n">header_vals</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">substitutions</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="kp">lower</span><span class="p">()</span><span class="o">.</span><span class="kp">lstrip</span><span class="p">(</span><span class="s2">&quot;`~.&quot;</span><span class="p">),</span> <span class="n">t</span><span class="o">.</span><span class="kp">lower</span><span class="p">())):</span>
+                <span class="n">header_vals</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">substitutions</span><span class="p">[</span><span class="n">target</span><span class="p">]))</span>
+
+            <span class="c1"># Write the final output</span>
+            <span class="n">rst_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">src_files</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
+            <span class="n">rst_out</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="kp">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">header_vals</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">rst</span>
+            <span class="n">rst_out</span><span class="o">.</span><span class="kp">write_text</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;``sphinx_readme``: saved generated file to </span><span class="si">{</span><span class="n">rst_out</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEParser.replace_admonitions"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_admonitions">[docs]</a>    <span class="k">def</span> <span class="nf">replace_admonitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replaces generic and specific admonition directives with HTML tables or ``list-table``</span>
+<span class="sd">        directives, depending on the value of :confval:`readme_raw_directive`</span>
+
+<span class="sd">        .. admonition:: Customizing Admonitions</span>
+<span class="sd">           :class: about</span>
+
+<span class="sd">           The :attr:`~.icon_map` can be overriden to use custom admonition icons/classes</span>
+
+<span class="sd">           * See :confval:`readme_admonition_icons` and :confval:`readme_default_admonition_icon`</span>
+
+<span class="sd">        :param rst_src: absolute path of the source file</span>
+<span class="sd">        :param rst: content of the source file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">admonition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">admonitions</span><span class="p">[</span><span class="n">rst_src</span><span class="p">]:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_admonition_regex</span><span class="p">(</span><span class="n">admonition</span><span class="p">)</span>
+            <span class="n">icon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_admonition_icon</span><span class="p">(</span><span class="n">admonition</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">raw_directive</span><span class="p">:</span>
+                <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+                    <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
+                    <span class="n">repl</span><span class="o">=</span><span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_replace_admonition</span><span class="p">(</span>
+                        <span class="n">match</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">,</span> <span class="n">admonition</span><span class="p">,</span> <span class="n">icon</span><span class="p">),</span>
+                    <span class="n">string</span><span class="o">=</span><span class="n">rst</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+                    <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
+                    <span class="n">repl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">admonition_template</span><span class="o">.</span><span class="kp">format</span><span class="p">(</span>
+                        <span class="n">title</span><span class="o">=</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                        <span class="n">text</span><span class="o">=</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">],</span>
+                        <span class="n">icon</span><span class="o">=</span><span class="n">icon</span><span class="p">),</span>
+                    <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+    <span class="k">def</span> <span class="nf">_replace_admonition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">,</span> <span class="n">admonition</span><span class="p">:</span> <span class="bp">dict</span><span class="p">,</span> <span class="n">icon</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function for formatting ``list-table`` admonitions&quot;&quot;&quot;</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="kp">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">((</span>
+                <span class="s2">&quot;.. rubric::&quot;</span> <span class="ow">in</span> <span class="n">body</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rubric_heading</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">raw_directive</span> <span class="ow">is</span> <span class="kc">False</span>
+        <span class="p">)):</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_rubrics</span><span class="p">(</span><span class="n">rst_src</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">force_markup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Add extra indentation to ensure body lines up with directive</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(\n+)&quot;</span><span class="p">,</span> <span class="n">repl</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\1    &quot;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">admonition_template</span><span class="o">.</span><span class="kp">format</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+            <span class="n">icon</span><span class="o">=</span><span class="n">icon</span>
+        <span class="p">)</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s1">&#39;\2&#39;</span><span class="p">,</span> <span class="n">body</span>
+        <span class="p">)</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s1">&#39;\1&#39;</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="kp">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">template</span>
+
+<div class="viewcode-block" id="READMEParser.replace_toctrees"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_toctrees">[docs]</a>    <span class="k">def</span> <span class="nf">replace_toctrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replaces :rst:dir:`toctree` directives with hyperlinked bullet lists</span>
+
+<span class="sd">        .. note:: Entries will link to HTML documentation regardless of the</span>
+<span class="sd">           value of :confval:`readme_docs_url_type`</span>
+
+<span class="sd">        :param rst_src: absolute path of the source file</span>
+<span class="sd">        :param rst: content of the source file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.\. toctree::\s*?\n+?(?:^[ ]+.+?$|^\s*$)+?(?=\n*\S+|\Z)&quot;</span>
+        <span class="n">toctrees</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="nc">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="nc">DOTALL</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">toctree</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">toctrees</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">toctrees</span><span class="p">[</span><span class="n">rst_src</span><span class="p">]):</span>
+            <span class="n">titles_only</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;titles_only&#39;</span><span class="p">)</span>
+            <span class="n">maxdepth</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;maxdepth&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">repl</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;caption&#39;</span><span class="p">]:</span>
+                <span class="n">repl</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;caption&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">**</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;entries&#39;</span><span class="p">]:</span>
+                <span class="n">repl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_replace_toctree_entry</span><span class="p">(</span><span class="n">rst_src</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">maxdepth</span><span class="p">,</span> <span class="n">titles_only</span><span class="p">)</span>
+
+            <span class="n">last_line</span> <span class="o">=</span> <span class="n">repl</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">last_indent</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_line</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_line</span><span class="o">.</span><span class="kp">lstrip</span><span class="p">())</span>
+            <span class="n">repl</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="p">(</span><span class="n">last_indent</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="si">}</span><span class="s2">|</span><span class="se">\n\n</span><span class="s2">&quot;</span>  <span class="c1"># Add line break at next indent to improve spacing</span>
+
+            <span class="c1"># Replace toctree directive with substitutions</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">rst</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="n">toctree</span><span class="p">,</span> <span class="n">repl</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+    <span class="k">def</span> <span class="nf">_replace_toctree_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">maxdepth</span><span class="p">,</span> <span class="n">titles_only</span><span class="p">,</span> <span class="n">indentation</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="n">maxdepth</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">repl</span>
+
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">titles_only</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;is_subtoc&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">repl</span>
+
+        <span class="c1"># Replace each entry with a link to html docs</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">html_baseurl</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;entry&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.html</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="s1">&#39;anchor&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">link</span><span class="p">,</span> <span class="n">subs</span> <span class="o">=</span> <span class="kp">format_hyperlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+        <span class="n">repl</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indentation</span><span class="si">}</span><span class="s2">* </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">subs</span><span class="p">:</span>
+            <span class="n">ref_id</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s2">&quot;`&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">substitutions</span><span class="p">[</span><span class="n">rst_src</span><span class="p">][</span><span class="n">ref_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">subs</span>
+
+        <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;entries&#39;</span><span class="p">]:</span>
+            <span class="n">repl</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>  <span class="c1"># Add new line for new level</span>
+            <span class="k">for</span> <span class="n">sub_entry</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;entries&quot;</span><span class="p">]:</span>
+                <span class="n">repl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_replace_toctree_entry</span><span class="p">(</span>
+                    <span class="n">rst_src</span><span class="p">,</span> <span class="n">sub_entry</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">maxdepth</span><span class="p">,</span> <span class="n">titles_only</span><span class="p">,</span>
+                    <span class="n">indentation</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indentation</span><span class="si">}</span><span class="s2">  &quot;</span><span class="p">,</span>
+                    <span class="n">depth</span><span class="o">=</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="p">)</span>
+            <span class="n">repl</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">repl</span>
+
+<div class="viewcode-block" id="READMEParser.replace_rst_images"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_rst_images">[docs]</a>    <span class="k">def</span> <span class="nf">replace_rst_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replaces filepaths in ``image`` directives with repository links</span>
+
+<span class="sd">        **Example:**</span>
+
+<span class="sd">            :rst:`.. image:: /_static/logo_readme.png`</span>
+
+<span class="sd">            would be replaced with</span>
+
+<span class="sd">            :rst:`.. image:: https://raw.githubusercontent.com/tdkorn/sphinx-readme/main/docs/source/_static/logo_readme.png`</span>
+
+<span class="sd">        .. note:: Your repository will be used as the image source regardless of the</span>
+<span class="sd">           value of :confval:`readme_docs_url_type`</span>
+
+<span class="sd">        :param rst_src: absolute path of the source file</span>
+<span class="sd">        :param rst: content of the source file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">src_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">src_dir</span>
+        <span class="n">repo_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">repo_dir</span>
+        <span class="n">rst_src_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">rst_src</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">relpath_to_src_dir</span> <span class="o">=</span> <span class="n">src_dir</span><span class="o">.</span><span class="kp">relative_to</span><span class="p">(</span><span class="n">repo_dir</span><span class="p">)</span>
+
+        <span class="c1"># Find the targets of all image directives</span>
+        <span class="n">img_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\.\. image:: ([./\w-]+\.\w{3,4})&quot;</span>
+        <span class="n">img_paths</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span><span class="n">img_pattern</span><span class="p">,</span> <span class="n">rst</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">img_path</span> <span class="ow">in</span> <span class="n">img_paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">img_path</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="c1"># These paths are relative to source dir</span>
+                <span class="n">path_to_img</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">relpath_to_src_dir</span><span class="si">}{</span><span class="n">img_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="kp">as_posix</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># These paths are relative to rst_file dir</span>
+                <span class="n">abs_img_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">rst_src_dir</span> <span class="o">/</span> <span class="nc">Path</span><span class="p">(</span><span class="n">img_path</span><span class="p">))</span><span class="o">.</span><span class="kp">resolve</span><span class="p">()</span>
+
+                <span class="c1"># Find path of image relative to the repo directory</span>
+                <span class="n">path_to_img</span> <span class="o">=</span> <span class="n">abs_img_path</span><span class="o">.</span><span class="kp">relative_to</span><span class="p">(</span><span class="n">repo_dir</span><span class="p">)</span><span class="o">.</span><span class="kp">as_posix</span><span class="p">()</span>
+
+            <span class="c1"># Sub that hoe in!!!</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;\.\. image:: </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">repl</span><span class="o">=</span><span class="sa">fr</span><span class="s2">&quot;.. image:: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">image_baseurl</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">path_to_img</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+<div class="viewcode-block" id="READMEParser.replace_rubrics"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_rubrics">[docs]</a>    <span class="k">def</span> <span class="nf">replace_rubrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">force_markup</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replaces :rst:dir:`rubric` directives with the section heading</span>
+<span class="sd">        character specified by :confval:`readme_rubric_heading`</span>
+
+<span class="sd">        If :confval:`readme_rubric_heading` is not specified, the rubric</span>
+<span class="sd">        will be replaced with bold text instead</span>
+
+<span class="sd">        ...</span>
+
+<span class="sd">        **Example:**</span>
+
+<span class="sd">        Consider a source file that contains</span>
+<span class="sd">        :rst:`.. rubric:: This is a \`\`rubric\`\` directive`</span>
+
+<span class="sd">        * Replacement without specifying ``readme_rubric_heading``::</span>
+
+<span class="sd">              **This is a** ``rubric`` **directive**</span>
+
+<span class="sd">        * Replacement if :code:`readme_rubric_heading = &quot;^&quot;`::</span>
+
+<span class="sd">              This is a ``rubric`` directive</span>
+<span class="sd">              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+
+<span class="sd">        :param rst_src: absolute path of the source file</span>
+<span class="sd">        :param rst: content of the source file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rubric_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\.\. rubric:: (</span><span class="si">{body}</span><span class="s1">)(?=\n?$(?:\n+?^\s*$|\Z))&#39;</span>
+        <span class="n">heading_chars</span> <span class="o">=</span> <span class="s1">&#39;!&quot;#$%&amp;</span><span class="se">\&#39;</span><span class="s1">()*+,-./:;&lt;=&gt;?@[</span><span class="se">\\</span><span class="s1">]^_`{|}~&#39;</span>
+
+        <span class="k">if</span> <span class="n">heading</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rubric_heading</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">heading</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">heading_chars</span><span class="p">:</span>
+                <span class="n">heading</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">rubric</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rubrics</span><span class="p">[</span><span class="n">rst_src</span><span class="p">]:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">rubric_pattern</span><span class="o">.</span><span class="kp">format</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="kp">escape</span><span class="p">(</span><span class="n">rubric</span><span class="p">)</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\\n</span><span class="s2">[ ]+&quot;</span><span class="p">))</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="kp">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">rubric</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">heading</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force_markup</span><span class="p">:</span>
+                <span class="n">repl</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="n">heading</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_xrefs</span><span class="p">(</span><span class="n">rst_src</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">replace_py_xrefs</span><span class="p">(</span><span class="n">rst_src</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+                <span class="n">repl</span> <span class="o">=</span> <span class="kp">format_rst</span><span class="p">(</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+            <span class="n">repl</span> <span class="o">=</span> <span class="n">repl</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="nc">M</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+<div class="viewcode-block" id="READMEParser.replace_xrefs"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_xrefs">[docs]</a>    <span class="k">def</span> <span class="nf">replace_xrefs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replaces cross-references from the |std_domain| and |rst_domain| with substitutions or inline links</span>
+
+<span class="sd">        .. tip:: This includes cross-references for any custom objects added by</span>
+<span class="sd">           :meth:`Sphinx.add_object_type() &lt;sphinx.application.Sphinx.add_object_type&gt;`</span>
+
+<span class="sd">        :param rst_src: absolute path of the source file</span>
+<span class="sd">        :param rst: content of the source file</span>
+<span class="sd">        :return: the ``rst`` with all applicable cross-references replaced by links/substitutions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_xref_regex</span><span class="p">(</span><span class="n">domains</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rst&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">]):</span>
+            <span class="n">xrefs</span><span class="o">.</span><span class="kp">update</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
+                <span class="n">string</span><span class="o">=</span><span class="n">rst</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">xref</span> <span class="ow">in</span> <span class="n">xrefs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xref</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># From title pattern</span>
+                <span class="n">full_xref</span><span class="p">,</span> <span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">ref_id</span> <span class="o">=</span> <span class="n">xref</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">full_xref</span><span class="p">,</span> <span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">,</span> <span class="o">*</span><span class="n">title</span> <span class="o">=</span> <span class="n">xref</span>
+
+            <span class="c1"># If xref is explicitly external, force resolve with external lookup</span>
+            <span class="k">if</span> <span class="n">is_explicitly_external</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">is_external_xref</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">):</span>
+                <span class="n">ref_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_external_id</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;ref&quot;</span><span class="p">:</span>  <span class="c1"># Normalize ref_id to ensure match in ref_map</span>
+                <span class="n">ref_id</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="kp">fully_normalize_name</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;doc&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ref_id</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                    <span class="c1"># These document paths are relative to source dir</span>
+                    <span class="n">ref_id</span> <span class="o">=</span> <span class="n">ref_id</span><span class="o">.</span><span class="kp">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># These document paths are relative to rst_src dir</span>
+                    <span class="n">abs_doc_path</span> <span class="o">=</span> <span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="n">rst_src</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">/</span><span class="nc">Path</span><span class="p">(</span><span class="n">ref_id</span><span class="p">))</span><span class="o">.</span><span class="kp">resolve</span><span class="p">()</span>
+                    <span class="n">ref_id</span> <span class="o">=</span> <span class="n">abs_doc_path</span><span class="o">.</span><span class="kp">relative_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="kp">as_posix</span><span class="p">()</span>
+
+            <span class="c1"># Match the xref with target data in the ref_map</span>
+            <span class="n">ref_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">{})</span>
+
+            <span class="k">if</span> <span class="n">ref_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ref_map</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_explicitly_external</span><span class="p">:</span>
+                <span class="c1"># If data is missing and the xref isn&#39;t explicitly external, check</span>
+                <span class="c1"># intersphinx since it&#39;s also used as a fallback resolution</span>
+                <span class="n">ref_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_external_id</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">info</span> <span class="o">:=</span> <span class="n">ref_map</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">title</span><span class="p">:</span>  <span class="c1"># Include explicit title in substitution name</span>
+                <span class="n">ref_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ref_id</span><span class="si">}</span><span class="s2">+</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="c1"># Add inline markup if replacement had it</span>
+                <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;replace&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;`&quot;</span><span class="p">):</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;``</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">``&quot;</span>
+
+            <span class="n">link</span><span class="p">,</span> <span class="n">subs</span> <span class="o">=</span> <span class="kp">format_hyperlink</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+                <span class="n">text</span><span class="o">=</span><span class="n">title</span> <span class="ow">or</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;replace&#39;</span><span class="p">],</span>
+                <span class="n">sub_override</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ref_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">force_subs</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">substitutions</span><span class="p">[</span><span class="n">rst_src</span><span class="p">][</span><span class="n">ref_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">subs</span>
+
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>  <span class="c1"># Replace cross-ref with substitution</span>
+                <span class="n">pattern</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;(?&lt;![^\s</span><span class="si">{</span><span class="nc">BEFORE_XREF</span><span class="si">}</span><span class="s2">])</span><span class="si">{</span><span class="kp">escape_rst</span><span class="p">(</span><span class="n">full_xref</span><span class="p">)</span><span class="si">}</span><span class="s2">(?=[\s</span><span class="si">{</span><span class="nc">AFTER_XREF</span><span class="si">}</span><span class="s2">]|\Z)&quot;</span><span class="p">,</span>
+                <span class="n">repl</span><span class="o">=</span><span class="n">link</span><span class="p">,</span>
+                <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+<div class="viewcode-block" id="READMEParser.replace_py_xrefs"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_py_xrefs">[docs]</a>    <span class="k">def</span> <span class="nf">replace_py_xrefs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_src</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace |py_domain| cross-references with substitutions</span>
+
+<span class="sd">        These substitutions will be hyperlinked to the corresponding source code</span>
+<span class="sd">        or HTML documentation entry, depending on the value of</span>
+<span class="sd">        :confval:`readme_docs_url_type`</span>
+
+<span class="sd">        .. note: External attributes are always hyperlinked, but attributes for your</span>
+<span class="sd">           own package will only be hyperlinked if linking to HTML documentation</span>
+
+<span class="sd">        :param rst_src: absolute path of the source file</span>
+<span class="sd">        :param rst: content of the source file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;regular&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;xrefs&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s1">&#39;repl&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;|.\4|_&quot;</span>  <span class="c1"># Replace with |.{ref_id}|_</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;xrefs&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s1">&#39;repl&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;|.\5+\4|_&quot;</span>  <span class="c1"># Replace with |.{ref_id}+{title}|_</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="c1"># Find all :ref_role:`ref_id` or :ref_role:`title &lt;ref_id&gt;` cross-refs</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_xref_regex</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">):</span>
+            <span class="n">xrefs</span><span class="o">.</span><span class="kp">update</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="kp">findall</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
+                <span class="n">string</span><span class="o">=</span><span class="n">rst</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">xref</span> <span class="ow">in</span> <span class="n">xrefs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xref</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># From title pattern</span>
+                <span class="n">full_xref</span><span class="p">,</span> <span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">ref_id</span> <span class="o">=</span> <span class="n">xref</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">full_xref</span><span class="p">,</span> <span class="n">external</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">,</span> <span class="o">*</span><span class="n">title</span> <span class="o">=</span> <span class="n">xref</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">info</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_map</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">title</span><span class="p">:</span>  <span class="c1"># Include explicit title in substitution name</span>
+                <span class="n">targets</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">][</span><span class="s1">&#39;xrefs&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)</span>
+                <span class="n">ref_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ref_id</span><span class="si">}</span><span class="s2">+</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inline_markup</span><span class="p">:</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;``</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">``&quot;</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">targets</span><span class="p">[</span><span class="s1">&#39;regular&#39;</span><span class="p">][</span><span class="s1">&#39;xrefs&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">append</span><span class="p">(</span><span class="n">ref_id</span><span class="p">)</span>
+
+            <span class="n">link</span><span class="p">,</span> <span class="n">subs</span> <span class="o">=</span> <span class="kp">format_hyperlink</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+                <span class="n">text</span><span class="o">=</span><span class="n">title</span> <span class="ow">or</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;replace&#39;</span><span class="p">],</span>
+                <span class="n">sub_override</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ref_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">force_subs</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">substitutions</span><span class="p">[</span><span class="n">rst_src</span><span class="p">][</span><span class="n">ref_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">subs</span>
+
+        <span class="c1"># Replace cross-refs with substitutions</span>
+        <span class="k">for</span> <span class="n">xref_type</span><span class="p">,</span> <span class="n">xref_data</span> <span class="ow">in</span> <span class="n">targets</span><span class="o">.</span><span class="kp">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">xrefs</span> <span class="o">:=</span> <span class="n">xref_data</span><span class="p">[</span><span class="s1">&#39;xrefs&#39;</span><span class="p">]:</span>
+                <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+                    <span class="n">pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="kp">get_xref_regex</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="n">xrefs</span><span class="p">,</span> <span class="n">xref_type</span><span class="o">=</span><span class="n">xref_type</span><span class="p">),</span>
+                    <span class="n">repl</span><span class="o">=</span><span class="n">xref_data</span><span class="p">[</span><span class="s1">&#39;repl&#39;</span><span class="p">],</span>
+                    <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+<div class="viewcode-block" id="READMEParser.replace_unresolved_xrefs"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_unresolved_xrefs">[docs]</a>    <span class="k">def</span> <span class="nf">replace_unresolved_xrefs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replaces any unresolved cross-references from all domains with inline literals&quot;&quot;&quot;</span>
+        <span class="c1"># Replace unresolved Python cross-refs</span>
+        <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="s1">&#39;py&#39;</span><span class="p">]</span><span class="o">.</span><span class="kp">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">replace_attrs</span><span class="p">:</span>
+            <span class="n">roles</span><span class="o">.</span><span class="kp">remove</span><span class="p">(</span><span class="s1">&#39;attr&#39;</span><span class="p">)</span>
+
+        <span class="n">rst</span> <span class="o">=</span> <span class="kp">replace_xrefs</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="n">roles</span><span class="p">)</span>
+
+        <span class="c1"># Replace unresolved cross-refs from Standard and RST domain</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_xref_regex</span><span class="p">(</span><span class="n">domains</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rst&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">]):</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
+                <span class="n">repl</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;``\4``&quot;</span><span class="p">,</span>  <span class="c1"># Target or explicit title</span>
+                <span class="n">string</span><span class="o">=</span><span class="n">rst</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+<div class="viewcode-block" id="READMEParser.get_xref_regex"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.get_xref_regex">[docs]</a>    <span class="k">def</span> <span class="nf">get_xref_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">domains</span><span class="p">:</span> <span class="bp">str</span> <span class="o">|</span> <span class="nc">Iterable</span><span class="p">[</span><span class="bp">str</span><span class="p">],</span>
+                       <span class="n">roles</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span> <span class="o">|</span> <span class="nc">Iterable</span><span class="p">[</span><span class="bp">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="n">targets</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span> <span class="o">|</span> <span class="nc">Iterable</span><span class="p">[</span><span class="bp">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="n">xref_type</span><span class="p">:</span> <span class="nc">Optional</span><span class="p">[</span><span class="bp">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span> <span class="o">|</span> <span class="nc">Tuple</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the regex to match cross-references</span>
+
+<span class="sd">        .. note:: The patterns have the following match groups:</span>
+
+<span class="sd">           :Regular Cross-References:</span>
+
+<span class="sd">              1. The full cross-reference</span>
+<span class="sd">              2. The external role, if present</span>
+<span class="sd">              3. The cross-reference role</span>
+<span class="sd">              4. The cross-reference target</span>
+
+<span class="sd">           :Explicit Title Cross-References:</span>
+
+<span class="sd">              1. The full cross-reference</span>
+<span class="sd">              2. The external role, if present</span>
+<span class="sd">              3. The cross-reference role</span>
+<span class="sd">              4. The explicit title</span>
+<span class="sd">              5. The cross-reference target</span>
+
+<span class="sd">        :param domains: an individual or list of Sphinx object domains to match</span>
+<span class="sd">        :param roles: an individual or list of cross-reference roles to match; matches all domain roles if not provided</span>
+<span class="sd">        :param targets: an individual or list of targets to match; matches all xrefs if not provided</span>
+<span class="sd">        :param xref_type: the xref type to match (``&quot;regular&quot;`` or ``&quot;title&quot;``); returns both if not specified</span>
+<span class="sd">        :return: the regex pattern to match regular xrefs, xrefs with explicit titles, or a tuple containing both</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Match every cross-reference</span>
+            <span class="n">targets</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;~?\.?[\w./: -]+&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="bp">str</span><span class="p">):</span>
+            <span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="n">targets</span><span class="p">]</span>
+
+        <span class="n">targets</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domains</span><span class="p">,</span> <span class="bp">str</span><span class="p">):</span>
+            <span class="n">domains</span> <span class="o">=</span> <span class="p">[</span><span class="n">domains</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">roles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">roles</span><span class="p">,</span> <span class="bp">str</span><span class="p">):</span>
+                <span class="n">roles</span> <span class="o">=</span> <span class="p">[</span><span class="n">roles</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="p">[</span><span class="n">role</span> <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">domains</span> <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">[</span><span class="n">domain</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="s2">&quot;py&quot;</span> <span class="ow">in</span> <span class="n">domains</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">replace_attrs</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">roles</span><span class="o">.</span><span class="kp">remove</span><span class="p">(</span><span class="s2">&quot;attr&quot;</span><span class="p">)</span>
+
+        <span class="n">roles</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">roles</span><span class="p">)</span>
+        <span class="n">domains</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">domains</span><span class="p">)</span>
+
+        <span class="n">xref_pattern</span> <span class="o">=</span> <span class="sa">fr</span><span class="s2">&quot;(?&lt;![^\s</span><span class="si">{</span><span class="nc">BEFORE_XREF</span><span class="si">}</span><span class="s2">])(:(?:(external(?:\+\w+)?):)?(?:(?:</span><span class="si">{</span><span class="n">domains</span><span class="si">}</span><span class="s2">):)?(</span><span class="si">{</span><span class="n">roles</span><span class="si">}</span><span class="s2">):`</span><span class="si">{</span><span class="n">targets</span><span class="si">}</span><span class="s2">`)(?=[\s</span><span class="si">{</span><span class="nc">AFTER_XREF</span><span class="si">}</span><span class="s2">]|\Z)&quot;</span>
+        <span class="n">xref_title_pattern</span> <span class="o">=</span> <span class="sa">fr</span><span class="s2">&quot;(?&lt;![^\s</span><span class="si">{</span><span class="nc">BEFORE_XREF</span><span class="si">}</span><span class="s2">])(:(?:(external(?:\+\w+)?):)?(?:(?:</span><span class="si">{</span><span class="n">domains</span><span class="si">}</span><span class="s2">):)?(</span><span class="si">{</span><span class="n">roles</span><span class="si">}</span><span class="s2">):`([^`]+?)\s&lt;</span><span class="si">{</span><span class="n">targets</span><span class="si">}</span><span class="s2">&gt;`)(?=[\s</span><span class="si">{</span><span class="nc">AFTER_XREF</span><span class="si">}</span><span class="s2">]|\Z)&quot;</span>
+
+        <span class="k">if</span> <span class="n">xref_type</span> <span class="o">==</span> <span class="s2">&quot;regular&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">xref_pattern</span>
+        <span class="k">elif</span> <span class="n">xref_type</span> <span class="o">==</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">xref_title_pattern</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">xref_pattern</span><span class="p">,</span> <span class="n">xref_title_pattern</span></div>
+
+<div class="viewcode-block" id="READMEParser.get_admonition_regex"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_regex">[docs]</a>    <span class="k">def</span> <span class="nf">get_admonition_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">admonition</span><span class="p">:</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the regex to match a specific admonition directive</span>
+
+<span class="sd">        :param admonition: a dict containing admonition data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="kp">escape_rst</span><span class="p">(</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\n\s*&#39;</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="kp">escape_rst</span><span class="p">(</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;specific&#39;</span><span class="p">:</span>
+            <span class="c1"># For example, .. note:: This is a note</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">fr</span><span class="s2">&quot;\.\. </span><span class="si">{</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">::\n*?\s+&quot;</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Generic admonition directives with/without class option</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;\.\. admonition::\s+</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;\n&quot;</span>
+
+            <span class="k">if</span> <span class="bp">cls</span> <span class="o">:=</span> <span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="s1">&#39;admonition-&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
+                    <span class="n">pattern</span> <span class="o">+=</span> <span class="sa">rf</span><span class="s2">&quot;\s+:class: </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;\n&quot;</span>
+
+            <span class="n">pattern</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;\n*?\s+&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">raw_directive</span><span class="p">:</span>
+            <span class="c1"># list-table template body uses match group</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;([ ]*)</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="s2">)(?=\n*(?:\1)?&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># raw html template body uses string formatting</span>
+            <span class="n">pattern</span> <span class="o">+=</span> <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="s2">(?=\n*&quot;</span>
+
+        <span class="n">pattern</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;(?:\S+|\Z))&quot;</span>
+        <span class="k">return</span> <span class="n">pattern</span></div>
+
+<div class="viewcode-block" id="READMEParser.get_admonition_icon"><a class="viewcode-back" href="../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_icon">[docs]</a>    <span class="k">def</span> <span class="nf">get_admonition_icon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">admonition</span><span class="p">:</span> <span class="bp">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the icon to use for an admonition</span>
+
+<span class="sd">        :param admonition: a dict of admonition data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">icon</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">icon_map</span><span class="o">.</span><span class="kp">get</span><span class="p">(</span><span class="n">admonition</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="n">icon</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">default_admonition_icon</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Adam Korn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

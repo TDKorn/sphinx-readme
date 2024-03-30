@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sphinx_readme.config &mdash; sphinx-readme 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-inlinecode.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/github_style.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="canonical" href="https://sphinx-readme.readthedocs.io/en/latest/_modules/sphinx_readme/config.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/sphinx-inlinecode.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../contents.html" class="icon icon-home">
+            sphinx-readme
+              <img src="../../_static/logo_html.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">README</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Sphinx README - Generate Beautiful README.rst for GitHub, PyPi, GitLab, BitBucket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#about-sphinx-readme">About Sphinx README</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#features">📋 Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#installation">⚙ Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#configuration">🔧 Configuration</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration/configuring.html">Extension Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/configuring.html#mandatory-conf-py-values">Mandatory <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#html-context"><code class="docutils literal notranslate"><span class="pre">html_context</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#html-baseurl"><code class="docutils literal notranslate"><span class="pre">html_baseurl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-src-files"><code class="docutils literal notranslate"><span class="pre">readme_src_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-docs-url-type"><code class="docutils literal notranslate"><span class="pre">readme_docs_url_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/configuring.html#optional-conf-py-values">Optional <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-out-dir"><code class="docutils literal notranslate"><span class="pre">readme_out_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-replace-attrs"><code class="docutils literal notranslate"><span class="pre">readme_replace_attrs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-inline-markup"><code class="docutils literal notranslate"><span class="pre">readme_inline_markup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-raw-directive"><code class="docutils literal notranslate"><span class="pre">readme_raw_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-tags"><code class="docutils literal notranslate"><span class="pre">readme_tags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-include-directive"><code class="docutils literal notranslate"><span class="pre">readme_include_directive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-admonition-icons"><code class="docutils literal notranslate"><span class="pre">readme_admonition_icons</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-default-admonition-icon"><code class="docutils literal notranslate"><span class="pre">readme_default_admonition_icon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-rubric-heading"><code class="docutils literal notranslate"><span class="pre">readme_rubric_heading</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#readme-blob"><code class="docutils literal notranslate"><span class="pre">readme_blob</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../configuration/configuring.html#linkcode-resolve"><code class="docutils literal notranslate"><span class="pre">linkcode_resolve</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration/sample_conf.html">Sample <code class="docutils literal notranslate"><span class="pre">conf.py</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme</span></code> package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../parser.html">The <code class="docutils literal notranslate"><span class="pre">READMEParser</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser"><code class="docutils literal notranslate"><span class="pre">READMEParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.__init__"><code class="docutils literal notranslate"><span class="pre">READMEParser.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.config"><code class="docutils literal notranslate"><span class="pre">READMEParser.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.ref_map"><code class="docutils literal notranslate"><span class="pre">READMEParser.ref_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.sources"><code class="docutils literal notranslate"><span class="pre">READMEParser.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.toctrees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.admonitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.rubrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.substitutions"><code class="docutils literal notranslate"><span class="pre">READMEParser.substitutions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.titles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.domains"><code class="docutils literal notranslate"><span class="pre">READMEParser.domains</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.roles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.objtypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.intersphinx_pkgs"><code class="docutils literal notranslate"><span class="pre">READMEParser.intersphinx_pkgs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.named_inventory"><code class="docutils literal notranslate"><span class="pre">READMEParser.named_inventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_env"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_titles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_titles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_roles"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_roles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_objtypes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_objtypes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_std_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_std_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_py_domain"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_py_domain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_py_target"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_py_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.add_variants"><code class="docutils literal notranslate"><span class="pre">READMEParser.add_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_doctree"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_intersphinx_nodes"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_intersphinx_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_external_node"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_external_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.parse_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.parse_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_external_ref"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_ref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_external_id"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_external_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.is_external_xref"><code class="docutils literal notranslate"><span class="pre">READMEParser.is_external_xref()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.resolve"><code class="docutils literal notranslate"><span class="pre">READMEParser.resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_admonitions"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_admonitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_toctrees"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_toctrees()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_rst_images"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rst_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_rubrics"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_rubrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_py_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_py_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.replace_unresolved_xrefs"><code class="docutils literal notranslate"><span class="pre">READMEParser.replace_unresolved_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_xref_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_xref_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_regex"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_regex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../parser.html#sphinx_readme.parser.READMEParser.get_admonition_icon"><code class="docutils literal notranslate"><span class="pre">READMEParser.get_admonition_icon()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme_config.html">The <code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code> Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig"><code class="docutils literal notranslate"><span class="pre">READMEConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.__init__"><code class="docutils literal notranslate"><span class="pre">READMEConfig.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.repo_blob"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_blob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.blob_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.blob_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.get_repo_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.get_docs_url"><code class="docutils literal notranslate"><span class="pre">READMEConfig.get_docs_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.setup_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">READMEConfig.setup_linkcode_resolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.read_rst"><code class="docutils literal notranslate"><span class="pre">READMEConfig.read_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.parse_include_directives"><code class="docutils literal notranslate"><span class="pre">READMEConfig.parse_include_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.src_files"><code class="docutils literal notranslate"><span class="pre">READMEConfig.src_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.sources"><code class="docutils literal notranslate"><span class="pre">READMEConfig.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.out_dir"><code class="docutils literal notranslate"><span class="pre">READMEConfig.out_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.docs_url_type"><code class="docutils literal notranslate"><span class="pre">READMEConfig.docs_url_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.repo_host"><code class="docutils literal notranslate"><span class="pre">READMEConfig.repo_host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.image_baseurl"><code class="docutils literal notranslate"><span class="pre">READMEConfig.image_baseurl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.icon_map"><code class="docutils literal notranslate"><span class="pre">READMEConfig.icon_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../readme_config.html#sphinx_readme.config.READMEConfig.admonition_template"><code class="docutils literal notranslate"><span class="pre">READMEConfig.admonition_template</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils</span></code> subpackage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../git.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.git</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_repo_url"><code class="docutils literal notranslate"><span class="pre">get_repo_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.is_valid_username"><code class="docutils literal notranslate"><span class="pre">is_valid_username()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.is_valid_repo"><code class="docutils literal notranslate"><span class="pre">is_valid_repo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_blob_url"><code class="docutils literal notranslate"><span class="pre">get_blob_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_repo_host"><code class="docutils literal notranslate"><span class="pre">get_repo_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_blob"><code class="docutils literal notranslate"><span class="pre">get_blob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_head"><code class="docutils literal notranslate"><span class="pre">get_head()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_last_tag"><code class="docutils literal notranslate"><span class="pre">get_last_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../git.html#sphinx_readme.utils.git.get_repo_dir"><code class="docutils literal notranslate"><span class="pre">get_repo_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../linkcode.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.linkcode</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_url"><code class="docutils literal notranslate"><span class="pre">get_linkcode_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../linkcode.html#sphinx_readme.utils.linkcode.get_linkcode_resolve"><code class="docutils literal notranslate"><span class="pre">get_linkcode_resolve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../rst.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.rst</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.escape_rst"><code class="docutils literal notranslate"><span class="pre">escape_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.BEFORE_XREF"><code class="docutils literal notranslate"><span class="pre">BEFORE_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.AFTER_XREF"><code class="docutils literal notranslate"><span class="pre">AFTER_XREF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.format_hyperlink"><code class="docutils literal notranslate"><span class="pre">format_hyperlink()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.format_rst"><code class="docutils literal notranslate"><span class="pre">format_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.replace_only_directives"><code class="docutils literal notranslate"><span class="pre">replace_only_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.remove_raw_directives"><code class="docutils literal notranslate"><span class="pre">remove_raw_directives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.replace_attrs"><code class="docutils literal notranslate"><span class="pre">replace_attrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.replace_xrefs"><code class="docutils literal notranslate"><span class="pre">replace_xrefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.get_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_xref_variants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../rst.html#sphinx_readme.utils.rst.get_all_xref_variants"><code class="docutils literal notranslate"><span class="pre">get_all_xref_variants()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../sphinx.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.sphinx</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../sphinx.html#sphinx_readme.utils.sphinx.ExternalRef"><code class="docutils literal notranslate"><span class="pre">ExternalRef</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sphinx.html#sphinx_readme.utils.sphinx.set_conf_val"><code class="docutils literal notranslate"><span class="pre">set_conf_val()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sphinx.html#sphinx_readme.utils.sphinx.get_conf_val"><code class="docutils literal notranslate"><span class="pre">get_conf_val()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../docutils.html">The <code class="docutils literal notranslate"><span class="pre">sphinx_readme.utils.docutils</span></code> submodule</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../docutils.html#sphinx_readme.utils.docutils.get_doctree"><code class="docutils literal notranslate"><span class="pre">get_doctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../docutils.html#sphinx_readme.utils.docutils.parse_node_text"><code class="docutils literal notranslate"><span class="pre">parse_node_text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents.html">sphinx-readme</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../contents.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sphinx_readme.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sphinx_readme.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="nc">Path</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="nc">Union</span><span class="p">,</span> <span class="nc">List</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">,</span> <span class="nc">Iterable</span>
+
+<span class="kn">from</span> <span class="nn">sphinx.util.tags</span> <span class="kn">import</span> <span class="nc">Tags</span>
+<span class="kn">from</span> <span class="nn">sphinx.application</span> <span class="kn">import</span> <span class="nc">Sphinx</span>
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="nc">ExtensionError</span>
+
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.git</span> <span class="kn">import</span> <span class="n">get_repo_url</span><span class="p">,</span> <span class="n">get_blob_url</span><span class="p">,</span> <span class="n">get_repo_host</span><span class="p">,</span> <span class="n">get_repo_dir</span>
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.rst</span> <span class="kn">import</span> <span class="n">replace_only_directives</span><span class="p">,</span> <span class="n">remove_raw_directives</span>
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.linkcode</span> <span class="kn">import</span> <span class="n">get_linkcode_url</span><span class="p">,</span> <span class="n">get_linkcode_resolve</span>
+<span class="kn">from</span> <span class="nn">sphinx_readme.utils.sphinx</span> <span class="kn">import</span> <span class="n">get_conf_val</span><span class="p">,</span> <span class="n">set_conf_val</span><span class="p">,</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="READMEConfig"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig">[docs]</a><span class="k">class</span> <span class="nc">READMEConfig</span><span class="p">:</span>
+
+<div class="viewcode-block" id="READMEConfig.__init__"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo_dir</span> <span class="o">=</span> <span class="kp">get_repo_dir</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_dir</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_out_dir&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_files</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_src_files&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="nc">Tags</span><span class="p">(</span><span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;readme_tags&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rst_prolog</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;rst_prolog&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rst_epilog</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;rst_epilog&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">html_context</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;html_context&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">html_baseurl</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;html_baseurl&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="kp">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">docs_url_type</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_docs_url_type&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replace_attrs</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_replace_attrs&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inline_markup</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_inline_markup&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_directive</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_raw_directive&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rubric_heading</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_rubric_heading&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">admonition_icons</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_admonition_icons&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_directive</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_include_directive&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_admonition_icon</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;readme_default_admonition_icon&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: The git blob to use when linking to the project&#39;s repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo_blob</span><span class="p">:</span> <span class="bp">str</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;readme_blob&quot;</span><span class="p">)</span>
+        <span class="c1">#: The base URL of the project&#39;s repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="p">:</span> <span class="bp">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_repo_url</span><span class="p">()</span>
+        <span class="c1">#: The base URL for the :attr:`repo_blob` blob of the project&#39;s repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blob_url</span><span class="p">:</span> <span class="bp">str</span> <span class="o">=</span> <span class="kp">get_blob_url</span><span class="p">(</span>
+            <span class="n">repo_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="p">,</span>
+            <span class="n">blob</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_blob</span>
+        <span class="p">)</span>
+        <span class="c1">#: The URL to use when resolving :mod:`~.sphinx.ext.autodoc` cross-references</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">docs_url</span><span class="p">:</span> <span class="bp">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">get_docs_url</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">docs_url_type</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="kp">setup_linkcode_resolve</span><span class="p">(</span><span class="n">app</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEConfig.get_repo_url"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig.get_repo_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_repo_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates the URL of the project&#39;s repository from the :external+sphinx:confval:`html_context` dict</span>
+
+<span class="sd">        :raises ExtensionError: if ``html_context`` is undefined or missing values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_context</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+                <span class="s2">&quot;``sphinx_readme``: conf.py value &quot;</span>
+                <span class="s2">&quot;must be set for ``html_context``&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kp">get_repo_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">html_context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEConfig.get_docs_url"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig.get_docs_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_docs_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the base URL of the documentation source to use</span>
+<span class="sd">        when resolving :mod:`~.sphinx.ext.autodoc` cross-references</span>
+
+<span class="sd">         If :attr:`docs_url_type` is</span>
+
+<span class="sd">         * ``&quot;code&quot;``: uses the :attr:`blob_url`</span>
+<span class="sd">         * ``&quot;html&quot;``: uses the :external+sphinx:confval:`html_baseurl`</span>
+
+<span class="sd">        :raises ExtensionError: if ``html_baseurl`` is undefined</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">docs_url_type</span> <span class="o">==</span> <span class="s2">&quot;html&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_baseurl</span><span class="p">:</span>
+                <span class="n">docs_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_baseurl</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;``sphinx_readme``: conf.py value &quot;</span>
+                    <span class="s2">&quot;must be set for ``html_baseurl``&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># ``docs_url_type`` is &quot;code&quot;</span>
+            <span class="n">docs_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_url</span>
+
+        <span class="k">return</span> <span class="n">docs_url</span><span class="o">.</span><span class="kp">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEConfig.setup_linkcode_resolve"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig.setup_linkcode_resolve">[docs]</a>    <span class="k">def</span> <span class="nf">setup_linkcode_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nc">Sphinx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves or defines a ``linkcode_resolve()`` function for your package&quot;&quot;&quot;</span>
+        <span class="n">linkcode_func</span> <span class="o">=</span> <span class="kp">get_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;linkcode_resolve&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">linkcode_func</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="kp">debug</span><span class="p">(</span>
+                <span class="s2">&quot;``sphinx_readme:`` using default ``linkcode_resolve``&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># Get the template for linking to source code</span>
+            <span class="n">linkcode_url</span> <span class="o">=</span> <span class="kp">get_linkcode_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blob_url</span><span class="p">)</span>
+            <span class="n">linkcode_func</span> <span class="o">=</span> <span class="kp">get_linkcode_resolve</span><span class="p">(</span><span class="n">linkcode_url</span><span class="p">)</span>
+
+        <span class="kp">set_conf_val</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;linkcode_resolve&#39;</span><span class="p">,</span> <span class="n">linkcode_func</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="READMEConfig.read_rst"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig.read_rst">[docs]</a>    <span class="k">def</span> <span class="nf">read_rst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst_file</span><span class="p">:</span> <span class="nc">Union</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Path</span><span class="p">],</span> <span class="n">replace_only</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">is_included</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads and partially parses an ``rst`` file</span>
+
+<span class="sd">        .. tip::</span>
+
+<span class="sd">           Files are parsed as follows:</span>
+
+<span class="sd">           1. If ``replace_only`` is ``True``, only directives are replaced via</span>
+<span class="sd">              :func:`~.replace_only_directives`</span>
+
+<span class="sd">           2. If :confval:`readme_include_directive` is ``True``, include directives are</span>
+<span class="sd">              replaced with the content of the included file;</span>
+<span class="sd">              otherwise, the directives will be removed</span>
+
+<span class="sd">           3. If :confval:`readme_raw_directive` is ``False``, raw directives are removed</span>
+
+<span class="sd">        :param rst_file: the ``rst`` file to read</span>
+<span class="sd">        :param replace_only: specifies if :rst:dir:`only` directives should be replaced or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">rst_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="kp">read</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">replace_only</span><span class="p">:</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="kp">replace_only_directives</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="n">rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">parse_include_directives</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="n">rst_file</span><span class="p">,</span> <span class="n">replace_only</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_directive</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="kp">remove_raw_directives</span><span class="p">(</span><span class="n">rst</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_included</span><span class="p">:</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_prolog</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">rst</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_epilog</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">rst</span></div>
+
+<div class="viewcode-block" id="READMEConfig.parse_include_directives"><a class="viewcode-back" href="../../readme_config.html#sphinx_readme.config.READMEConfig.parse_include_directives">[docs]</a>    <span class="k">def</span> <span class="nf">parse_include_directives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst</span><span class="p">:</span> <span class="bp">str</span><span class="p">,</span> <span class="n">rst_file</span><span class="p">:</span> <span class="nc">Union</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Path</span><span class="p">],</span> <span class="n">replace_only</span><span class="p">:</span> <span class="bp">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="kp">sub</span><span class="p">(</span>
+            <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\.\. include::\s+([./]*?[\w/-]+\.\w+)\s*?((?:^[ ]+:\S+:.*?$)*?)(?=\n*\S+|\Z)&quot;</span><span class="p">,</span>
+            <span class="n">repl</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="kp">_parse_include</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">rst_file</span><span class="p">,</span> <span class="n">replace_only</span><span class="p">),</span>
+            <span class="n">string</span><span class="o">=</span><span class="n">rst</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="nc">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="nc">DOTALL</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_parse_include</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="nc">Match</span><span class="p">,</span> <span class="n">rst_file</span><span class="p">:</span> <span class="nc">Union</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Path</span><span class="p">],</span> <span class="n">replace_only</span><span class="p">:</span> <span class="bp">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_directive</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">file</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="kp">groups</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">start</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*:start-line:\s+(\d+).*&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="nc">DOTALL</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="kp">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">end</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="kp">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*:end-line:\s+(\d+).*&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="nc">DOTALL</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">end</span><span class="o">.</span><span class="kp">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># Determine abs path of included file</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="kp">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="c1"># These paths are relative to source dir</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span><span class="si">}{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="kp">resolve</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># These paths are relative to rst_file dir</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="n">rst_file</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="nc">Path</span><span class="p">(</span><span class="n">file</span><span class="p">))</span><span class="o">.</span><span class="kp">resolve</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="kp">exists</span><span class="p">():</span>
+            <span class="c1"># Write corresponding lines of unparsed file to a temp file</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="kp">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="kp">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span> <span class="o">/</span> <span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="n">rst_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;_temp.rst&quot;</span><span class="p">))</span>
+            <span class="n">temp</span><span class="o">.</span><span class="kp">write_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="kp">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Replace directive with parsed file content</span>
+            <span class="n">repl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="kp">read_rst</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">replace_only</span><span class="p">,</span> <span class="n">is_included</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\n&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">)</span>
+            <span class="n">temp</span><span class="o">.</span><span class="kp">unlink</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">repl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># Remove the directive</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="kp">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;``sphinx_readme``: included file </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2"> does not exist&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">repl</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">src_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">Path</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Absolute paths of the :confval:`readme_src_files` mapped to corresponding output files&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_src_files</span>
+
+    <span class="nd">@src_files</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">src_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_files</span><span class="p">:</span> <span class="nc">Union</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="nc">List</span><span class="p">[</span><span class="bp">str</span><span class="p">],</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">]]):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_files</span><span class="p">,</span> <span class="nc">Iterable</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;``sphinx_readme``: confval ``readme_src_files`` must be a&quot;</span>
+                <span class="s2">&quot; string, list or dictionary of source and output files&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_files</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_files</span><span class="p">,</span> <span class="bp">str</span><span class="p">):</span>
+                <span class="n">src_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">src_files</span><span class="p">]</span>
+            <span class="n">src_files</span> <span class="o">=</span> <span class="bp">dict</span><span class="o">.</span><span class="kp">fromkeys</span><span class="p">(</span><span class="n">src_files</span><span class="p">)</span>
+
+        <span class="n">src_files</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># Files should be relative to source dir</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span> <span class="o">/</span> <span class="nc">Path</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span><span class="o">.</span><span class="kp">resolve</span><span class="p">():</span> <span class="n">out_file</span>
+            <span class="k">for</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">out_file</span> <span class="ow">in</span> <span class="n">src_files</span><span class="o">.</span><span class="kp">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">invalid_files</span> <span class="o">:=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">src_files</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="kp">exists</span><span class="p">()]:</span>
+            <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;``sphinx_readme``: The following files&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; do not exist: </span><span class="si">{</span><span class="n">invalid_files</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_src_files</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">src_file</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_dir</span><span class="o">.</span><span class="kp">joinpath</span><span class="p">(</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">src_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">out_file</span> <span class="ow">in</span> <span class="n">src_files</span><span class="o">.</span><span class="kp">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Absolute paths of source files mapped to their file content&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">src_file</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="kp">read_rst</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_files</span>
+        <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">out_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Absolute path of the directory to save generated ``rst`` files to</span>
+<span class="sd">        (from :confval:`readme_out_dir`)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_dir</span>
+
+    <span class="nd">@out_dir</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">out_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="bp">str</span><span class="p">):</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">out_dir</span><span class="o">.</span><span class="kp">is_absolute</span><span class="p">():</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span> <span class="o">/</span> <span class="n">out_dir</span><span class="p">)</span><span class="o">.</span><span class="kp">resolve</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">out_dir</span><span class="o">.</span><span class="kp">exists</span><span class="p">():</span>
+            <span class="n">out_dir</span><span class="o">.</span><span class="kp">mkdir</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_out_dir</span> <span class="o">=</span> <span class="n">out_dir</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">docs_url_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Documentation source type (``&quot;code&quot;`` or ``&quot;html``&quot;) for</span>
+<span class="sd">        resolving :mod:`~.sphinx.ext.autodoc` cross-references</span>
+
+<span class="sd">        See :confval:`readme_docs_url_type`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docs_url_type</span>
+
+    <span class="nd">@docs_url_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">docs_url_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs_url_type</span><span class="p">:</span> <span class="bp">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">docs_url_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>
+                <span class="s2">&quot;``sphinx_readme``: ``readme_docs_url_type`` value must be ``code`` or ``html``&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">docs_url_type</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_baseurl</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">ExtensionError</span><span class="p">(</span>  <span class="c1"># HTML url is needed for non-source code xrefs</span>
+                <span class="s2">&quot;``sphinx_readme``: conf.py value missing for ``html_baseurl``&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_docs_url_type</span> <span class="o">=</span> <span class="n">docs_url_type</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">repo_host</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The platform that the project&#39;s repository is hosted on&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kp">get_repo_host</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">image_baseurl</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The base URL to use when replacing images with :meth:`~.replace_rst_images`&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_host</span> <span class="o">==</span> <span class="s2">&quot;github&quot;</span><span class="p">:</span>
+            <span class="c1"># Ex. https://raw.githubusercontent.com/TDKorn/sphinx-readme/main</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_url</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s2">&quot;github.com&quot;</span><span class="p">,</span> <span class="s2">&quot;raw.githubusercontent.com&quot;</span><span class="p">)</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s1">&#39;blob/&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_host</span> <span class="o">==</span> <span class="s2">&quot;gitlab&quot;</span><span class="p">:</span>
+            <span class="c1"># Ex. https://gitlab.com/TDKorn/sphinx-readme/raw/main</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_url</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s2">&quot;/blob/&quot;</span><span class="p">,</span> <span class="s2">&quot;/raw/&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Ex. https://bitbucket.org/TDKorn/sphinx-readme/raw/main</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_url</span><span class="o">.</span><span class="kp">replace</span><span class="p">(</span><span class="s2">&quot;/src/&quot;</span><span class="p">,</span> <span class="s2">&quot;/raw/&quot;</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">icon_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Dict</span><span class="p">[</span><span class="bp">str</span><span class="p">,</span> <span class="bp">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A mapping of admonition classes to their icons</span>
+
+<span class="sd">        The default mapping is as follows, but can be modified</span>
+<span class="sd">        via :confval:`readme_admonition_icons`</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {</span>
+<span class="sd">             &#39;attention&#39;: &#39;🔔️&#39;,</span>
+<span class="sd">             &#39;caution&#39;: &#39;⚠️&#39;,</span>
+<span class="sd">             &#39;danger&#39;: &#39;☢&#39;,</span>
+<span class="sd">             &#39;error&#39;: &#39;⛔&#39;,</span>
+<span class="sd">             &#39;hint&#39;: &#39;🧠&#39;,</span>
+<span class="sd">             &#39;important&#39;: &#39;📢&#39;,</span>
+<span class="sd">             &#39;note&#39;: &#39;📝&#39;,</span>
+<span class="sd">             &#39;tip&#39;: &#39;💡&#39;,</span>
+<span class="sd">             &#39;warning&#39;: &#39;🚩&#39;,</span>
+<span class="sd">             &#39;default&#39;: &#39;📄&#39;</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;attention&quot;</span><span class="p">,</span> <span class="s2">&quot;caution&quot;</span><span class="p">,</span> <span class="s2">&quot;danger&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;hint&quot;</span><span class="p">,</span> <span class="s2">&quot;important&quot;</span><span class="p">,</span> <span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+        <span class="n">icons</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;🔔️&quot;</span><span class="p">,</span> <span class="s2">&quot;⚠️&quot;</span><span class="p">,</span> <span class="s2">&quot;☢️&quot;</span><span class="p">,</span> <span class="s1">&#39;⛔&#39;</span><span class="p">,</span> <span class="s2">&quot;🧠&quot;</span><span class="p">,</span> <span class="s2">&quot;📢&quot;</span><span class="p">,</span> <span class="s2">&quot;📝&quot;</span><span class="p">,</span> <span class="s2">&quot;💡&quot;</span><span class="p">,</span> <span class="s2">&quot;🚩&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_admonition_icon</span><span class="p">)</span>
+        <span class="n">icon_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">icons</span><span class="p">))</span>
+
+        <span class="c1"># Update/add custom admonition icons from conf.py</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">admonition_icons</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">admonition_icons</span><span class="p">,</span> <span class="nc">Dict</span><span class="p">):</span>
+                <span class="n">icon_map</span><span class="o">.</span><span class="kp">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">admonition_icons</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">icon_map</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">admonition_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The template to use when replacing admonitions with :meth:`~.replace_admonitions`&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_directive</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">r</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">.. raw:: html</span>
+
+<span class="s1">   &lt;table&gt;</span>
+<span class="s1">       &lt;tr align=&quot;left&quot;&gt;</span>
+<span class="s1">           &lt;th&gt;</span>
+
+<span class="si">{icon}</span><span class="s1"> </span><span class="si">{title}</span>
+
+<span class="s1">.. raw:: html</span>
+
+<span class="s1">   &lt;/th&gt;</span>
+<span class="s1">   &lt;tr&gt;&lt;td&gt;</span>
+
+<span class="si">{text}</span>
+
+<span class="s1">.. raw:: html</span>
+
+<span class="s1">   &lt;/td&gt;&lt;/tr&gt;</span>
+<span class="s1">   &lt;/table&gt;</span>
+<span class="s1">&#39;&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">r</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">\1.. list-table::</span>
+<span class="s1">\1   :header-rows: 1</span>
+<span class="s1">   </span>
+<span class="s1">\1   * - </span><span class="si">{icon}</span><span class="s1"> </span><span class="si">{title}</span>
+<span class="s1">\1   * - \2</span>
+<span class="s1">&#39;&#39;&#39;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Adam Korn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
