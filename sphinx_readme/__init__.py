@@ -56,5 +56,6 @@ def parse_doctree(app: Sphinx, doctree: document, docname: str):
 
 
 def resolve(app: Sphinx, exception):
-    parser = get_conf_val(app, 'READMEParser')
-    parser.resolve()
+    if app.builder.name == "html":
+        parser = get_conf_val(app, 'READMEParser')
+        parser.resolve()
